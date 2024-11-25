@@ -360,11 +360,6 @@
         <translation>Opcje</translation>
     </message>
     <message>
-        <location filename="../OptionsPopup.qml" line="89"/>
-        <source>Set hostname:</source>
-        <translation>ustaw hostname:</translation>
-    </message>
-    <message>
         <location filename="../OptionsPopup.qml" line="112"/>
         <source>Set username and password</source>
         <translation>Ustaw login i hasło</translation>
@@ -406,21 +401,6 @@
         <translation>Kraj Wi-Fi:</translation>
     </message>
     <message>
-        <location filename="../OptionsPopup.qml" line="262"/>
-        <source>Set locale settings</source>
-        <translation>Ustawienia lokalizacji</translation>
-    </message>
-    <message>
-        <location filename="../OptionsPopup.qml" line="272"/>
-        <source>Time zone:</source>
-        <translation>Strefa czasowa:</translation>
-    </message>
-    <message>
-        <location filename="../OptionsPopup.qml" line="282"/>
-        <source>Keyboard layout:</source>
-        <translation>Układ klawiatury:</translation>
-    </message>
-    <message>
         <location filename="../OptionsPopup.qml" line="299"/>
         <source>Enable SSH</source>
         <translation>Włącz SSH</translation>
@@ -456,7 +436,7 @@
         <translation>Wysuń nośnik po zakończeniu</translation>
     </message>
     <message>
-        <location filename="../OptionsPopup.qml" line="384"/>
+        <location filename="../main.qml" line="343"/>
         <source>Enable telemetry</source>
         <translation>Włącz telemetrię</translation>
     </message>
@@ -570,6 +550,26 @@
         <translation>Dysk</translation>
     </message>
     <message>
+    <location filename="../main.qml" line="142"/>
+      <source>Set hostname:</source>
+    <translation>Ustaw hostname:</translation>
+    </message>
+    <message>
+    <location filename="../main.qml" line="196"/>
+      <source>Set locale settings</source>
+    <translation>Ustawienia lokalizacji</translation>
+    </message>
+    <message>
+    <location filename="../main.qml" line="204"/>
+      <source>Time zone:</source>
+    <translation>Strefa czasowa:</translation>
+    </message>
+    <message>
+    <location filename="../main.qml" line="224"/>
+      <source>Keyboard layout:</source>
+    <translation>Układ klawiatury:</translation>
+    </message>
+    <message>
         <location filename="../main.qml" line="330"/>
         <source>Network not ready yet</source>
         <translation type="unfinished"></translation>
@@ -621,6 +621,11 @@
         <location filename="../main.qml" line="292"/>
         <source>Next</source>
         <translation>Kontynuuj</translation>
+    </message>
+    <message>
+        <location filename="../main.qml" line="358"/>
+        <source>Advanced</source>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <location filename="../main.qml" line="298"/>

@@ -1,0 +1,5 @@
+ - [ ] Embedded mode UI/components
+ - [ ] Translations
+ - [ ] Dynamic OS list (URL)
+ - [ ] Fields validations
+ - [ ] CLI

@@ -29,6 +29,8 @@ class ImageWriter : public QObject
 {
     Q_OBJECT
 public:
+    void useMockedOsList();
+
     explicit ImageWriter(QObject *parent = nullptr);
     virtual ~ImageWriter();
     void setEngine(QQmlApplicationEngine *engine);

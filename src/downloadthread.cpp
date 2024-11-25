@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
 #include <QtNetwork/QNetworkProxy>
+#include <QRegularExpression>
 
 #ifdef Q_OS_LINUX
 #include <sys/ioctl.h>
@@ -920,24 +921,30 @@ bool DownloadThread::_customizeImage()
             auto configItems = _config.split('\n');
             configItems.removeAll("");
             QByteArray config = fat->readFile("config.txt");
+            QString configString = QString::fromUtf8(config);
 
             for (const QByteArray& item : std::as_const(configItems))
             {
-                if (config.contains("#"+item)) {
-                    /* Uncomment existing line */
-                    config.replace("#"+item, item);
-                } else if (config.contains("\n"+item)) {
-                    /* config.txt already contains the line */
+                QList<QByteArray> parts = item.split('=');
+
+                if (parts.size() != 2) {
+                    continue;
+                }
+
+                QByteArray parameter = parts[0].trimmed();
+                QByteArray newValue = parts[1].trimmed();
+
+                QRegularExpression regex(QString("(^|\\n)(#?%1=)[^\n]*").arg(QString(parameter)));
+                QRegularExpressionMatch match = regex.match(configString);
+
+                if (match.hasMatch()) {
+                    configString.replace(regex, QString("\n%1=%2").arg(QString(parameter), QString(newValue)));
                 } else {
-                    /* Append new line to config.txt */
-                    if (config.right(1) != "\n")
-                        config += "\n"+item+"\n";
-                    else
-                        config += item+"\n";
+                    configString.append(QString("\n%1=%2").arg(QString(parameter), QString(newValue)));
                 }
             }
 
-            fat->writeFile("config.txt", config);
+            fat->writeFile("config.txt", configString.toUtf8());
         }
 
         if (_initFormat == "auto")

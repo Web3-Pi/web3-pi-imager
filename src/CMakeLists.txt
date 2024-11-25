@@ -6,12 +6,12 @@ OPTION (ENABLE_CHECK_VERSION "Check for version updates" ON)
 OPTION (ENABLE_TELEMETRY "Enable sending telemetry" ON)
 OPTION (DRIVELIST_FILTER_SYSTEM_DRIVES "Filter System drives from displayed drives" ON)
 
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "Which macOS architectures to build for")
+set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Which macOS architectures to build for")
 
 project(rpi-imager LANGUAGES CXX C)
 set(IMAGER_VERSION_MAJOR 1)
-set(IMAGER_VERSION_MINOR 9)
-set(IMAGER_VERSION_PATCH 2)
+set(IMAGER_VERSION_MINOR 0)
+set(IMAGER_VERSION_PATCH 0)
 set(IMAGER_VERSION_STR "${IMAGER_VERSION_MAJOR}.${IMAGER_VERSION_MINOR}.${IMAGER_VERSION_PATCH}")
 set(IMAGER_VERSION_CSV "${IMAGER_VERSION_MAJOR},${IMAGER_VERSION_MINOR},${IMAGER_VERSION_PATCH},0")
 add_definitions(-DIMAGER_VERSION_STR="${IMAGER_VERSION_STR}")
@@ -20,8 +20,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_compile_options("-fsanitize=address")
 #add_link_options("-fsanitize=address")
 
-# You _must_ set your Qt6 root for the build to progress.
-set(Qt6_ROOT "/opt/Qt/6.7.2/gcc_arm64" CACHE PATH "Your Qt6 root path")
+# You _must_ set your Qt6 root for the build to progress.C
+set(Qt6_ROOT "/Users/deimos/dev/Qt/6.8.0/macos" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
     set(MINGW64_ROOT "" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
@@ -79,7 +79,6 @@ set(Zstd_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/zstd-1.5.6/lib)
 set(ZSTD_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/zstd-1.5.6/lib)
 set(Zstd_LIBRARIES libzstd_static)
 set(ZSTD_LIBRARIES libzstd_static)
-set(ZSTD_LIBRARY libzstd_static)
 
 # Bundled zlib
 set(ZLIB_BUILD_EXAMPLES OFF)
@@ -112,18 +111,16 @@ set(ARCHIVE_ENABLE_TAR OFF CACHE BOOL "")
 set(ARCHIVE_ENABLE_CPIO OFF CACHE BOOL "")
 set(ARCHIVE_ENABLE_CAT OFF CACHE BOOL "")
 set(ARCHIVE_BUILD_SHARED_LIBS OFF CACHE BOOL "")
-add_subdirectory(dependencies/libarchive-3.7.7)
+add_subdirectory(dependencies/libarchive-3.7.4)
 set(LibArchive_FOUND true)
 set(LibArchive_LIBRARIES archive_static)
-set(LibArchive_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/libarchive-3.7.7/libarchive)
+set(LibArchive_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/libarchive-3.7.4/libarchive)
 
 # Bundled libcurl
 set(CMAKE_CURL_INCLUDES)
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
 set(BUILD_LIBCURL_DOCS OFF CACHE BOOL "" FORCE)
 set(ENABLE_CURL_MANUAL OFF CACHE BOOL "" FORCE)
-set(CURL_USE_LIBPSL OFF)
-set(CURL_USE_LIBSSH2 OFF)
 set(CURL_DISABLE_ALTSVC ON)
 set(CURL_DISABLE_KERBEROS_AUTH ON)
 set(CURL_DISABLE_DICT ON)
@@ -151,7 +148,6 @@ if (APPLE)
     #       on macOS.
     set(CURL_USE_SECTRANSP ON)
     set(CURL_DEFAULT_SSL_BACKEND "secure-transport")
-    set(USE_APPLE_IDN ON)
 else()
     if (WIN32)
         set(CURL_USE_SCHANNEL ON)
@@ -162,11 +158,11 @@ else()
     endif(WIN32)
 endif(APPLE)
 
-add_subdirectory(dependencies/curl-8.11.0)
+add_subdirectory(dependencies/curl-8.8.0)
 set(CURL_FOUND true)
 set(CURL_LIBRARIES libcurl_static)
-set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.11.0/include)
-set(CURL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.11.0/include)
+set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.8.0/include)
+set(CURL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.8.0/include)
 
 # Adding headers explicity so they are displayed in Qt Creator
 set(HEADERS config.h imagewriter.h networkaccessmanagerfactory.h nan.h drivelistitem.h drivelistmodel.h drivelistmodelpollthread.h driveformatthread.h powersaveblocker.h cli.h
@@ -366,15 +362,15 @@ if (WIN32)
     if (NOT SIGNTOOL)
         message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
     endif()
-    add_definitions(-DSIGNTOOL="${SIGNTOOL}")
-
-    add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
-
-    add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe")
+#    add_definitions(-DSIGNTOOL="${SIGNTOOL}")
+#
+#    add_custom_command(TARGET ${PROJECT_NAME}
+#        POST_BUILD
+#        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
+#
+#    add_custom_command(TARGET ${PROJECT_NAME}
+#        POST_BUILD
+#        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe")
 
     # Windeploy
     find_program(WINDEPLOYQT "windeployqt.exe" PATHS "${Qt6_ROOT}/bin")
@@ -475,12 +471,12 @@ elseif(APPLE)
         # Unsigned application
         add_custom_command(TARGET ${PROJECT_NAME}
             POST_BUILD
-            COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -dmg)
+            COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -dmg)
     endif(IMAGER_SIGNED_APP)
 
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        COMMAND "mv" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.dmg" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
+        COMMAND "mv" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.dmg" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
 
 else()
     # UNIX, Linux systems

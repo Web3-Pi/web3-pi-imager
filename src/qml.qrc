@@ -32,11 +32,13 @@
         <file>icons/cat_language_specific_operating_systems.png</file>
         <file>icons/cat_3d_printing.png</file>
         <file>icons/logo_stacked_imager.png</file>
-        <file>icons/logo_sxs_imager.png</file>
+        <file>icons/logo_web3_pi_imager.png</file>
         <file>qmlcomponents/ImButton.qml</file>
         <file>qmlcomponents/ImButtonRed.qml</file>
         <file>qmlcomponents/ImCheckBox.qml</file>
         <file>qmlcomponents/ImRadioButton.qml</file>
+        <file>qmlcomponents/ImText.qml</file>
+        <file>qmlcomponents/ImTextField.qml</file>
         <file>icons/cat_digital_signage.png</file>
     </qresource>
 </RCC>
