@@ -8,19 +8,20 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
-import "qmlcomponents"
+import "components"
 
-Window {
+ApplicationWindow {
     id: window
     visible: true
 
-    width: imageWriter.isEmbeddedMode() ? -1 : 450
-    height: imageWriter.isEmbeddedMode() ? -1 : 680
-    minimumWidth: imageWriter.isEmbeddedMode() ? -1 : 450
-    minimumHeight: imageWriter.isEmbeddedMode() ? -1 : 680
+    width: imageWriter.isEmbeddedMode() ? -1 : 480
+    height: imageWriter.isEmbeddedMode() ? -1 : 730
+    minimumWidth: imageWriter.isEmbeddedMode() ? -1 : 480
+    minimumHeight: imageWriter.isEmbeddedMode() ? -1 : 730
 
     title: qsTr("Web3 Pi Imager v%1").arg(imageWriter.constantVersion())
 
+    property bool dualMode: false;
     property bool initialized: false
     property bool hasSavedSettings: false
     property string config
@@ -42,12 +43,6 @@ Window {
     FontLoader {id: robotoLight; source: "fonts/Roboto-Light.ttf"}
     FontLoader {id: robotoBold;  source: "fonts/Roboto-Bold.ttf"}
 
-    // onClosing: {
-    //     if (progressBar.visible) {
-    //         close.accepted = false
-    //         quitpopup.openPopup()
-    //     }
-    // }
 
     Component.onCompleted: {
         if (!initialized) {
@@ -65,14 +60,6 @@ Window {
             if (!progressBar.visible) {
                 Qt.quit()
             }
-        }
-    }
-
-    Shortcut {
-        sequences: ["Shift+Ctrl+X", "Shift+Meta+X"]
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            optionspopup.openPopup()
         }
     }
 
@@ -120,602 +107,31 @@ Window {
             implicitWidth: window.width
             implicitHeight: window.height * (1 - 1/5)
 
-            ColumnLayout {
-                id: mainForm
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.left: parent.left
-                anchors.rightMargin: 35
-                anchors.leftMargin: 35
-                anchors.topMargin: 20
-                anchors.bottomMargin: 20
+            StackView {
+                id: stackView
                 anchors.fill: parent
+                // initialItem: "ModeSelector.qml"
+                // initialItem: "SingleModeForm.qml"
+                initialItem: ModeSelector {}
+                // initialItem: "Writing.qml"
 
-                ColumnLayout {
-                    Layout.fillHeight: true
-                    spacing: 20
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 200
+                // Component.onCompleted: {
+                //     push("ModeSelector.qml")
+                // }
 
-                    RowLayout {
-                        ImText {
-                            text: qsTr("Set hostname:")
-                            rightPadding: 5
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        TextField {
-                            id: fieldHostname
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            text: "eop-1"
-                            selectByMouse: true
-                            maximumLength: 255
-                            Layout.minimumWidth: 205
-                            Layout.minimumHeight: 35
-                            font.family: roboto.name
-                            font.pointSize: 12
-                            padding: 0
-                            // validator: RegularExpressionValidator { regularExpression: /[0-9A-Za-z][0-9A-Za-z-]{0,62}/ }
-                        }
-                        ImText {
-                            text : ".local"
-                        }
-                    }
-                    RowLayout {
-                        ImText {
-                            text: qsTr("Image version:")
-                            rightPadding: 5
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        ComboBox {
-                            id: fieldImageVersion
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            selectTextByMouse: true
-                            Layout.minimumWidth: 239
-                            Layout.minimumHeight: 35
-                            font.pointSize: 12
-                            onCurrentIndexChanged: {
-                                if (currentIndex !== -1) {
-                                    selectOSitem(osmodel.get(currentIndex))
-                                }
-                            }
-                            model: ListModel {
-                                id: oslistmodel
-                            }
-                        }
-                    }
-
-                    ImText {
-                        text: qsTr("Set locale settings")
-                        rightPadding: 5
-                    }
-
-
-                    ColumnLayout {
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Time zone:")
-                                Layout.leftMargin: 40
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ComboBox {
-                                selectTextByMouse: true
-                                id: fieldTimezone
-                                editable: true
-                                background: Rectangle {
-                                    color: "white"
-                                }
-                                Layout.minimumHeight: 35
-                                Layout.minimumWidth: 200
-                                font.pointSize: 12
-                            }
-                        }
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Keyboard layout:")
-                                Layout.leftMargin: 40
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ComboBox {
-                                selectTextByMouse: true
-                                id: fieldKeyboardLayout
-                                editable: true
-                                Layout.minimumWidth: 200
-                                background: Rectangle {
-                                    color: "white"
-                                }
-                                Layout.minimumHeight: 35
-                                font.pointSize: 12
-                            }
-                        }
-
-                    }
-
-                    RowLayout {
-                        ImText {
-                            text: qsTr("Execution Client")
-                            rightPadding: 5
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        ComboBox {
-                            id: fieldExecutionClient
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            selectTextByMouse: true
-                            Layout.preferredWidth: 120
-                            Layout.minimumHeight: 35
-                            font.pointSize: 12
-                            model: ListModel {
-                                ListElement { text: "Geth"; value: "geth" }
-                                ListElement { text: "Disabled"; value: "disabled" }
-                            }
-                            textRole: "text"
-                            currentIndex: 0
-                            onActivated: {
-                                window.executionclient = model.get(currentIndex).value
-                            }
-                        }
-                        ImText {
-                            text: qsTr("Port")
-                            leftPadding: 5
-                        }
-                        TextField {
-                            id: fieldExecutionPort
-                            Layout.preferredWidth: 70
-                            Layout.minimumHeight: 35
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            text: "30303"
-                            font.family: roboto.name
-                            font.pointSize: 12
-                        }
-                    }
-
-                    RowLayout {
-                        ImText {
-                            text: qsTr("Consensus Client")
-                            rightPadding: 5
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        ComboBox {
-                            id: fieldConsensusClient
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            selectTextByMouse: true
-                            Layout.preferredWidth: 120
-                            Layout.minimumHeight: 35
-                            font.pointSize: 12
-                            model: ListModel {
-                                ListElement { text: "Nimbus"; value: "nimbus" }
-                                ListElement { text: "Lighthouse"; value: "lighthouse" }
-                            }
-                            currentIndex: 0
-                            textRole: "text"
-                            onActivated: {
-                                window.consensusclient = model.get(currentIndex).value
-                            }
-                        }
-                        ImText {
-                            text: qsTr("Port")
-                            leftPadding: 5
-                        }
-                        TextField {
-                            id: fieldConsensusPort
-                            background: Rectangle {
-                                color: "white"
-                            }
-                            Layout.preferredWidth: 70
-                            Layout.minimumHeight: 35
-                            text: "9000"
-                            font.family: roboto.name
-                            font.pointSize: 12
-
-                        }
-                    }
-                    ColumnLayout {
-                        spacing: 0
-                        ImCheckBox {
-                            id: chkMonitoring
-                            text: qsTr("Enable Grafana monitoring")
-                            padding: 0
-                            checked: true
-                        }
-                        ImCheckBox {
-                            id: chkTelemtry
-                            text: qsTr("Enable telemetry")
-                            padding: 0
-                        }
-                    }
+                Component {
+                    id: singleModeForm
+                    SingleModeForm {}
                 }
 
-                RowLayout {
-                    Layout.preferredHeight: 50
-                    width: parent.width
-                    // anchors.bottom: parent.bottom
-                    // anchors.right: parent.right
-                    // anchors.left: parent.left
-
-                    ImButton {
-                        id: advencedbutton
-                        text: qsTr("Advanced")
-                        Layout.preferredWidth: 120
-                        Layout.alignment: Qt.AlignLeft
-                        Material.background: "#cd2355"
-                        Material.foreground: "#ffffff"
-
-                        onClicked: {
-                            optionspopup.screen = window.screen
-                            optionspopup.x = window.x + window.width / 2 - optionspopup.width / 2
-                            optionspopup.y = window.y + window.height / 2 - optionspopup.height / 2
-                            optionspopup.openPopup()
-                        }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    ImButton {
-                        id: continueutton
-                        text: qsTr("Next")
-                        Layout.preferredWidth: 200
-                        Layout.minimumHeight: 40
-                        Layout.alignment: Qt.AlignRight
-                        Accessible.description: qsTr("Select this button to start writing the image")
-                        onClicked: {
-                            applySettings()
-                            saveSettings()
-                            imageWriter.startDriveListPolling()
-                            dstpopup.open()
-                            dstlist.forceActiveFocus()
-                        }
-                    }
-                }
-
-                Text {
-                    Layout.columnSpan: 3
-                    color: "#ffffff"
-                    font.pixelSize: 18
-                    font.family: roboto.name
-                    visible: imageWriter.isEmbeddedMode() && imageWriter.customRepo()
-                    text: qsTr("Using custom repository: %1").arg(imageWriter.constantOsListUrl())
-                }
-
-                Text {
-                    id: networkInfo
-                    Layout.columnSpan: 3
-                    color: "#ffffff"
-                    font.pixelSize: 18
-                    font.family: roboto.name
-                    visible: imageWriter.isEmbeddedMode()
-                    text: qsTr("Network not ready yet")
-                }
-
-                Text {
-                    Layout.columnSpan: 3
-                    color: "#ffffff"
-                    font.pixelSize: 18
-                    font.family: roboto.name
-                    visible: !imageWriter.hasMouse()
-                    text: qsTr("Keyboard navigation: <tab> navigate to next button <space> press button/select item <arrow up/down> go up/down in lists")
-                }
-
-                Rectangle {
-                    id: langbarRect
-                    Layout.columnSpan: 3
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-                    Layout.bottomMargin: 5
-                    visible: imageWriter.isEmbeddedMode()
-                    implicitWidth: langbar.width
-                    implicitHeight: langbar.height
-                    color: "#ffffe3"
-                    radius: 5
-
-                    RowLayout {
-                        id: langbar
-                        spacing: 10
-
-                        Text {
-                            font.pixelSize: 12
-                            font.family: roboto.name
-                            text: qsTr("Language: ")
-                            Layout.leftMargin: 30
-                            Layout.topMargin: 10
-                            Layout.bottomMargin: 10
-                        }
-                        ComboBox {
-                            font.pixelSize: 12
-                            font.family: roboto.name
-                            model: imageWriter.getTranslations()
-                            Layout.preferredWidth: 200
-                            currentIndex: -1
-                            Component.onCompleted: {
-                                currentIndex = find(imageWriter.getCurrentLanguage())
-                            }
-                            onActivated: {
-                                imageWriter.changeLanguage(editText)
-                            }
-                            Layout.topMargin: 10
-                            Layout.bottomMargin: 10
-                        }
-                        Text {
-                            font.pixelSize: 12
-                            font.family: roboto.name
-                            text: qsTr("Keyboard: ")
-                            Layout.topMargin: 10
-                            Layout.bottomMargin: 10
-                        }
-                        ComboBox {
-                            enabled: imageWriter.isEmbeddedMode()
-                            font.pixelSize: 12
-                            font.family: roboto.name
-                            model: imageWriter.getKeymapLayoutList()
-                            currentIndex: -1
-                            Component.onCompleted: {
-                                currentIndex = find(imageWriter.getCurrentKeyboard())
-                            }
-                            onActivated: {
-                                imageWriter.changeKeyboard(editText)
-                            }
-                            Layout.topMargin: 10
-                            Layout.bottomMargin: 10
-                            Layout.rightMargin: 30
-                        }
-                    }
-                }
-
-                /* Language/keyboard bar is normally only visible in embedded mode.
-                   To test translations also show it when shift+ctrl+L is pressed. */
-                Shortcut {
-                    sequences: ["Shift+Ctrl+L", "Shift+Meta+L"]
-                    context: Qt.ApplicationShortcut
-                    onActivated: {
-                        langbarRect.visible = true
-                    }
-                }
-            }
-
-            ColumnLayout {
-                id: writingProcess
-                visible: false
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.left: parent.left
-                anchors.rightMargin: 35
-                anchors.leftMargin: 35
-                anchors.topMargin: 20
-                anchors.bottomMargin: 35
-                anchors.fill: parent
-
-                ColumnLayout {
-                    id: columnLayoutProgress
-                    spacing: 0
-                    Layout.topMargin: 30
-
-                    ImText {
-                        id: progressText
-                        color: "white"
-                        font.family: robotoBold.name
-                        font.bold: true
-                        visible: true
-                        horizontalAlignment: Text.AlignHCenter
-                        Layout.fillWidth: true
-                        text: qsTr("Preparing to write...")
-                    }
-
-                    ProgressBar {
-                        Layout.bottomMargin: 25
-                        id: progressBar
-                        Layout.fillWidth: true
-                        visible: true
-                        Material.background: "#d15d7d"
-                        indeterminate: true
-                        Material.accent: "#ffffff"
-                    }
-                }
-                Item {
-                    Layout.fillHeight: true
-                }
-                ColumnLayout {
-                    id: infoText
-                    spacing: 25
-                    Layout.alignment: Qt.AlignCenter
-                    Column {
-                        spacing: 5
-                        Layout.bottomMargin: 0
-
-                        ImText {
-                            text:  qsTr("After installation, you can log in via ssh using credentials")
-                            color: "#fff"
-                            font.pointSize: 13
-                            font.italic: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                        ImText {
-                            text: "ethereum:ethereum"
-                            color: "#fff"
-                            font.pointSize: 12
-                            font.bold: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                    }
-
-                    Column {
-                        Layout.alignment: Qt.AlignCenter
-                        spacing: 5
-
-                        ImText {
-                            text:  qsTr("You can monitor the installation process at")
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 13
-                            font.italic: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                        ImText {
-                            text: qsTr("<a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(fieldHostname.text)
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 12
-                            font.bold: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                            onLinkActivated: {
-                                Qt.openUrlExternally(link)
-                            }
-                        }
-                    }
-
-                    Column {
-                        Layout.alignment: Qt.AlignCenter
-                        spacing: 5
-                        visible: chkMonitoring.checked
-
-                        ImText {
-                            text: qsTr("After correct installation, you can monitor your node at")
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 13
-                            font.italic: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                        ImText {
-                            text: qsTr("<a href='http://%1.local:3000' style='color: white;'>http://%1.local:3000</a>").arg(fieldHostname.text)
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 12
-                            font.bold: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                            onLinkActivated: {
-                                Qt.openUrlExternally(link)
-                            }
-                        }
-                    }
-
-                    Column {
-                        Layout.alignment: Qt.AlignCenter
-                        spacing: 5
-
-                        ImText {
-                            text: qsTr("You can find more information at")
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 13
-                            font.italic: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                        ImText {
-                            text: qsTr("<a href='https://www.web3pi.io' style='color: white;'>https://www.web3pi.io</a>")
-                            textFormat: Text.RichText
-                            color: "#fff"
-                            font.pointSize: 12
-                            font.bold: true
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                            }
-                            onLinkActivated: {
-                                Qt.openUrlExternally(link)
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    Layout.fillHeight: true
-                }
-
-
-                ImButton {
-                    Layout.minimumHeight: 40
-                    Layout.preferredWidth: 200
-                    padding: 5
-                    id: cancelwritebutton
-                    text: qsTr("CANCEL WRITE")
-                    onClicked: {
-                        enabled = false
-                        progressText.text = qsTr("Cancelling...")
-                        imageWriter.cancelWrite()
-                    }
-                    Layout.alignment: Qt.AlignCenter
-                    visible: true
-                }
-                ImButton {
-                    Layout.minimumHeight: 40
-                    Layout.preferredWidth: 200
-                    padding: 5
-                    id: cancelverifybutton
-                    text: qsTr("CANCEL VERIFY")
-                    onClicked: {
-                        enabled = false
-                        progressText.text = qsTr("Finalizing...")
-                        imageWriter.setVerifyEnabled(false)
-                    }
-                    Layout.alignment: Qt.AlignCenter
-                    visible: false
-                }
-
-            }
-
-            DropArea {
-                anchors.fill: parent
-                onEntered: {
-                    if (drag.active && mimeData.hasUrls()) {
-                        drag.acceptProposedAction()
-                    }
-                }
-                onDropped: {
-                    if (drop.urls && drop.urls.length > 0) {
-                        onFileSelected(drop.urls[0].toString())
-                    }
+                Component {
+                    id: dualModeForm
+                    DualModeForm {}
                 }
             }
         }
     }
 
-    ListModel {
-        id: osmodel
-
-        Component.onCompleted: {
-            if (imageWriter.isOnline()) {
-                fetchOSlist();
-            }
-        }
-    }
 
     /*
       Popup for storage device selection
@@ -992,8 +408,8 @@ Window {
         }
     }
 
-    OptionsPopup {
-        id: optionspopup
+    AdvancedSettings {
+        id: advancedSettings
     }
 
     function initialize() {

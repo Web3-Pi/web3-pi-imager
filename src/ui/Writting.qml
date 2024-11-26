@@ -8,7 +8,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
-import "../src/qmlcomponents"
+import "components"
 
 
 ColumnLayout {

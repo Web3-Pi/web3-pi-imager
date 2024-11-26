@@ -1,6 +1,10 @@
-/*
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Raspberry Pi Ltd
+/**
+ * This file is intended solely for UI prototyping purposes in QT Design Studio.
+ * It is a duplicate of the main.qml file stripped of any dependencies and references to core code to run the project in QT Design Studio.
+ *
+ * Warning!
+ * Changes in this file do not affect the output code after the application has been compiled.
+ * It is just a mock for visual prototyping. Any changes must be moved to the main.qml file
  */
 
 import QtQuick 2.15
@@ -8,24 +12,25 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
-import "../src/qmlcomponents"
+import "components"
 
 Window {
     id: window
     visible: true
 
-    width: 450
-    height: 720
-    minimumWidth: 450
-    minimumHeight: 680
+    width: 480
+    height: 730
+    minimumWidth: 480
+    minimumHeight: 730
 
     title: qsTr("Web3 Pi Imager v%1").arg("1.0.0")
 
-    FontLoader {id: roboto;      source: "../src/fonts/Roboto-Regular.ttf"}
-    FontLoader {id: robotoLight; source: "../src/fonts/Roboto-Light.ttf"}
-    FontLoader {id: robotoBold;  source: "../src/fonts/Roboto-Bold.ttf"}
+    property bool dualMode: false;
 
-
+    FontLoader {id: roboto;      source: "./fonts/Roboto-Regular.ttf"}
+    FontLoader {id: robotoLight; source: "./fonts/Roboto-Light.ttf"}
+    FontLoader {id: robotoBold;  source: "./fonts/Roboto-Bold.ttf"}
+    
     Shortcut {
         sequence: StandardKey.Quit
         context: Qt.ApplicationShortcut
@@ -47,7 +52,7 @@ Window {
 
             Image {
                 id: image
-                source: "../src/icons/logo_web3_pi_imager.png"
+                source: "./icons/logo_web3_pi_imager.png"
 
                 // Specify the maximum size of the image
                 width: window.width
@@ -80,14 +85,12 @@ Window {
             implicitWidth: window.width
             implicitHeight: window.height * (1 - 1/5)
 
+            Material.theme: Material.Light
 
             StackView {
                 id: stackView
                 anchors.fill: parent
                 initialItem: ModeSelector {}
-                // initialItem: "SingleModeForm.qml"
-                // initialItem: "DualModeForm.qml"
-                // initialItem: "Writing.qml"
 
                 Component {
                     id: singleModeForm
@@ -98,12 +101,11 @@ Window {
                     id: dualModeForm
                     DualModeForm {}
                 }
-
-
-
             }
-
         }
     }
 
+    AdvancedSettings {
+        id: advancedSettings
+    }
 }
