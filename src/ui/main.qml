@@ -21,6 +21,8 @@ ApplicationWindow {
 
     title: qsTr("Web3 Pi Imager v%1").arg(imageWriter.constantVersion())
 
+    signal saveSettingsSignal(var settings)
+
     property bool dualMode: false;
     property bool initialized: false
     property bool hasSavedSettings: false
@@ -32,17 +34,32 @@ ApplicationWindow {
     property string cloudinitwrite
     property string cloudinitnetwork
 
+    property string hostname
+    property string defaultNetwork
     property string selecteddstdesc
     property string selectedos
-    property string executionclient
-    property string consensusclient
+    property string executionClient
+    property string consensusClient
+    property string executionPort
+    property string consensusPort
+    property string executionEndpointAddress
+    property string keyboardLayout
+    property var localeOptions: {
+        "timezone": "",
+        "keyboardLayout": "",
+    }
+    property var wifiOptions: {
+        "ssid": "",
+        "password": "",
+        "ssidHidden": false,
+        "wifiCountry": "",
+    }
 
-    signal saveSettingsSignal(var settings)
+
 
     FontLoader {id: roboto;      source: "fonts/Roboto-Regular.ttf"}
     FontLoader {id: robotoLight; source: "fonts/Roboto-Light.ttf"}
     FontLoader {id: robotoBold;  source: "fonts/Roboto-Bold.ttf"}
-
 
     Component.onCompleted: {
         if (!initialized) {
@@ -110,240 +127,41 @@ ApplicationWindow {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                // initialItem: "ModeSelector.qml"
-                // initialItem: "SingleModeForm.qml"
-                initialItem: ModeSelector {}
-                // initialItem: "Writing.qml"
-
-                // Component.onCompleted: {
-                //     push("ModeSelector.qml")
-                // }
-
-                Component {
-                    id: singleModeForm
-                    SingleModeForm {}
-                }
-
-                Component {
-                    id: dualModeForm
-                    DualModeForm {}
+                initialItem: ModeSelector {
+                    id: modeSelector
                 }
             }
         }
     }
 
+    SingleModeForm {
+        id: singleModeForm
+        visible: false
+    }
 
-    /*
-      Popup for storage device selection
-     */
-    Popup {
+    DualModeForm {
+        id: dualModeForm
+        visible: false
+    }
+
+    WritingPage {
+        id: writingPage
+        objectName: "writingPage"
+        visible: false
+        onEnd: {
+            stackView.clear()
+            stackView.push(modeSelector)
+        }
+    }
+
+    StoragePopup {
         id: dstpopup
-        x: 50
-        y: 25
-        width: parent.width-100
-        height: parent.height-50
-        padding: 0
-        closePolicy: Popup.CloseOnEscape
-        onClosed: imageWriter.stopDriveListPolling()
-
-        // background of title
-        Rectangle {
-            id: dstpopup_title_background
-            color: "#f5f5f5"
-            anchors.left: parent.left
-            anchors.top: parent.top
-            height: 35
-            width: parent.width
-
-            Text {
-                text: qsTr("Storage")
-                horizontalAlignment: Text.AlignHCenter
-                anchors.fill: parent
-                anchors.topMargin: 10
-                font.family: roboto.name
-                font.bold: true
+        onSelected: {
+            if (!imageWriter.readyToWrite()) {
+                // TODO: show error ... ?
+                return
             }
-
-            Text {
-                text: "X"
-                Layout.alignment: Qt.AlignRight
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 25
-                anchors.topMargin: 10
-                font.family: roboto.name
-                font.bold: true
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        dstpopup.close()
-                    }
-                }
-            }
-        }
-        // line under title
-        Rectangle {
-            id: dstpopup_title_separator
-            color: "#afafaf"
-            width: parent.width
-            anchors.top: dstpopup_title_background.bottom
-            height: 1
-        }
-        ListView {
-            id: dstlist
-            model: driveListModel
-            delegate: dstdelegate
-
-            anchors.top: dstpopup_title_separator.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            boundsBehavior: Flickable.StopAtBounds
-            highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-            clip: true
-
-            Label {
-                anchors.fill: parent
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                visible: parent.count == 0
-                text: qsTr("No storage devices found")
-                font.bold: true
-            }
-
-            ScrollBar.vertical: ScrollBar {
-                width: 10
-                policy: dstlist.contentHeight > dstlist.height ? ScrollBar.AlwaysOn : ScrollBar.AsNeeded
-            }
-
-            Keys.onSpacePressed: {
-                if (currentIndex == -1)
-                    return
-                selectDstItem(currentItem)
-            }
-            Accessible.onPressAction: {
-                if (currentIndex == -1)
-                    return
-                selectDstItem(currentItem)
-            }
-            Keys.onEnterPressed: Keys.onSpacePressed(event)
-            Keys.onReturnPressed: Keys.onSpacePressed(event)
-        }
-    }
-
-    Component {
-        id: dstdelegate
-
-        Item {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            Layout.topMargin: 1
-            height: 61
-            Accessible.name: {
-                var txt = description+" - "+(size/1000000000).toFixed(1)+" gigabytes"
-                if (mountpoints.length > 0) {
-                    txt += qsTr("Mounted as %1").arg(mountpoints.join(", "))
-                }
-                return txt;
-            }
-            property string description: model.description
-            property string device: model.device
-            property string size: model.size
-
-            Rectangle {
-                id: dstbgrect
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 60
-
-                color: mouseOver ? "#f5f5f5" : "#ffffff"
-                property bool mouseOver: false
-
-                RowLayout {
-                    anchors.fill: parent
-
-                    Item {
-                        width: 25
-                    }
-
-                    Image {
-                        id: dstitem_image
-                        source: isUsb ? "icons/ic_usb_40px.svg" : isScsi ? "icons/ic_storage_40px.svg" : "icons/ic_sd_storage_40px.svg"
-                        verticalAlignment: Image.AlignVCenter
-                        fillMode: Image.Pad
-                        width: 64
-                        height: 60
-                    }
-
-                    Item {
-                        width: 25
-                    }
-
-                    ColumnLayout {
-                        Text {
-                            textFormat: Text.StyledText
-                            verticalAlignment: Text.AlignVCenter
-                            Layout.fillWidth: true
-                            font.family: roboto.name
-                            font.pointSize: 12
-                            color: isReadOnly ? "grey" : "";
-                            text: {
-                                var sizeStr = (size/1000000000).toFixed(1)+ " " + qsTr("GB");
-                                return description + " - " + sizeStr;
-                            }
-
-                        }
-                        Text {
-                            textFormat: Text.StyledText
-                            height: parent.height
-                            verticalAlignment: Text.AlignVCenter
-                            Layout.fillWidth: true
-                            font.family: roboto.name
-                            font.pointSize: 12
-                            color: "grey"
-                            text: {
-                                var txt= qsTr("Mounted as %1").arg(mountpoints.join(", "));
-                                if (isReadOnly) {
-                                    txt += " " + qsTr("[WRITE PROTECTED]")
-                                }
-                                return txt;
-                            }
-                        }
-                    }
-                }
-
-            }
-            Rectangle {
-                id: dstborderrect
-                anchors.top: dstbgrect.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 1
-                color: "#dcdcdc"
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                hoverEnabled: true
-
-                onEntered: {
-                    dstbgrect.mouseOver = true
-                }
-
-                onExited: {
-                    dstbgrect.mouseOver = false
-                }
-
-                onClicked: {
-                    selectDstItem(model)
-                }
-            }
+            confirmwritepopup.askForConfirmation()
         }
     }
 
@@ -373,16 +191,7 @@ ApplicationWindow {
         noButton: true
         title: qsTr("Warning")
         modal: true
-        onYes: {
-            mainForm.visible = false;
-            writingProcess.visible = true
-            langbarRect.visible = false
-            progressText.text = qsTr("Preparing to write...");
-            progressBar.indeterminate = true
-            progressBar.Material.accent = "#ffffff"
-            imageWriter.setVerifyEnabled(true)
-            imageWriter.startWrite()
-        }
+        onYes: startWrite()
 
         function askForConfirmation()
         {
@@ -413,70 +222,14 @@ ApplicationWindow {
     }
 
     function initialize() {
-        chkTelemtry.checked = imageWriter.getBoolSetting("telemetry")
-        var settings = imageWriter.getSavedCustomizationSettings()
-        fieldTimezone.model = imageWriter.getTimezoneList()
-        fieldKeyboardLayout.model = imageWriter.getKeymapLayoutList()
+        // TODO
+        // chkTelemtry.checked = imageWriter.getBoolSetting("telemetry")
+        const savedSettings = imageWriter.getSavedCustomizationSettings()
 
-        window.executionclient = fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value
-        window.consensusclient = fieldConsensusClient.model.get(fieldConsensusClient.currentIndex).value
+        singleModeForm.initialize(savedSettings)
+        // dualModeForm.initialize(savedSettings)
+        advancedSettings.initialize(savedSettings)
 
-        if (Object.keys(settings).length) {
-            hasSavedSettings = true
-        }
-        if ('hostname' in settings) {
-            fieldHostname.text = settings.hostname
-        }
-
-        if ('wifiSSID' in settings) {
-            optionspopup.wifiOptions.ssid = settings.wifiSSID
-            if ('wifiSSIDHidden' in settings && settings.wifiSSIDHidden) {
-                optionspopup.wifiOptions.ssidHidden.checked = true
-            }
-            optionspopup.wifiOptions.psassword = settings.wifiPassword
-            optionspopup.wifiOptions.wifiCountry = settings.wifiCountry
-            optionspopup.wifiOptions.checked = true
-        } else {
-            optionspopup.wifiOptions.wifiCountry = "GB"
-            optionspopup.wifiOptions.ssid = imageWriter.getSSID()
-            if (optionspopup.wifiOptions.ssid.length) {
-                optionspopup.wifiOptions.psassword = imageWriter.getPSK()
-            }
-        }
-        var tz;
-        if ('timezone' in settings) {
-            tz = settings.timezone
-        } else {
-            tz = imageWriter.getTimezone()
-        }
-        var tzidx = fieldTimezone.find(tz)
-        if (tzidx === -1) {
-            fieldTimezone.editText = tz
-        } else {
-            fieldTimezone.currentIndex = tzidx
-        }
-        if ('keyboardLayout' in settings) {
-            fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(settings.keyboardLayout)
-            if (fieldKeyboardLayout.currentIndex == -1) {
-                fieldKeyboardLayout.editText = settings.keyboardLayout
-            }
-        } else {
-            if (imageWriter.isEmbeddedMode())
-            {
-                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(imageWriter.getCurrentKeyboard())
-            }
-            else
-            {
-                /* Lacking an easy cross-platform to fetch keyboard layout
-                   from host system, just default to "gb" for people in
-                   UK time zone for now, and "us" for everyone else */
-                if (tz === "Europe/London") {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("gb")
-                } else {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("us")
-                }
-            }
-        }
         initialized = true
     }
 
@@ -506,8 +259,7 @@ ApplicationWindow {
         cloudinitrun += "- "+cmd+"\n"
     }
 
-    function applySettings()
-    {
+    function applySettings() {
         cmdline = ""
         config = ""
         firstrun = ""
@@ -516,16 +268,16 @@ ApplicationWindow {
         cloudinitwrite = ""
         cloudinitnetwork = ""
 
-        if (fieldHostname.length) {
+        if (hostname) {
             addFirstRun("CURRENT_HOSTNAME=`cat /etc/hostname | tr -d \" \\t\\n\\r\"`")
             addFirstRun("if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then")
-            addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_hostname "+fieldHostname.text)
+            addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_hostname "+hostname)
             addFirstRun("else")
-            addFirstRun("   echo "+fieldHostname.text+" >/etc/hostname")
-            addFirstRun("   sed -i \"s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\\t"+fieldHostname.text+"/g\" /etc/hosts")
+            addFirstRun("   echo "+hostname+" >/etc/hostname")
+            addFirstRun("   sed -i \"s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\\t"+hostname+"/g\" /etc/hosts")
             addFirstRun("fi")
 
-            addCloudInit("hostname: "+fieldHostname.text)
+            addCloudInit("hostname: "+hostname)
             addCloudInit("manage_etc_hosts: true")
             addCloudInit("packages:")
             addCloudInit("- avahi-daemon")
@@ -552,71 +304,74 @@ ApplicationWindow {
             addConfig("lighthouse=true")
         }
 
-        if (optionspopup.executionEndpointAddress.checked) {
-            addConfig(optionspopup.executionEndpointAddress.value)
+        if (executionEndpointAddress.length) {
+            addConfig(executionEndpointAddress)
         }
 
-        if (fieldExecutionPort.length && window.executionclient === 'geth') {
-            addConfig("geth_port="+fieldExecutionPort.text)
+        if (executionPort && executionClient === 'geth') {
+            addConfig("geth_port=" + executionPort)
         }
-        if (fieldConsensusPort.length) {
-            if (window.consensusclient === 'nimbus') {
-                addConfig("nimbus_port="+fieldConsensusPort.text)
-            } else if (window.consensusclient === 'lighthouse') {
-                addConfig("lighthouse_port=" + fieldConsensusPort.text)
+        if (consensusPort) {
+            if (consensusClient === 'nimbus') {
+                addConfig("nimbus_port="+consensusPort)
+            } else if (consensusClient === 'lighthouse') {
+                addConfig("lighthouse_port=" + consensusPort)
             }
         }
 
-        if (chkMonitoring.checked) {
-            addConfig("influxdb=true")
-            addConfig( "grafana=true")
+        // if (chkMonitoring.checked) {
+        //     addConfig("influxdb=true")
+        //     addConfig( "grafana=true")
+        // }
+
+        if (localeOptions.keyboardLayout) {
+
+            var kbdconfig = "XKBMODEL=\"pc105\"\n"
+            kbdconfig += "XKBLAYOUT=\""+localeOptions.keyboardLayout+"\"\n"
+            kbdconfig += "XKBVARIANT=\"\"\n"
+            kbdconfig += "XKBOPTIONS=\"\"\n"
+
+            addFirstRun("if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then")
+            addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_keymap "+escapeshellarg(localeOptions.keyboardLayout))
+            addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_timezone "+escapeshellarg(localeOptions.timezone))
+            addFirstRun("else")
+            addFirstRun("   rm -f /etc/localtime")
+            addFirstRun("   echo \""+localeOptions.timezone+"\" >/etc/timezone")
+            addFirstRun("   dpkg-reconfigure -f noninteractive tzdata")
+            addFirstRun("cat >/etc/default/keyboard <<'KBEOF'")
+            addFirstRun(kbdconfig)
+            addFirstRun("KBEOF")
+            addFirstRun("   dpkg-reconfigure -f noninteractive keyboard-configuration")
+            addFirstRun("fi")
+
+            addCloudInit("timezone: "+localeOptions.timezone)
+            addCloudInit("keyboard:")
+            addCloudInit("  model: pc105")
+            addCloudInit("  layout: \"" + localeOptions.keyboardLayout + "\"")
         }
 
-        var kbdconfig = "XKBMODEL=\"pc105\"\n"
-        kbdconfig += "XKBLAYOUT=\""+fieldKeyboardLayout.editText+"\"\n"
-        kbdconfig += "XKBVARIANT=\"\"\n"
-        kbdconfig += "XKBOPTIONS=\"\"\n"
-
-        addFirstRun("if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then")
-        addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_keymap "+escapeshellarg(fieldKeyboardLayout.editText))
-        addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_timezone "+escapeshellarg(fieldTimezone.editText))
-        addFirstRun("else")
-        addFirstRun("   rm -f /etc/localtime")
-        addFirstRun("   echo \""+fieldTimezone.editText+"\" >/etc/timezone")
-        addFirstRun("   dpkg-reconfigure -f noninteractive tzdata")
-        addFirstRun("cat >/etc/default/keyboard <<'KBEOF'")
-        addFirstRun(kbdconfig)
-        addFirstRun("KBEOF")
-        addFirstRun("   dpkg-reconfigure -f noninteractive keyboard-configuration")
-        addFirstRun("fi")
-
-        addCloudInit("timezone: "+fieldTimezone.editText)
-        addCloudInit("keyboard:")
-        addCloudInit("  model: pc105")
-        addCloudInit("  layout: \"" + fieldKeyboardLayout.editText + "\"")
-
-        if (optionspopup.wifiOptions.checked) {
-            var wpaconfig = "country="+optionspopup.wifiOptions.wifiCountry+"\n"
+        if (wifiOptions.wifiCountry) {
+            var wpaconfig = "country="+wifiOptions.wifiCountry+"\n"
             wpaconfig += "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n"
             wpaconfig += "ap_scan=1\n\n"
             wpaconfig += "update_config=1\n"
             wpaconfig += "network={\n"
-            if (optionspopup.wifiOptions.ssidHidden) {
+            if (wifiOptions.ssidHidden) {
                 wpaconfig += "\tscan_ssid=1\n"
             }
-            wpaconfig += "\tssid=\""+optionspopup.wifiOptions.ssid+"\"\n"
+            wpaconfig += "\tssid=\""+wifiOptions.ssid+"\"\n"
 
-            const isPassphrase = optionspopup.wifiOptions.password.length >= 8 &&
-                optionspopup.wifiOptions.password.length < 64
-            var cryptedPsk = isPassphrase ? imageWriter.pbkdf2(optionspopup.wifiOptions.password, optionspopup.wifiOptions.ssid)
-                : optionspopup.wifiOptions.password
+            const isPassphrase = wifiOptions.password.length >= 8 &&
+                wifiOptions.password.length < 64
+            var cryptedPsk = isPassphrase ? imageWriter.pbkdf2(wifiOptions.password, wifiOptions.ssid)
+                : wifiOptions.password
             wpaconfig += "\tpsk="+cryptedPsk+"\n"
             wpaconfig += "}\n"
 
             addFirstRun("if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then")
             addFirstRun("   /usr/lib/raspberrypi-sys-mods/imager_custom set_wlan "
-                +(optionspopup.wifiOptions.ssidHidden ? " -h " : "")
-                +escapeshellarg(optionspopup.wifiOptions.ssid)+" "+escapeshellarg(cryptedPsk)+" "+escapeshellarg(optionspopup.wifiOptions.wifiCountry))
+                +(wifiOptions.ssidHidden ? " -h " : "")
+                +escapeshellarg(wifiOptions.ssid)+" "+escapeshellarg(cryptedPsk)+" "+escapeshellarg(wifiOptions.wifiCountry))
             addFirstRun("else")
             addFirstRun("cat >/etc/wpa_supplicant/wpa_supplicant.conf <<'WPAEOF'")
             addFirstRun(wpaconfig)
@@ -636,13 +391,13 @@ ApplicationWindow {
             cloudinitnetwork += "    dhcp4: true\n"
             cloudinitnetwork += "    optional: true\n"
             cloudinitnetwork += "    access-points:\n"
-            cloudinitnetwork += "      \""+optionspopup.wifiOptions.ssid+"\":\n"
+            cloudinitnetwork += "      \""+wifiOptions.ssid+"\":\n"
             cloudinitnetwork += "        password: \""+cryptedPsk+"\"\n"
-            if (optionspopup.wifiOptions.ssidHidden) {
+            if (wifiOptions.ssidHidden) {
                 cloudinitnetwork += "        hidden: true\n"
             }
 
-            addCmdline("cfg80211.ieee80211_regdom="+optionspopup.wifiOptions.wifiCountry)
+            addCmdline("cfg80211.ieee80211_regdom="+wifiOptions.wifiCountry)
         }
 
         if (firstrun.length) {
@@ -667,118 +422,25 @@ ApplicationWindow {
         imageWriter.setImageCustomization(config, cmdline, firstrun, cloudinit, cloudinitnetwork)
     }
 
-    function saveSettings()
-    {
-        var settings = { };
-        if (fieldHostname.length) {
-            settings.hostname = fieldHostname.text
-        }
-        settings.timezone = fieldTimezone.editText
-        settings.keyboardLayout = fieldKeyboardLayout.editText
-
-        imageWriter.setSetting("telemetry", chkTelemtry.checked)
-        hasSavedSettings = true
-        saveSettingsSignal(settings)
+    function saveSettings() {
+        // TODO
+        // var settings = { };
+        // if (fieldHostname.length) {
+        //     settings.hostname = fieldHostname.text
+        // }
+        // settings.timezone = fieldTimezone.editText
+        // settings.keyboardLayout = fieldKeyboardLayout.editText
+        //
+        // imageWriter.setSetting("telemetry", chkTelemtry.checked)
+        // hasSavedSettings = true
+        // saveSettingsSignal(settings)
     }
 
-    /* Slots for signals imagewrite emits */
-    function onDownloadProgress(now,total) {
-        var newPos
-        if (total) {
-            newPos = now/(total+1)
-        } else {
-            newPos = 0
-        }
-        if (progressBar.value !== newPos) {
-            if (progressText.text === qsTr("Cancelling..."))
-                return
-
-            progressText.text = qsTr("Writing... %1%").arg(Math.floor(newPos*100))
-            progressBar.indeterminate = false
-            progressBar.value = newPos
-        }
-    }
-
-    function onVerifyProgress(now,total) {
-        var newPos
-        if (total) {
-            newPos = now/total
-        } else {
-            newPos = 0
-        }
-
-        if (progressBar.value !== newPos) {
-            if (cancelwritebutton.visible) {
-                cancelwritebutton.visible = false
-                cancelverifybutton.visible = true
-            }
-
-            if (progressText.text === qsTr("Finalizing..."))
-                return
-
-            progressText.text = qsTr("Verifying... %1%").arg(Math.floor(newPos*100))
-            progressBar.Material.accent = "#6cc04a"
-            progressBar.value = newPos
-        }
-    }
-
-    function onPreparationStatusUpdate(msg) {
-        progressText.text = qsTr("Preparing to write... (%1)").arg(msg)
-    }
-
-    function onOsListPrepared() {
-        fetchOSlist()
-    }
-
-    function reset() {
-        writingProcess.visible = false
-        mainForm.visible = true;
-    }
-
-    function onError(msg) {
-        msgpopup.title = qsTr("Error")
-        msgpopup.text = msg
-        msgpopup.openPopup()
-        reset()
-    }
-
-    function onSuccess() {
-        msgpopup.title = qsTr("Write Successful")
-        if (window.selectedos === qsTr("Erase"))
-            msgpopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(window.selecteddstdesc)
-        else if (imageWriter.isEmbeddedMode()) {
-            //msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
-            /* Just reboot to the installed OS */
-            Qt.quit()
-        }
-        else
-            msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(window.selectedos).arg(window.selecteddstdesc)
-        if (imageWriter.isEmbeddedMode()) {
-            msgpopup.continueButton = false
-            msgpopup.quitButton = true
-        }
-
-        msgpopup.openPopup()
-        imageWriter.setDst("")
-        reset()
-    }
 
     function onFileSelected(file) {
         imageWriter.setSrc(file)
         osbutton.text = imageWriter.srcFileName()
         ospopup.close()
-    }
-
-    function onCancelled() {
-        reset()
-    }
-
-    function onFinalizing() {
-        progressText.text = qsTr("Finalizing...")
-    }
-
-    function onNetworkInfo(msg) {
-        networkInfo.text = msg
     }
 
     function shuffle(arr) {
@@ -982,27 +644,9 @@ ApplicationWindow {
         window.selectedos = d.name
     }
 
-    function selectDstItem(d) {
-        if (d.isReadOnly) {
-            onError(qsTr("SD card is write protected.<br>Push the lock switch on the left side of the card upwards, and try again."))
-            return
-        }
-
-        dstpopup.close()
-        imageWriter.setDst(d.device, d.size)
-        window.selecteddstdesc = d.description
-        // dstbutton.text = d.description
-        // if (imageWriter.readyToWrite()) {
-        //     writebutton.enabled = true
-        // }
-
-        // TODO: next step
-
-        if (!imageWriter.readyToWrite()) {
-            // TODO: show error ... ?
-            return
-        }
-        confirmwritepopup.askForConfirmation()
-
+    function startWrite() {
+        stackView.push(writingPage)
+        imageWriter.setVerifyEnabled(true)
+        imageWriter.startWrite()
     }
 }

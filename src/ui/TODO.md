@@ -3,3 +3,4 @@
  - [ ] Dynamic OS list (URL)
  - [ ] Fields validations
  - [ ] CLI
+ - [ ] DropArea custom local file image

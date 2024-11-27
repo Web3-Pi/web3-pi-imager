@@ -87,7 +87,6 @@ Item {
                     y: -20
                 }
                 background: Rectangle {
-                    y: control.topPadding - control.padding
                     z: 1
                     color: "#00000000"
                     radius: 2
@@ -183,7 +182,6 @@ Item {
                     y: -20
                 }
                 background: Rectangle {
-                    y: control.topPadding - control.padding
                     color: "transparent"
                     radius: 2
                     border.color: "#9affffff"
@@ -290,9 +288,7 @@ Item {
         RowLayout {
             Layout.preferredHeight: 50
             width: parent.width
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: parent.left
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             ImButton {
                 id: advencedbutton

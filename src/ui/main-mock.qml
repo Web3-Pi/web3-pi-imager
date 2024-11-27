@@ -91,18 +91,22 @@ Window {
                 id: stackView
                 anchors.fill: parent
                 initialItem: ModeSelector {}
-
-                Component {
-                    id: singleModeForm
-                    SingleModeForm {}
-                }
-
-                Component {
-                    id: dualModeForm
-                    DualModeForm {}
-                }
             }
         }
+    }
+    SingleModeForm {
+        id: singleModeForm
+        visible: false
+    }
+
+    DualModeForm {
+        id: dualModeForm
+        visible: false
+    }
+
+    WritingPage {
+        id: writingPage
+        visible: false
     }
 
     AdvancedSettings {

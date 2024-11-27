@@ -5,6 +5,9 @@
         <file>SingleModeForm.qml</file>
         <file>DualModeForm.qml</file>
         <file>AdvancedSettings.qml</file>
+        <file>WritingPage.qml</file>
+        <file>StoragePopup.qml</file>
+        <file>MsgPopup.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>icons/rpi-imager.ico</file>
         <file>fonts/Roboto-Bold.ttf</file>
@@ -15,7 +18,6 @@
         <file>icons/ic_sd_storage_40px.svg</file>
         <file>icons/ic_storage_40px.svg</file>
         <file>icons/ic_usb_40px.svg</file>
-        <file>MsgPopup.qml</file>
         <file>icons/use_custom.png</file>
         <file>icons/erase.png</file>
         <file>icons/cat_raspberry_pi_os.png</file>

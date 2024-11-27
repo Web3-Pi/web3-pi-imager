@@ -40,7 +40,6 @@ Item {
                 }
                 ImComboBox {
                     id: fieldImageVersion
-                    model: ["v0.7.3 (latest)", "v0.7.2", "v0.7.1"]
                     background: Rectangle {
                         color: "white"
                         radius: 4
@@ -51,7 +50,9 @@ Item {
                     Layout.minimumWidth: 245
                     Layout.minimumHeight: 35
                     font.pointSize: 12
-
+                    model: ListModel {
+                        id: osListModel
+                    }
                 }
             }
 
@@ -65,12 +66,17 @@ Item {
                 }
                 ImComboBox {
                     id: fieldNetwork
-                    model: ["Ethereum Mainnet", "Ethereum Sepolia", "Ethereum Goerli"]
+                    model: ListModel {
+                        ListElement { text: "Ethereum Mainnet"; value: "mainnet" }
+                        ListElement { text: "Ethereum Sepolia"; value: "sepolia" }
+                        ListElement { text: "Ethereum Goerli"; value: "goerli" }
+                    }
+                    currentIndex: 0
+                    textRole: "text"
                     selectTextByMouse: true
                     Layout.minimumWidth: 245
                     Layout.minimumHeight: 35
                     font.pointSize: 12
-
                 }
             }
 
@@ -111,12 +117,16 @@ Item {
                 }
                 ImComboBox {
                     id: fieldExecutionClient
-                    model: ["Geth", "Disabled"]
                     selectTextByMouse: true
                     Layout.preferredWidth: 120
                     Layout.minimumHeight: 35
                     font.pointSize: 12
-
+                    model: ListModel {
+                        ListElement { text: "Geth"; value: "geth" }
+                        ListElement { text: "Disabled"; value: "disabled" }
+                    }
+                    textRole: "text"
+                    currentIndex: 0
                 }
                 ImText {
                     text: qsTr("Port:")
@@ -146,14 +156,11 @@ Item {
                     Layout.minimumHeight: 35
                     font.pointSize: 12
                     model: ListModel {
-                        ListElement { text: "Nimbus" }
-                        ListElement { text: "Lighthouse" }
+                        ListElement { text: "Nimbus"; value: "nimbus" }
+                        ListElement { text: "Lighthouse"; value: "lighthouse" }
                     }
-                    currentIndex: 1
+                    currentIndex: 0
                     textRole: "text"
-                    onActivated: {
-                        window.consensusclient = model.get(currentIndex).value
-                    }
 
                 }
                 ImText {
@@ -192,9 +199,7 @@ Item {
         RowLayout {
             Layout.preferredHeight: 50
             width: parent.width
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: parent.left
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             ImButton {
                 id: advencedbutton
@@ -242,7 +247,59 @@ Item {
                 text: qsTr("Next")
                 Layout.preferredWidth: 150
                 Layout.alignment: Qt.AlignRight
+                onClicked: startWritingSingleMode()
             }
+        }
+    }
+
+    ListModel {
+        id: osModel
+    }
+
+    function initialize(savedSettings) {
+        if (imageWriter.isOnline()) {
+            fetchOSList();
+        }
+        if ('hostname' in savedSettings) {
+            fieldHostname.text = savedSettings.hostname
+        }
+        // TODO
+    }
+
+    function applySettings() {
+        window.hostname = fieldHostname.text
+        window.defaultNetwork = fieldNetwork.model.get(fieldNetwork.currentIndex).value
+        window.executionClient = fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value
+        window.consensusClient = fieldConsensusClient.model.get(fieldConsensusClient.currentIndex).value
+        window.executionPort = fieldExecutionPort.text
+        window.consensusPort = fieldConsensusPort.text
+        window.selectOSitem(osModel.get(fieldImageVersion.currentIndex))
+        window.applySettings()
+    }
+
+    function startWritingSingleMode() {
+        applySettings()
+        window.saveSettings()
+        dstpopup.clientType = "execution"
+        dstpopup.open()
+    }
+
+    function fetchOSList() {
+        const osListString = imageWriter.getFilteredOSlist();
+        const osListJson = JSON.parse(osListString)
+        const osListParsed = oslistFromJson(osListJson)
+        if (osListParsed === false) {
+            // TODO: show error
+            return
+        }
+        osModel.clear()
+        osListModel.clear()
+        for (const i in osListParsed) {
+            osModel.append(osListParsed[i])
+            osListModel.append({ text: String(osListParsed[i].name) });
+        }
+        if (fieldImageVersion.count > 0) {
+            fieldImageVersion.currentIndex = 0
         }
     }
 }

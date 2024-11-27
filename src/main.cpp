@@ -349,14 +349,20 @@ int main(int argc, char *argv[])
         return -1;
 
     QObject *qmlwindow = engine.rootObjects().value(0);
-    qmlwindow->connect(&imageWriter, SIGNAL(downloadProgress(QVariant,QVariant)), qmlwindow, SLOT(onDownloadProgress(QVariant,QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(verifyProgress(QVariant,QVariant)), qmlwindow, SLOT(onVerifyProgress(QVariant,QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(preparationStatusUpdate(QVariant)), qmlwindow, SLOT(onPreparationStatusUpdate(QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(error(QVariant)), qmlwindow, SLOT(onError(QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(success()), qmlwindow, SLOT(onSuccess()));
+    QObject *writingPage = qmlwindow->findChild<QObject*>("writingPage");
+    if (writingPage) {
+        writingPage->connect(&imageWriter, SIGNAL(downloadProgress(QVariant,QVariant)), writingPage, SLOT(onDownloadProgress(QVariant,QVariant)));
+        writingPage->connect(&imageWriter, SIGNAL(verifyProgress(QVariant,QVariant)), writingPage, SLOT(onVerifyProgress(QVariant,QVariant)));
+        writingPage->connect(&imageWriter, SIGNAL(preparationStatusUpdate(QVariant)), writingPage, SLOT(onPreparationStatusUpdate(QVariant)));
+        writingPage->connect(&imageWriter, SIGNAL(error(QVariant)), writingPage, SLOT(onError(QVariant)));
+        writingPage->connect(&imageWriter, SIGNAL(success()), writingPage, SLOT(onSuccess()));
+        writingPage->connect(&imageWriter, SIGNAL(cancelled()), writingPage, SLOT(onCancelled()));
+        writingPage->connect(&imageWriter, SIGNAL(finalizing()), writingPage, SLOT(onFinalizing()));
+    } else {
+        qWarning() << "WritingPage not found!";
+    }
+
     qmlwindow->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), qmlwindow, SLOT(onFileSelected(QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(cancelled()), qmlwindow, SLOT(onCancelled()));
-    qmlwindow->connect(&imageWriter, SIGNAL(finalizing()), qmlwindow, SLOT(onFinalizing()));
     qmlwindow->connect(&imageWriter, SIGNAL(networkOnline()), qmlwindow, SLOT(fetchOSlist()));
     qmlwindow->connect(&imageWriter, SIGNAL(osListPrepared()), qmlwindow, SLOT(onOsListPrepared()));
     qmlwindow->connect(&imageWriter, SIGNAL(networkInfo(QVariant)), qmlwindow, SLOT(onNetworkInfo(QVariant)));

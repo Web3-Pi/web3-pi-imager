@@ -22,25 +22,6 @@ Window {
 
     FontLoader {id: roboto; source: "fonts/Roboto-Regular.ttf"}
 
-    Material.theme: Material.Light
-
-    property var wifiOptions: {
-        "checked": chkWifi.checked,
-        "ssid": fieldWifiSSID.text,
-        "password": fieldWifiPassword.text,
-        "ssidHidden": chkWifiSSIDHidden.checked,
-        "wifiCountry": fieldWifiCountry.currentText
-    }
-
-    property var executionEndpointAddress: {
-        "checked": chkExecutionEndpointAddress.checked,
-        "value": fieldExecutionEndpointAddress.text
-    }
-    property var cpuOverclock: {
-        "checked": chkOverclocking.checked,
-        "value": fieldOverclocking.currentText
-    }
-
     ColumnLayout {
         anchors.top: parent.top
         anchors.right: parent.right
@@ -51,13 +32,12 @@ Window {
         anchors.topMargin: 35
         anchors.fill: parent
         ColumnLayout {
-            anchors.fill: parent
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
             spacing: 10
 
             RowLayout {
-                anchors.right: parent.right
-                anchors.left: parent.left
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 spacing: 10
                 ImCheckBox {
                     id: chkExecutionEndpointAddress
@@ -93,8 +73,8 @@ Window {
 
             ColumnLayout {
                 RowLayout {
-                    anchors.right: parent.right
-                    anchors.left: parent.left
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
                     ImText {
                         text: qsTr("Time zone:")
                         Layout.leftMargin: 40
@@ -115,8 +95,8 @@ Window {
                     }
                 }
                 RowLayout {
-                    anchors.right: parent.right
-                    anchors.left: parent.left
+
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     ImText {
                         text: qsTr("Keyboard layout:")
                         Layout.leftMargin: 40
@@ -174,7 +154,6 @@ Window {
                 }
                 TextField {
                     id: fieldWifiSSID
-                    text: advancedSettings.wifiOptions.ssid
                     enabled: chkWifi.checked
                     Layout.minimumWidth: 220
                     selectByMouse: true
@@ -199,7 +178,6 @@ Window {
                 }
                 TextField {
                     id: fieldWifiPassword
-                    text: advancedSettings.wifiOptions.password
                     enabled: chkWifi.checked
                     Layout.minimumWidth: 220
                     selectByMouse: true
@@ -234,7 +212,6 @@ Window {
                     enabled: chkWifi.checked
                     Layout.columnSpan: 2
                     text: qsTr("Hidden SSID")
-                    checked: advancedSettings.wifiOptions.ssidHidden
                 }
                 // Spacer item
                 Item {
@@ -263,13 +240,8 @@ Window {
                     padding: 0
                     implicitHeight: 35
                     Layout.minimumWidth: 220
-                    Component.onCompleted: {
-                        fieldWifiCountry.currentIndex = fieldWifiCountry.find(advancedSettings.wifiOptions.wifiCountry)
-                    }
                 }
             }
-
-
 
         }
 
@@ -279,9 +251,7 @@ Window {
 
         RowLayout {
             id: buttonsRow
-            anchors.right: parent.right
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Item {
                 Layout.fillWidth: true
@@ -291,32 +261,13 @@ Window {
                 text: qsTr("SAVE")
                 Layout.preferredWidth: 150
                 onClicked: {
-                    if (chkExecutionEndpointAddress.checked && fieldExecutionEndpointAddress.text.length == 0)
-                    {
-                        fieldExecutionEndpointAddress.indicateError = true
-                        fieldExecutionEndpointAddress.forceActiveFocus()
-                        return
-                    }
-
-                    if (chkWifi.checked)
-                    {
-                        // Valid Wi-Fi PSKs are:
-                        // - 0 characters (indicating an open network)
-                        // - 8-63 characters (passphrase)
-                        // - 64 characters (hashed passphrase, as hex)
-                        if (fieldWifiPassword.text.length > 0 &&
-                            (fieldWifiPassword.text.length < 8 || fieldWifiPassword.text.length > 64))
-                        {
-                            fieldWifiPassword.indicateError = true
-                            fieldWifiPassword.forceActiveFocus()
-                        }
-                        if (fieldWifiSSID.text.length == 0)
-                        {
-                            fieldWifiSSID.indicateError = true
-                            fieldWifiSSID.forceActiveFocus()
-                        }
-                    }
+                    validate()
+                    save()
                     advancedSettings.close()
+                    // TODO
+                    // if (validate()) {
+                    //     advancedSettings.close()
+                    // }
                 }
             }
 
@@ -325,6 +276,118 @@ Window {
             }
         }
 
+    }
+
+    function validate(): bool {
+        let error = false;
+        if (chkExecutionEndpointAddress.checked && fieldExecutionEndpointAddress.text.length == 0) {
+            fieldExecutionEndpointAddress.indicateError = true
+            fieldExecutionEndpointAddress.forceActiveFocus()
+            error = true
+        }
+
+        if (chkWifi.checked) {
+            // Valid Wi-Fi PSKs are:
+            // - 0 characters (indicating an open network)
+            // - 8-63 characters (passphrase)
+            // - 64 characters (hashed passphrase, as hex)
+            if (fieldWifiPassword.text.length > 0 &&
+                (fieldWifiPassword.text.length < 8 || fieldWifiPassword.text.length > 64)) {
+                fieldWifiPassword.indicateError = true
+                fieldWifiPassword.forceActiveFocus()
+                error = true
+            }
+            if (fieldWifiSSID.text.length == 0) {
+                fieldWifiSSID.indicateError = true
+                fieldWifiSSID.forceActiveFocus()
+                error = true
+            }
+        }
+
+        return !!error
+    }
+
+    function initialize(savedSettings) {
+        fieldTimezone.model = imageWriter.getTimezoneList()
+        fieldKeyboardLayout.model = imageWriter.getKeymapLayoutList()
+
+        if ('wifiSSID' in savedSettings) {
+            fieldWifiSSID.text = savedSettings.wifiSSID
+            if ('wifiSSIDHidden' in savedSettings && savedSettings.wifiSSIDHidden) {
+                chkWifiSSIDHidden.checked = true
+            }
+            fieldWifiPassword.text = savedSettings.wifiPassword
+            fieldWifiCountry.currentIndex = fieldWifiCountry.find(savedSettings.wifiCountry)
+            if (fieldWifiCountry.currentIndex == -1) {
+                fieldWifiCountry.editText = savedSettings.wifiCountry
+            }
+            chkWifi.checked = true
+        } else {
+            fieldWifiCountry.currentIndex = fieldWifiCountry.find("GB")
+            fieldWifiSSID.text = imageWriter.getSSID()
+            if (fieldWifiSSID.text.length) {
+                fieldWifiPassword.text = imageWriter.getPSK()
+                if (fieldWifiPassword.text.length) {
+                    chkShowPassword.checked = false
+                    if (Qt.platform.os == "osx") {
+                        /* User indicated wifi must be prefilled */
+                        chkWifi.checked = true
+                    }
+                }
+            }
+        }
+
+        var tz;
+        if ('timezone' in savedSettings) {
+            chkLocale.checked = true
+            tz = savedSettings.timezone
+        } else {
+            tz = imageWriter.getTimezone()
+        }
+        var tzidx = fieldTimezone.find(tz)
+        if (tzidx === -1) {
+            fieldTimezone.editText = tz
+        } else {
+            fieldTimezone.currentIndex = tzidx
+        }
+        if ('keyboardLayout' in savedSettings) {
+            fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(savedSettings.keyboardLayout)
+            if (fieldKeyboardLayout.currentIndex == -1) {
+                fieldKeyboardLayout.editText = savedSettings.keyboardLayout
+            }
+        } else {
+            if (imageWriter.isEmbeddedMode())
+            {
+                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(imageWriter.getCurrentKeyboard())
+            }
+            else
+            {
+                /* Lacking an easy cross-platform to fetch keyboard layout
+                   from host system, just default to "gb" for people in
+                   UK time zone for now, and "us" for everyone else */
+                if (tz === "Europe/London") {
+                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("gb")
+                } else {
+                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("us")
+                }
+            }
+        }
+    }
+
+    function save() {
+        if (chkExecutionEndpointAddress.checked) {
+            window.executionEndpointAddress = fieldExecutionEndpointAddress.text
+        }
+        if (chkLocale.checked) {
+            window.localeOptions = fieldTimezone.editText
+            window.localeOptions.timezone = fieldKeyboardLayout.editText
+        }
+        if (chkWifi.checked) {
+            window.wifi.ssid = fieldWifiSSID.editText
+            window.wifi.password = fieldWifiPassword.editText
+            window.wifi.hidden = fieldWichkWifiSSIDHiddenfiSSID.checked
+            window.wifi.country = fieldWifiCountry.currentText
+        }
     }
 
     function open() {
