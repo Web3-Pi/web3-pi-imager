@@ -1299,6 +1299,7 @@ void ImageWriter::setImageCustomization(const QByteArray &config, const QByteArr
     qDebug() << "Custom cmdline.txt entries:" << cmdline;
     qDebug() << "Custom firstuse.sh:" << firstrun;
     qDebug() << "Cloudinit:" << cloudinit;
+    qDebug() << "CloudinitNetwork:" << cloudinitNetwork;
 }
 
 QString ImageWriter::crypt(const QByteArray &password)

@@ -13,7 +13,7 @@ Popup {
     id: msgpopup
     x: (parent.width-width)/2
     y: (parent.height-height)/2
-    width: 550
+    width: 460
     height: msgpopupbody.implicitHeight+150
     padding: 0
     closePolicy: Popup.CloseOnEscape

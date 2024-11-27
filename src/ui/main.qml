@@ -45,10 +45,12 @@ ApplicationWindow {
     property string executionEndpointAddress
     property string keyboardLayout
     property var localeOptions: {
+        "checked": false,
         "timezone": "",
         "keyboardLayout": "",
     }
     property var wifiOptions: {
+        "checked": false,
         "ssid": "",
         "password": "",
         "ssidHidden": false,
@@ -149,8 +151,7 @@ ApplicationWindow {
         objectName: "writingPage"
         visible: false
         onEnd: {
-            stackView.clear()
-            stackView.push(modeSelector)
+            stackView.pop()
         }
     }
 
@@ -324,7 +325,7 @@ ApplicationWindow {
         //     addConfig( "grafana=true")
         // }
 
-        if (localeOptions.keyboardLayout) {
+        if (localeOptions.checked) {
 
             var kbdconfig = "XKBMODEL=\"pc105\"\n"
             kbdconfig += "XKBLAYOUT=\""+localeOptions.keyboardLayout+"\"\n"
@@ -350,7 +351,7 @@ ApplicationWindow {
             addCloudInit("  layout: \"" + localeOptions.keyboardLayout + "\"")
         }
 
-        if (wifiOptions.wifiCountry) {
+        if (wifiOptions.checked) {
             var wpaconfig = "country="+wifiOptions.wifiCountry+"\n"
             wpaconfig += "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n"
             wpaconfig += "ap_scan=1\n\n"

@@ -379,14 +379,16 @@ Window {
             window.executionEndpointAddress = fieldExecutionEndpointAddress.text
         }
         if (chkLocale.checked) {
-            window.localeOptions = fieldTimezone.editText
-            window.localeOptions.timezone = fieldKeyboardLayout.editText
+            window.localeOptions.checked = true
+            window.localeOptions.timezone = fieldTimezone.editText
+            window.localeOptions.keyboardLayout = fieldKeyboardLayout.editText
         }
         if (chkWifi.checked) {
-            window.wifi.ssid = fieldWifiSSID.editText
-            window.wifi.password = fieldWifiPassword.editText
-            window.wifi.hidden = fieldWichkWifiSSIDHiddenfiSSID.checked
-            window.wifi.country = fieldWifiCountry.currentText
+            window.wifiOptions.checked = true
+            window.wifiOptions.ssid = fieldWifiSSID.text
+            window.wifiOptions.password = fieldWifiPassword.text
+            window.wifiOptions.hidden = chkWifiSSIDHidden.checked
+            window.wifiOptions.country = fieldWifiCountry.currentText
         }
     }
 
