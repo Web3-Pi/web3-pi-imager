@@ -4,9 +4,12 @@
         <file>ModeSelector.qml</file>
         <file>SingleModeForm.qml</file>
         <file>DualModeForm.qml</file>
+        <file>Settings.qml</file>
         <file>AdvancedSettings.qml</file>
         <file>WritingPage.qml</file>
         <file>StoragePopup.qml</file>
+        <file>InsertingPageSingle.qml</file>
+        <file>FinalPageSingle.qml</file>
         <file>MsgPopup.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>icons/rpi-imager.ico</file>
@@ -40,6 +43,10 @@
         <file>icons/cat_3d_printing.png</file>
         <file>icons/logo_stacked_imager.png</file>
         <file>icons/logo_web3_pi_imager.png</file>
+        <file>icons/cat_digital_signage.png</file>
+        <file>icons/writing.gif</file>
+        <file>icons/success.png</file>
+        <file>icons/inserting.png</file>
         <file>components/ImButton.qml</file>
         <file>components/ImButtonRed.qml</file>
         <file>components/ImCheckBox.qml</file>
@@ -47,6 +54,7 @@
         <file>components/ImText.qml</file>
         <file>components/ImTextField.qml</file>
         <file>components/ImComboBox.qml</file>
-        <file>icons/cat_digital_signage.png</file>
+        <file>components/ImVersionSelector.qml</file>
+        <file>components/ImNetworkSelector.qml</file>
     </qresource>
 </RCC>

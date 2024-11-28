@@ -12,6 +12,7 @@ import "components"
 
 Item {
     id: singleModeForm
+    
     ColumnLayout {
         id: mainForm
         anchors.top: parent.top
@@ -38,21 +39,8 @@ Item {
                 Item {
                     Layout.fillWidth: true
                 }
-                ImComboBox {
+                ImVersionSelector {
                     id: fieldImageVersion
-                    background: Rectangle {
-                        color: "white"
-                        radius: 4
-                        border.color: "#9affffff"
-                        border.width: 1
-                    }
-                    selectTextByMouse: true
-                    Layout.minimumWidth: 245
-                    Layout.minimumHeight: 35
-                    font.pointSize: 12
-                    model: ListModel {
-                        id: osListModel
-                    }
                 }
             }
 
@@ -64,27 +52,16 @@ Item {
                 Item {
                     Layout.fillWidth: true
                 }
-                ImComboBox {
+                ImNetworkSelector {
                     id: fieldNetwork
-                    model: ListModel {
-                        ListElement { text: "Ethereum Mainnet"; value: "mainnet" }
-                        ListElement { text: "Ethereum Sepolia"; value: "sepolia" }
-                        ListElement { text: "Ethereum Goerli"; value: "goerli" }
-                    }
-                    currentIndex: 0
-                    textRole: "text"
-                    selectTextByMouse: true
-                    Layout.minimumWidth: 245
-                    Layout.minimumHeight: 35
-                    font.pointSize: 12
                 }
+
             }
 
             RowLayout {
                 ImText {
                     text: qsTr("Set Hostname:")
                     rightPadding: 5
-
                 }
                 Item {
                     Layout.fillWidth: true
@@ -252,14 +229,7 @@ Item {
         }
     }
 
-    ListModel {
-        id: osModel
-    }
-
     function initialize(savedSettings) {
-        if (imageWriter.isOnline()) {
-            fetchOSList();
-        }
         if ('hostname' in savedSettings) {
             fieldHostname.text = savedSettings.hostname
         }
@@ -267,40 +237,22 @@ Item {
     }
 
     function applySettings() {
-        window.hostname = fieldHostname.text
-        window.defaultNetwork = fieldNetwork.model.get(fieldNetwork.currentIndex).value
-        window.executionClient = fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value
-        window.consensusClient = fieldConsensusClient.model.get(fieldConsensusClient.currentIndex).value
-        window.executionPort = fieldExecutionPort.text
-        window.consensusPort = fieldConsensusPort.text
-        window.selectOSitem(osModel.get(fieldImageVersion.currentIndex))
-        window.applySettings()
+        settings.hostname = fieldHostname.text
+        settings.defaultNetwork = fieldNetwork.model.get(fieldNetwork.currentIndex).value
+        console.log('EXE CLIENT', fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value)
+        settings.executionClient = fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value
+        settings.consensusClient = fieldConsensusClient.model.get(fieldConsensusClient.currentIndex).value
+        settings.executionPort = fieldExecutionPort.text
+        settings.consensusPort = fieldConsensusPort.text
+        settings.selectOs(fieldImageVersion.getSelectedOs())
+        settings.apply()
     }
 
     function startWritingSingleMode() {
         applySettings()
-        window.saveSettings()
+        settings.save()
         dstpopup.clientType = "execution"
         dstpopup.open()
-    }
-
-    function fetchOSList() {
-        const osListString = imageWriter.getFilteredOSlist();
-        const osListJson = JSON.parse(osListString)
-        const osListParsed = oslistFromJson(osListJson)
-        if (osListParsed === false) {
-            // TODO: show error
-            return
-        }
-        osModel.clear()
-        osListModel.clear()
-        for (const i in osListParsed) {
-            osModel.append(osListParsed[i])
-            osListModel.append({ text: String(osListParsed[i].name) });
-        }
-        if (fieldImageVersion.count > 0) {
-            fieldImageVersion.currentIndex = 0
-        }
     }
 }
 

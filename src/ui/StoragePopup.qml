@@ -228,8 +228,31 @@ Popup {
         }
         dstpopup.close()
         imageWriter.setDst(d.device, d.size)
-        window.selecteddstdesc = d.description
+        settings.selectedDsc = d.description
         selected()
-
     }
+
+    Timer {
+        /* Verify if default drive is in our list after 100 ms */
+        id: setDefaultDest
+        property string drive : ""
+        interval: 100
+        onTriggered: {
+            for (var i = 0; i < driveListModel.rowCount(); i++)
+            {
+                /* FIXME: there should be a better way to iterate drivelist than
+                   fetch data by numeric role number */
+                if (driveListModel.data(driveListModel.index(i,0), 0x101) === drive) {
+                    selectDstItem({
+                        device: drive,
+                        description: driveListModel.data(driveListModel.index(i,0), 0x102),
+                        size: driveListModel.data(driveListModel.index(i,0), 0x103),
+                        readonly: false
+                    })
+                    break
+                }
+            }
+        }
+    }
+
 }

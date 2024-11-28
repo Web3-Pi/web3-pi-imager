@@ -31,7 +31,7 @@ Item {
         ColumnLayout {
             id: columnLayoutProgress
             spacing: 0
-            Layout.topMargin: 30
+            Layout.topMargin: 80
 
             ImText {
                 id: progressText
@@ -58,107 +58,19 @@ Item {
         Item {
             Layout.fillHeight: true
         }
-        ColumnLayout {
-            id: infoText
+
+        Item {
             Layout.alignment: Qt.AlignCenter
-            spacing: 25
-            Column {
-                spacing: 5
-                Layout.bottomMargin: 0
-
-                ImText {
-                    text: "After installation, you can log in via ssh using credentials"
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "ethereum:ethereum"
-                    color: "#fff"
-                    font.pointSize: 14
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
-
-            Column {
+            width: 150
+            height: 150
+            AnimatedImage {
+                anchors.fill: parent
+                source: "icons/writing.gif"
+                clip: true
                 Layout.alignment: Qt.AlignCenter
-                spacing: 5
-
-                ImText {
-                    text: "You can monitor the installation process at"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "<a href='http://hostname.local' style='color: white;'>http://hostname.local</a>"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 14
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    HoverHandler {
-                        cursorShape: Qt.PointingHandCursor
-                    }
-                }
-            }
-
-            Column {
-                Layout.alignment: Qt.AlignCenter
-                spacing: 5
-
-                ImText {
-                    text: "After correct installation you can monitor your node at"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "<a href='http://hostname.local:3000' style='color: white;'>http://hostname.local:3000</a>"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 14
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
-
-            Column {
-                Layout.alignment: Qt.AlignCenter
-                spacing: 5
-
-                ImText {
-                    text: "You can find more information at"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "<a href='https://www.web3pi.io' style='color: white;'>https://www.web3pi.io</a>"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 14
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
             }
         }
+
 
         Item {
             Layout.fillHeight: true
@@ -253,22 +165,22 @@ Item {
     }
 
     function onSuccess() {
-        msgpopup.title = qsTr("Write Successful")
-        if (window.selectedos === qsTr("Erase"))
-            msgpopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(window.selecteddstdesc)
-        else if (imageWriter.isEmbeddedMode()) {
-            //msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
-            /* Just reboot to the installed OS */
-            Qt.quit()
-        }
-        else
-            msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(window.selectedos).arg(window.selecteddstdesc)
-        if (imageWriter.isEmbeddedMode()) {
-            msgpopup.continueButton = false
-            msgpopup.quitButton = true
-        }
+        // msgpopup.title = qsTr("Write Successful")
+        // if (settings.selectedDsc === qsTr("Erase"))
+        //     msgpopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(settings.selectedDsc)
+        // else if (imageWriter.isEmbeddedMode()) {
+        //     //msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
+        //     /* Just reboot to the installed OS */
+        //     Qt.quit()
+        // }
+        // else
+        //     msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(settings.selectedOS).arg(settings.selectedDsc)
+        // if (imageWriter.isEmbeddedMode()) {
+        //     msgpopup.continueButton = false
+        //     msgpopup.quitButton = true
+        // }
 
-        msgpopup.openPopup()
+        // msgpopup.openPopup()
         imageWriter.setDst("")
         end()
     }

@@ -376,19 +376,19 @@ Window {
 
     function save() {
         if (chkExecutionEndpointAddress.checked) {
-            window.executionEndpointAddress = fieldExecutionEndpointAddress.text
+            settings.executionEndpointAddress = fieldExecutionEndpointAddress.text
         }
         if (chkLocale.checked) {
-            window.localeOptions.checked = true
-            window.localeOptions.timezone = fieldTimezone.editText
-            window.localeOptions.keyboardLayout = fieldKeyboardLayout.editText
+            settings.localeOptions.checked = true
+            settings.localeOptions.timezone = fieldTimezone.editText
+            settings.localeOptions.keyboardLayout = fieldKeyboardLayout.editText
         }
         if (chkWifi.checked) {
-            window.wifiOptions.checked = true
-            window.wifiOptions.ssid = fieldWifiSSID.text
-            window.wifiOptions.password = fieldWifiPassword.text
-            window.wifiOptions.hidden = chkWifiSSIDHidden.checked
-            window.wifiOptions.country = fieldWifiCountry.currentText
+            settings.wifiOptions.checked = true
+            settings.wifiOptions.ssid = fieldWifiSSID.text
+            settings.wifiOptions.password = fieldWifiPassword.text
+            settings.wifiOptions.hidden = chkWifiSSIDHidden.checked
+            settings.wifiOptions.country = fieldWifiCountry.currentText
         }
     }
 

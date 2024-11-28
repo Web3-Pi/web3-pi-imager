@@ -90,7 +90,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: ModeSelector {}
+                initialItem: FinalPageSingle {}
             }
         }
     }
@@ -111,5 +111,18 @@ Window {
 
     AdvancedSettings {
         id: advancedSettings
+    }
+    Settings {
+        id: settings
+    }
+
+    FinalPageSingle {
+        id: finalPageSingle
+        visible: false
+    }
+
+    InsertingPageSingle {
+        id: insertingPageSingle
+        visible: false
     }
 }
