@@ -100,6 +100,7 @@ Item {
             text: qsTr("Next")
             onClicked: {
                 stackView.push(finalPageSingle)
+                finalPageSingle.startResolving();
             }
         }
     }

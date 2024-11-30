@@ -90,7 +90,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: FinalPageSingle {}
+                initialItem: WritingPage {}
             }
         }
     }

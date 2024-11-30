@@ -77,6 +77,10 @@ void DriveListModel::processDriveList(std::vector<Drivelist::DeviceDescriptor> l
         if (i.size == 0)
             continue;
 
+        // Skip devices larger than 300GB
+        if (i.size > 300ULL * 1024 * 1024 * 1024)
+            continue;
+
 #ifdef Q_OS_DARWIN
         if (i.isVirtual)
             continue;

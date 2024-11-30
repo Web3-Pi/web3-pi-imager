@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include "imagewriter.h"
+#include "hostresolver.h"
 #include "drivelistmodel.h"
 #include "networkaccessmanagerfactory.h"
 #include "cli.h"
@@ -193,6 +194,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QString customQm;
     QSettings settings;
+    HostResolver hostResolver;
 
     /* Parse commandline arguments (if any) */
     QString customRepo;
@@ -342,6 +344,7 @@ int main(int argc, char *argv[])
     imageWriter.setEngine(&engine);
     engine.setNetworkAccessManagerFactory(&namf);
     engine.rootContext()->setContextProperty("imageWriter", &imageWriter);
+    engine.rootContext()->setContextProperty("hostResolver", &hostResolver);
     engine.rootContext()->setContextProperty("driveListModel", imageWriter.getDriveList());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
@@ -350,6 +353,7 @@ int main(int argc, char *argv[])
 
     QObject *qmlwindow = engine.rootObjects().value(0);
     QObject *writingPage = qmlwindow->findChild<QObject*>("writingPage");
+    QObject *finalPageSingle = qmlwindow->findChild<QObject*>("finalPageSingle");
     if (writingPage) {
         writingPage->connect(&imageWriter, SIGNAL(downloadProgress(QVariant,QVariant)), writingPage, SLOT(onDownloadProgress(QVariant,QVariant)));
         writingPage->connect(&imageWriter, SIGNAL(verifyProgress(QVariant,QVariant)), writingPage, SLOT(onVerifyProgress(QVariant,QVariant)));
@@ -360,6 +364,12 @@ int main(int argc, char *argv[])
         writingPage->connect(&imageWriter, SIGNAL(finalizing()), writingPage, SLOT(onFinalizing()));
     } else {
         qWarning() << "WritingPage not found!";
+    }
+
+    if (finalPageSingle) {
+        finalPageSingle->connect(&hostResolver, SIGNAL(hostResolved(QVariant,QVariant)), finalPageSingle, SLOT(onHostResolved(QVariant,QVariant)));
+    } else {
+        qWarning() << "FinalPageSingle not found!";
     }
 
     qmlwindow->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), qmlwindow, SLOT(onFileSelected(QVariant)));

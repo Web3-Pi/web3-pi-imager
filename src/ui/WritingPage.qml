@@ -59,6 +59,19 @@ Item {
             Layout.fillHeight: true
         }
 
+        ImText {
+            text: "Now the image is written for Single Mode device\n(execution and consensus client)"
+            color: "#fff"
+            font.pointSize: 15
+            font.italic: true
+            horizontalAlignment: Text.AlignHCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Item {
+            Layout.fillHeight: true
+        }
+
+
         Item {
             Layout.alignment: Qt.AlignCenter
             width: 150
@@ -84,7 +97,6 @@ Item {
             id: cancelwritebutton
             text: qsTr("CANCEL WRITE")
             onClicked: {
-                enabled = false
                 progressText.text = qsTr("Cancelling...")
                 imageWriter.cancelWrite()
             }
@@ -98,7 +110,6 @@ Item {
             id: cancelverifybutton
             text: qsTr("CANCEL VERIFY")
             onClicked: {
-                enabled = false
                 progressText.text = qsTr("Finalizing...")
                 imageWriter.setVerifyEnabled(false)
             }
@@ -161,7 +172,7 @@ Item {
         msgpopup.title = qsTr("Error")
         msgpopup.text = msg
         msgpopup.openPopup()
-        end()
+        stackView.pop()
     }
 
     function onSuccess() {
@@ -185,13 +196,9 @@ Item {
         end()
     }
 
-
-
     function onCancelled() {
-        end()
+        stackView.pop()
     }
-
-
 
     function onFinalizing() {
         progressText.text = qsTr("Finalizing...")

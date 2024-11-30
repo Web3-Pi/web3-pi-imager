@@ -46,6 +46,7 @@
         <file>icons/cat_digital_signage.png</file>
         <file>icons/writing.gif</file>
         <file>icons/success.png</file>
+        <file>icons/warning.png</file>
         <file>icons/inserting.png</file>
         <file>components/ImButton.qml</file>
         <file>components/ImButtonRed.qml</file>

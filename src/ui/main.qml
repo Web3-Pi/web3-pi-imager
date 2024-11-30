@@ -124,6 +124,7 @@ ApplicationWindow {
 
     FinalPageSingle {
         id: finalPageSingle
+        objectName: "finalPageSingle"
         visible: false
     }
 
