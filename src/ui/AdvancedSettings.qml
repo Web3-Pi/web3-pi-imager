@@ -20,8 +20,6 @@ Window {
 
     title: qsTr("Advanced settings")
 
-    FontLoader {id: roboto; source: "fonts/Roboto-Regular.ttf"}
-
     ColumnLayout {
         anchors.top: parent.top
         anchors.right: parent.right

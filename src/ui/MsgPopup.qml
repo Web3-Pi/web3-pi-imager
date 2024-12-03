@@ -10,17 +10,17 @@ import QtQuick.Controls.Material 2.2
 import "components"
 
 Popup {
-    id: msgpopup
+    id: msgPopup
     x: (parent.width-width)/2
     y: (parent.height-height)/2
     width: 460
-    height: msgpopupbody.implicitHeight+150
+    height: msgPopupbody.implicitHeight+150
     padding: 0
     closePolicy: Popup.CloseOnEscape
     modal: true
 
-    property alias title: msgpopupheader.text
-    property alias text: msgpopupbody.text
+    property alias title: msgPopupheader.text
+    property alias text: msgPopupbody.text
     property bool continueButton: true
     property bool quitButton: false
     property bool yesButton: false
@@ -30,7 +30,7 @@ Popup {
 
     // background of title
     Rectangle {
-        id: msgpopup_title_background
+        id: msgPopup_title_background
         color: "#f5f5f5"
         anchors.left: parent.left
         anchors.top: parent.top
@@ -38,7 +38,7 @@ Popup {
         width: parent.width
 
         Text {
-            id: msgpopupheader
+            id: msgPopupheader
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
             anchors.topMargin: 10
@@ -61,29 +61,29 @@ Popup {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    msgpopup.close()
+                    msgPopup.close()
                 }
             }
         }
     }
     // line under title
     Rectangle {
-        id: msgpopup_title_separator
+        id: msgPopup_title_separator
         color: "#afafaf"
         width: parent.width
-        anchors.top: msgpopup_title_background.bottom
+        anchors.top: msgPopup_title_background.bottom
         height: 1
     }
 
     ColumnLayout {
         spacing: 20
-        anchors.top: msgpopup_title_separator.bottom
+        anchors.top: msgPopup_title_separator.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
         Text {
-            id: msgpopupbody
+            id: msgPopupbody
             font.pointSize: 12
             wrapMode: Text.Wrap
             textFormat: Text.StyledText
@@ -108,27 +108,27 @@ Popup {
             ImButtonRed {
                 text: qsTr("NO")
                 onClicked: {
-                    msgpopup.close()
-                    msgpopup.no()
+                    msgPopup.close()
+                    msgPopup.no()
                 }
-                visible: msgpopup.noButton
+                visible: msgPopup.noButton
             }
 
             ImButtonRed {
                 text: qsTr("YES")
                 onClicked: {
-                    msgpopup.close()
-                    msgpopup.yes()
+                    msgPopup.close()
+                    msgPopup.yes()
                 }
-                visible: msgpopup.yesButton
+                visible: msgPopup.yesButton
             }
 
             ImButtonRed {
                 text: qsTr("CONTINUE")
                 onClicked: {
-                    msgpopup.close()
+                    msgPopup.close()
                 }
-                visible: msgpopup.continueButton
+                visible: msgPopup.continueButton
             }
 
             ImButtonRed {
@@ -137,7 +137,7 @@ Popup {
                     Qt.quit()
                 }
                 font.family: roboto.name
-                visible: msgpopup.quitButton
+                visible: msgPopup.quitButton
             }
         }
     }
@@ -145,6 +145,6 @@ Popup {
     function openPopup() {
         open()
         // trigger screen reader to speak out message
-        msgpopupbody.forceActiveFocus()
+        msgPopupbody.forceActiveFocus()
     }
 }

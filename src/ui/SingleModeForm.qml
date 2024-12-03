@@ -12,6 +12,8 @@ import "components"
 
 Item {
     id: singleModeForm
+
+    signal next()
     
     ColumnLayout {
         id: mainForm
@@ -186,9 +188,9 @@ Item {
                 Material.background: "#cd2355"
                 Material.foreground: "#ffffff"
                 onClicked: {
-                    advancedSettings.screen = window.screen
-                    advancedSettings.x = window.x + window.width / 2 - advancedSettings.width / 2
-                    advancedSettings.y = window.y + window.height / 2 - advancedSettings.height / 2
+                    advancedSettings.screen = mainWindow.screen
+                    advancedSettings.x = mainWindow.x + mainWindow.width / 2 - advancedSettings.width / 2
+                    advancedSettings.y = mainWindow.y + mainWindow.height / 2 - advancedSettings.height / 2
                     advancedSettings.open()
                 }
             }
@@ -224,7 +226,10 @@ Item {
                 text: qsTr("Next")
                 Layout.preferredWidth: 150
                 Layout.alignment: Qt.AlignRight
-                onClicked: startWritingSingleMode()
+                onClicked: {
+                    save()
+                    next()
+                }
             }
         }
     }
@@ -236,23 +241,16 @@ Item {
         // TODO
     }
 
-    function applySettings() {
+    function save() {
         settings.hostname = fieldHostname.text
         settings.defaultNetwork = fieldNetwork.model.get(fieldNetwork.currentIndex).value
-        console.log('EXE CLIENT', fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value)
         settings.executionClient = fieldExecutionClient.model.get(fieldExecutionClient.currentIndex).value
         settings.consensusClient = fieldConsensusClient.model.get(fieldConsensusClient.currentIndex).value
         settings.executionPort = fieldExecutionPort.text
         settings.consensusPort = fieldConsensusPort.text
         settings.selectOs(fieldImageVersion.getSelectedOs())
         settings.apply()
-    }
-
-    function startWritingSingleMode() {
-        applySettings()
         settings.save()
-        dstpopup.clientType = "execution"
-        dstpopup.open()
     }
 }
 

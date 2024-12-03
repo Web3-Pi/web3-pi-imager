@@ -11,7 +11,7 @@ import QtQuick.Controls.Material 2.2
 import "components"
 
 ApplicationWindow {
-    id: window
+    id: mainWindow
     visible: true
 
     width: imageWriter.isEmbeddedMode() ? -1 : 480
@@ -23,7 +23,6 @@ ApplicationWindow {
 
     signal saveSettingsSignal(var settings)
 
-    property bool dualMode: false;
     property bool initialized: false
     property bool hasSavedSettings: false
 
@@ -35,7 +34,7 @@ ApplicationWindow {
         if (!initialized) {
             initialize()
             if (imageWriter.hasSavedCustomizationSettings()) {
-                applySettings()
+                settings.apply()
             }
         }
     }
@@ -57,28 +56,28 @@ ApplicationWindow {
 
         Rectangle {
             id: logoContainer
-            implicitHeight: window.height/5
+            implicitHeight: mainWindow.height/5
 
             Image {
                 id: image
                 source: "icons/logo_web3_pi_imager.png"
-                width: window.width
-                height: window.height / 5
+                width: mainWindow.width
+                height: mainWindow.height / 5
                 fillMode: Image.PreserveAspectFit
                 horizontalAlignment: Image.AlignLeft
                 anchors.left: logoContainer.left
                 anchors.leftMargin: 20
                 anchors.top: logoContainer.top
                 anchors.bottom: logoContainer.bottom
-                anchors.topMargin: window.height / 40
-                anchors.bottomMargin: window.height / 40
+                anchors.topMargin: mainWindow.height / 40
+                anchors.bottomMargin: mainWindow.height / 40
             }
         }
 
         Rectangle {
             color: "#e51763"
-            implicitWidth: window.width
-            implicitHeight: window.height * (1 - 1/5)
+            implicitWidth: mainWindow.width
+            implicitHeight: mainWindow.height * (1 - 1/5)
 
             StackView {
                 id: stackView
@@ -101,11 +100,24 @@ ApplicationWindow {
     SingleModeForm {
         id: singleModeForm
         visible: false
+        onNext: {
+            chooseStorage("single")
+        }
     }
 
     DualModeForm {
         id: dualModeForm
         visible: false
+        onNext: {
+            chooseStorage("execution")
+        }
+    }
+
+    StoragePopup {
+        id: storagePopup
+        onSelected: {
+            startWrite(mode)
+        }
     }
 
     WritingPage {
@@ -113,68 +125,33 @@ ApplicationWindow {
         objectName: "writingPage"
         visible: false
         onEnd: {
-            stackView.push(insertingPageSingle)
+            afterWriting(mode)
         }
     }
 
-    InsertingPageSingle {
-        id: insertingPageSingle
+    AfterWritingPageSingle {
+        id: afterWritingPageSingle
         visible: false
     }
 
-    FinalPageSingle {
-        id: finalPageSingle
-        objectName: "finalPageSingle"
+    AfterWritingPageExecution {
+        id: afterWritingPageExecution
         visible: false
     }
 
-    StoragePopup {
-        id: dstpopup
-        onSelected: {
-            if (!imageWriter.readyToWrite()) {
-                // TODO: show error ... ?
-                return
-            }
-            confirmwritepopup.askForConfirmation()
-        }
+    AfterWritingPageConsensus {
+        id: afterWritingPageConsensus
+        visible: false
+    }
+
+    HostResolverPage {
+        id: hostResolverPage
+        objectName: "hostResolverPage"
+        visible: false
     }
 
     MsgPopup {
-        id: msgpopup
-        onOpened: {
-            forceActiveFocus()
-        }
-    }
-
-    MsgPopup {
-        id: quitpopup
-        continueButton: false
-        yesButton: true
-        noButton: true
-        title: qsTr("Are you sure you want to quit?")
-        text: qsTr("Raspberry Pi Imager is still busy.<br>Are you sure you want to quit?")
-        onYes: {
-            Qt.quit()
-        }
-    }
-
-    MsgPopup {
-        id: confirmwritepopup
-        continueButton: false
-        yesButton: true
-        noButton: true
-        title: qsTr("Warning")
-        modal: true
-        onYes: startWrite()
-
-        function askForConfirmation() {
-            text = qsTr("All existing data on '%1' will be erased.<br>Are you sure you want to continue?").arg(settings.selectedDsc)
-            openPopup()
-        }
-    }
-
-    MsgPopup {
-        id: updatepopup
+        id: updatePopup
         continueButton: false
         yesButton: true
         noButton: true
@@ -186,21 +163,58 @@ ApplicationWindow {
         }
     }
 
+    MsgPopup {
+        id: warningPopup
+        continueButton: false
+        yesButton: false
+        noButton: false
+        constinueButton: true
+        title: qsTr("Warning")
+    }
+
+
     function initialize() {
         // TODO
         // chkTelemtry.checked = imageWriter.getBoolSetting("telemetry")
         const savedSettings = imageWriter.getSavedCustomizationSettings()
 
         singleModeForm.initialize(savedSettings)
-        // dualModeForm.initialize(savedSettings)
+        dualModeForm.initialize(savedSettings)
         advancedSettings.initialize(savedSettings)
 
         initialized = true
+        onNetworkInfo("error bla bla")
     }
 
-    function startWrite() {
+    function chooseStorage(mode) {
+        storagePopup.mode = mode
+        storagePopup.open()
+    }
+
+    function startWrite(mode) {
+        writingPage.mode = mode
         stackView.push(writingPage)
         imageWriter.setVerifyEnabled(true)
         imageWriter.startWrite()
+    }
+
+    function afterWriting(mode) {
+        console.log("After writing, mode=", mode)
+        if (mode === "single") {
+            stackView.push(afterWritingPageSingle)
+        } else if (mode === "execution") {
+            settings.hostname = settings.hostnameConsesnus
+            settings.apply()
+            settings.save()
+            stackView.pop()
+            stackView.push(afterWritingPageExecution)
+        } else if (mode === "consensus") {
+            stackView.push(afterWritingPageConsensus)
+        }
+    }
+
+    function onNetworkInfo(msg) {
+        warningPopup.text = qsTr("No internet connection\n%1").arg(msg)
+        warningPopup.openPopup()
     }
 }

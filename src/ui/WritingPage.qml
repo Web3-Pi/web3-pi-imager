@@ -13,9 +13,9 @@ import "components"
 Item {
     id: writingPage
 
-    property bool isDualMode: false
+    property string mode
 
-    signal end()
+    signal end(string mode)
 
     ColumnLayout {
         id: writingProcess
@@ -60,12 +60,12 @@ Item {
         }
 
         ImText {
-            text: "Now the image is written for Single Mode device\n(execution and consensus client)"
+            text: getInfoText()
             color: "#fff"
             font.pointSize: 15
             font.italic: true
             horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignCenter
         }
         Item {
             Layout.fillHeight: true
@@ -169,31 +169,31 @@ Item {
     }
 
     function onError(msg) {
-        msgpopup.title = qsTr("Error")
-        msgpopup.text = msg
-        msgpopup.openPopup()
+        msgPopup.title = qsTr("Error")
+        msgPopup.text = msg
+        msgPopup.openPopup()
         stackView.pop()
     }
 
     function onSuccess() {
-        // msgpopup.title = qsTr("Write Successful")
+        // msgPopup.title = qsTr("Write Successful")
         // if (settings.selectedDsc === qsTr("Erase"))
-        //     msgpopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(settings.selectedDsc)
+        //     msgPopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(settings.selectedDsc)
         // else if (imageWriter.isEmbeddedMode()) {
-        //     //msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
+        //     //msgPopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
         //     /* Just reboot to the installed OS */
         //     Qt.quit()
         // }
         // else
-        //     msgpopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(settings.selectedOS).arg(settings.selectedDsc)
+        //     msgPopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(settings.selectedOS).arg(settings.selectedDsc)
         // if (imageWriter.isEmbeddedMode()) {
-        //     msgpopup.continueButton = false
-        //     msgpopup.quitButton = true
+        //     msgPopup.continueButton = false
+        //     msgPopup.quitButton = true
         // }
 
-        // msgpopup.openPopup()
+        // msgPopup.openPopup()
         imageWriter.setDst("")
-        end()
+        end(mode)
     }
 
     function onCancelled() {
@@ -206,6 +206,17 @@ Item {
 
     function onNetworkInfo(msg) {
         networkInfo.text = msg
+    }
+
+    function getInfoText() {
+        if (mode === "single") {
+            return qsTr("The image is now being written for a Single Mode Device\n(execution and consensus client).")
+        } else if (mode === "execution") {
+            return qsTr("The image is now being written for a Execution Device")
+        } else if (mode === "consensus") {
+            return qsTr("The image is now being written for a Consensus Device")
+        }
+        return qsTr("The image is now being written")
     }
 
 

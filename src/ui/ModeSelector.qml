@@ -14,6 +14,8 @@ import "components"
 Item {
     id: modeSelector
 
+    property string mode: "single";
+
     ColumnLayout {
         anchors.top: parent.top
         anchors.right: parent.right
@@ -96,7 +98,7 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: setDualMode(false)
+                    onClicked: setMode(false)
                 }
             }
 
@@ -162,7 +164,7 @@ Item {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: setDualMode(true)
+                    onClicked: setMode(true)
                 }
             }
         }
@@ -170,7 +172,6 @@ Item {
         Item {
             Layout.fillHeight: true
         }
-
 
         ImButton {
             Layout.minimumHeight: 40
@@ -180,16 +181,16 @@ Item {
             text: qsTr("Next")
             Layout.alignment: Qt.AlignCenter
             onClicked: {
-                stackView.push(dualMode ? dualModeForm : singleModeForm)
+                stackView.push(mode === "single" ? singleModeForm :  dualModeForm)
             }
         }
 
     }
 
 
-    function setDualMode(isDualMode = true) {
+    function setMode(isDualMode = true) {
         if (isDualMode) {
-            dualMode = true
+            mode = "execution"
 
             singleModeBg.color = "transparent"
             singleModeBg.border.color = "#fff"
@@ -202,7 +203,7 @@ Item {
             dualModeText.color = "#cd2355"
 
         } else {
-            dualMode = false
+            mode = "single"
 
             singleModeBg.color = "#fff"
             singleModeBg.border.color = "#a60434"

@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 
 Popup {
-    id: dstpopup
+    id: storagePopup
     x: 50
     y: 25
     width: parent.width-100
@@ -17,9 +17,9 @@ Popup {
         dstlist.forceActiveFocus()
     }
 
-    property string clientType: "execution"
+    property string mode: "execution"
 
-    signal selected()
+    signal selected(string mode)
 
     // background of title
     Rectangle {
@@ -31,7 +31,7 @@ Popup {
         width: parent.width
 
         Text {
-            text: qsTr("Storage")
+            text: getTitle()
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
             anchors.topMargin: 10
@@ -55,7 +55,7 @@ Popup {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    dstpopup.close()
+                    storagePopup.close()
                 }
             }
         }
@@ -221,15 +221,48 @@ Popup {
         }
     }
 
+    MsgPopup {
+        id: confirmwritepopup
+        continueButton: false
+        yesButton: true
+        noButton: true
+        title: qsTr("Warning")
+        modal: true
+        onYes: {
+            if (!imageWriter.readyToWrite()) {
+                // TODO: show error ... ?
+                console.log("Image writer is not ready to write")
+                return
+            }
+            selected(mode)
+        }
+
+        function askForConfirmation() {
+            text = qsTr("All existing data on '%1' will be erased.<br>Are you sure you want to continue?").arg(settings.selectedDsc)
+            openPopup()
+        }
+    }
+
     function selectDstItem(d) {
         if (d.isReadOnly) {
             onError(qsTr("SD card is write protected.<br>Push the lock switch on the left side of the card upwards, and try again."))
             return
         }
-        dstpopup.close()
+        storagePopup.close()
         imageWriter.setDst(d.device, d.size)
         settings.selectedDsc = d.description
-        selected()
+        confirmwritepopup.askForConfirmation()
+    }
+
+    function getTitle() {
+        if (mode === "single") {
+            return qsTr("Storage for Single Mode Device")
+        } else if (mode === "execution") {
+            return qsTr("Storage for Execution Device")
+        } else if (mode === "consensus") {
+            return qsTr("Storage for Consensus Device")
+        }
+        return qsTr("Storage")
     }
 
     Timer {

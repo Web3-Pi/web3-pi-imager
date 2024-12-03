@@ -351,9 +351,9 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    QObject *qmlwindow = engine.rootObjects().value(0);
-    QObject *writingPage = qmlwindow->findChild<QObject*>("writingPage");
-    QObject *finalPageSingle = qmlwindow->findChild<QObject*>("finalPageSingle");
+    QObject *mainWindow = engine.rootObjects().value(0);
+    QObject *writingPage = mainWindow->findChild<QObject*>("writingPage");
+    QObject *hostResolverPage = mainWindow->findChild<QObject*>("hostResolverPage");
     if (writingPage) {
         writingPage->connect(&imageWriter, SIGNAL(downloadProgress(QVariant,QVariant)), writingPage, SLOT(onDownloadProgress(QVariant,QVariant)));
         writingPage->connect(&imageWriter, SIGNAL(verifyProgress(QVariant,QVariant)), writingPage, SLOT(onVerifyProgress(QVariant,QVariant)));
@@ -366,24 +366,24 @@ int main(int argc, char *argv[])
         qWarning() << "WritingPage not found!";
     }
 
-    if (finalPageSingle) {
-        finalPageSingle->connect(&hostResolver, SIGNAL(hostResolved(QVariant,QVariant)), finalPageSingle, SLOT(onHostResolved(QVariant,QVariant)));
+    if (hostResolverPage) {
+        hostResolverPage->connect(&hostResolver, SIGNAL(hostResolved(QVariant,QVariant)), hostResolverPage, SLOT(onHostResolved(QVariant,QVariant)));
     } else {
-        qWarning() << "FinalPageSingle not found!";
+        qWarning() << "HostResolverPage not found!";
     }
 
-    qmlwindow->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), qmlwindow, SLOT(onFileSelected(QVariant)));
-    qmlwindow->connect(&imageWriter, SIGNAL(networkOnline()), qmlwindow, SLOT(fetchOSlist()));
-    qmlwindow->connect(&imageWriter, SIGNAL(osListPrepared()), qmlwindow, SLOT(onOsListPrepared()));
-    qmlwindow->connect(&imageWriter, SIGNAL(networkInfo(QVariant)), qmlwindow, SLOT(onNetworkInfo(QVariant)));
+    mainWindow->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), mainWindow, SLOT(onFileSelected(QVariant)));
+    mainWindow->connect(&imageWriter, SIGNAL(networkOnline()), mainWindow, SLOT(fetchOSlist()));
+    mainWindow->connect(&imageWriter, SIGNAL(osListPrepared()), mainWindow, SLOT(onOsListPrepared()));
+    mainWindow->connect(&imageWriter, SIGNAL(networkInfo(QVariant)), mainWindow, SLOT(onNetworkInfo(QVariant)));
 
 #ifndef QT_NO_WIDGETS
     /* Set window position */
     auto screensize = app.primaryScreen()->geometry();
     int x = settings.value("x", -1).toInt();
     int y = settings.value("y", -1).toInt();
-    int w = qmlwindow->property("width").toInt();
-    int h = qmlwindow->property("height").toInt();
+    int w = mainWindow->property("width").toInt();
+    int h = mainWindow->property("height").toInt();
 
     if (x != -1 && y != -1)
     {
@@ -400,8 +400,8 @@ int main(int argc, char *argv[])
         y = qMax(1, (screensize.height()-h)/2);
     }
 
-    qmlwindow->setProperty("x", x);
-    qmlwindow->setProperty("y", y);
+    mainWindow->setProperty("x", x);
+    mainWindow->setProperty("y", y);
 #endif
 
     if (imageWriter.isOnline())
@@ -410,8 +410,8 @@ int main(int argc, char *argv[])
     int rc = app.exec();
 
 #ifndef QT_NO_WIDGETS
-    int newX = qmlwindow->property("x").toInt();
-    int newY = qmlwindow->property("y").toInt();
+    int newX = mainWindow->property("x").toInt();
+    int newY = mainWindow->property("y").toInt();
     if (x != newX || y != newY)
     {
         settings.setValue("x", newX);

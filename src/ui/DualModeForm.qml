@@ -12,8 +12,10 @@ import "components"
 
 Item {
     id: dualModeForm
+
+    signal next()
+
     ColumnLayout {
-        id: mainForm
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
@@ -32,23 +34,14 @@ Item {
             RowLayout {
                 Layout.topMargin: -5
                 ImText {
-                    text: qsTr("Image Version:")
+                    text: qsTr("Image version:")
                     rightPadding: 5
                 }
                 Item {
                     Layout.fillWidth: true
                 }
-                ImComboBox {
+                ImVersionSelector {
                     id: fieldImageVersion
-                    model: ["v0.7.3 (latest)", "v0.7.2", "v0.7.1"]
-                    background: Rectangle {
-                        color: "white"
-                    }
-                    selectTextByMouse: true
-                    Layout.minimumWidth: 245
-                    Layout.minimumHeight: 35
-                    font.pointSize: 12
-
                 }
             }
 
@@ -60,15 +53,10 @@ Item {
                 Item {
                     Layout.fillWidth: true
                 }
-                ImComboBox {
+                ImNetworkSelector {
                     id: fieldNetwork
-                    model: ["Ethereum Mainnet", "Ethereum Sepolia", "Ethereum Goerli"]
-                    selectTextByMouse: true
-                    Layout.minimumWidth: 245
-                    Layout.minimumHeight: 35
-                    font.pointSize: 12
-
                 }
+
             }
 
 
@@ -115,7 +103,7 @@ Item {
                                 Layout.fillWidth: true
                             }
                             ImTextField {
-                                id: fieldHostname
+                                id: fieldHostnameExecution
                                 text: "eop-1-exec"
                                 selectByMouse: true
                                 maximumLength: 255
@@ -141,20 +129,24 @@ Item {
                                 Layout.fillWidth: true
                             }
                             ImComboBox {
-                                id: fieldExecutionClient
-                                model: ["Geth", "Disabled"]
+                                id: fieldDualExecutionClient
                                 selectTextByMouse: true
                                 Layout.preferredWidth: 110
                                 Layout.minimumHeight: 35
                                 font.pointSize: 12
-
+                                model: ListModel {
+                                    ListElement { text: "Geth"; value: "geth" }
+                                    ListElement { text: "Disabled"; value: "disabled" }
+                                }
+                                textRole: "text"
+                                currentIndex: 0
                             }
                             ImText {
                                 text: qsTr("Port:")
                                 leftPadding: 5
                             }
                             ImTextField {
-                                id: fieldExecutionPort
+                                id: fieldDualExecutionPort
                                 Layout.preferredWidth: 78
                                 text: "30303"
                                 font.family: roboto.name
@@ -210,7 +202,7 @@ Item {
                                 Layout.fillWidth: true
                             }
                             ImTextField {
-                                id: fieldHostname2
+                                id: fieldHostnameConsensus
                                 text: "eop-1-cons"
                                 selectByMouse: true
                                 maximumLength: 255
@@ -236,15 +228,17 @@ Item {
                                 Layout.fillWidth: true
                             }
                             ImComboBox {
-                                id: fieldExecutionClient2
-                                model: ListModel {
-                                    ListElement { text: "Nimbus" }
-                                    ListElement { text: "Lighthouse" }
-                                }
+                                id: fieldDualConsensusClient
                                 selectTextByMouse: true
                                 Layout.preferredWidth: 110
                                 Layout.minimumHeight: 35
                                 font.pointSize: 12
+                                model: ListModel {
+                                    ListElement { text: "Nimbus"; value: "nimbus" }
+                                    ListElement { text: "Lighthouse"; value: "lighthouse" }
+                                }
+                                currentIndex: 0
+                                textRole: "text"
 
                             }
                             ImText {
@@ -252,7 +246,7 @@ Item {
                                 leftPadding: 5
                             }
                             ImTextField {
-                                id: fieldExecutionPort2
+                                id: fieldDualConsensusPort
                                 Layout.preferredWidth: 78
                                 text: "9000"
                                 font.family: roboto.name
@@ -298,9 +292,9 @@ Item {
                 Material.background: "#cd2355"
                 Material.foreground: "#ffffff"
                 onClicked: {
-                    advancedSettings.screen = window.screen
-                    advancedSettings.x = window.x + window.width / 2 - advancedSettings.width / 2
-                    advancedSettings.y = window.y + window.height / 2 - advancedSettings.height / 2
+                    advancedSettings.screen = mainWindow.screen
+                    advancedSettings.x = mainWindow.x + mainWindow.width / 2 - advancedSettings.width / 2
+                    advancedSettings.y = mainWindow.y + mainWindow.height / 2 - advancedSettings.height / 2
                     advancedSettings.open()
                 }
             }
@@ -336,8 +330,29 @@ Item {
                 text: qsTr("Next")
                 Layout.preferredWidth: 150
                 Layout.alignment: Qt.AlignRight
+                onClicked: {
+                    save()
+                    next()
+                }
             }
         }
+    }
+
+    function initialize(savedSettings) {
+        // TODO
+    }
+
+    function save() {
+        settings.hostnameExecution = fieldHostnameExecution.text
+        settings.hostnameConsesnus = fieldHostnameConsensus.text
+        settings.defaultNetwork = fieldNetwork.model.get(fieldNetwork.currentIndex).value
+        settings.executionClient = fieldDualExecutionClient.model.get(fieldDualExecutionClient.currentIndex).value
+        settings.consensusClient = fieldDualConsensusClient.model.get(fieldDualConsensusClient.currentIndex).value
+        settings.executionPort = fieldDualExecutionPort.text
+        settings.consensusPort = fieldDualConsensusPort.text
+        settings.selectOs(fieldImageVersion.getSelectedOs())
+        settings.apply()
+        settings.save()
     }
 }
 

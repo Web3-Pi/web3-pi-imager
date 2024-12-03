@@ -8,10 +8,24 @@
         <file>AdvancedSettings.qml</file>
         <file>WritingPage.qml</file>
         <file>StoragePopup.qml</file>
-        <file>InsertingPageSingle.qml</file>
-        <file>FinalPageSingle.qml</file>
+        <file>AfterWritingPageSingle.qml</file>
+        <file>AfterWritingPageExecution.qml</file>
+        <file>AfterWritingPageConsensus.qml</file>
+        <file>HostResolverPage.qml</file>
         <file>MsgPopup.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>countries.txt</file>
+        <file>timezones.txt</file>
+        <file>UseSavedSettingsPopup.qml</file>
+        <file>components/ImButton.qml</file>
+        <file>components/ImButtonRed.qml</file>
+        <file>components/ImCheckBox.qml</file>
+        <file>components/ImRadioButton.qml</file>
+        <file>components/ImText.qml</file>
+        <file>components/ImTextField.qml</file>
+        <file>components/ImComboBox.qml</file>
+        <file>components/ImVersionSelector.qml</file>
+        <file>components/ImNetworkSelector.qml</file>
         <file>icons/rpi-imager.ico</file>
         <file>fonts/Roboto-Bold.ttf</file>
         <file>fonts/Roboto-Light.ttf</file>
@@ -31,9 +45,6 @@
         <file>icons/cat_emulation_and_games.png</file>
         <file>icons/mode_dual.png</file>
         <file>icons/mode_single.png</file>
-        <file>countries.txt</file>
-        <file>timezones.txt</file>
-        <file>UseSavedSettingsPopup.qml</file>
         <file>icons/ic_info_16px.png</file>
         <file>icons/ic_info_12px.png</file>
         <file>keymap-layouts.txt</file>
@@ -48,14 +59,7 @@
         <file>icons/success.png</file>
         <file>icons/warning.png</file>
         <file>icons/inserting.png</file>
-        <file>components/ImButton.qml</file>
-        <file>components/ImButtonRed.qml</file>
-        <file>components/ImCheckBox.qml</file>
-        <file>components/ImRadioButton.qml</file>
-        <file>components/ImText.qml</file>
-        <file>components/ImTextField.qml</file>
-        <file>components/ImComboBox.qml</file>
-        <file>components/ImVersionSelector.qml</file>
-        <file>components/ImNetworkSelector.qml</file>
+        <file>icons/inserting2.png</file>
+        <file>icons/after_writing_execution.png</file>
     </qresource>
 </RCC>

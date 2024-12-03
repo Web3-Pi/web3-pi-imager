@@ -11,7 +11,7 @@ import QtQuick.Controls.Material 2.2
 import "components"
 
 Item {
-    id: insertingPageSingle
+    id: afterWritingPageExecution
 
     ColumnLayout {
         anchors.top: parent.top
@@ -32,48 +32,20 @@ Item {
             spacing: 25
 
             ImText {
-                text: qsTr("<b>%1</b>has been written to<br><b>%2</b>").arg(settings.selectedOS).arg(settings.selectedDsc)
-                // text: qsTr("%1 has been written to<br>%2").arg("Web3PI Imager ver 873 (latest)").arg("Apple Media Sd Card Reader bala bla")
+                text: qsTr("<b>%1</b>has been written to<br><b>%2</b><br>for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 color: "#fff"
                 font.pointSize: 14
                 horizontalAlignment: Text.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignCenter
             }
 
             ImText {
-                text: "Now perform the following operations:"
+                text: "Now you can remove the card and insert another one\nfor the second Consensus Device"
                 color: "#fff"
                 font.pointSize: 14
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            ColumnLayout {
-
-                ImText {
-                    text: "1. Insert the card into the Raspberry Pi"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.italic: true
-                }
-
-                ImText {
-                    text: "2. Connect the necessary cables"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.italic: true
-                }
-
-                ImText {
-                    text: "3. Turn on the device"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.italic: true
-                }
+                Layout.alignment: Qt.AlignCenter
             }
             Item {
                 Layout.alignment: Qt.AlignCenter
@@ -81,7 +53,7 @@ Item {
                 height: 150
                 Image {
                     anchors.fill: parent
-                    source: "icons/inserting.png"
+                    source: "icons/after_writing_execution.png"
                     Layout.alignment: Qt.AlignCenter
                 }
             }
@@ -91,7 +63,6 @@ Item {
             Layout.fillHeight: true
         }
 
-
         ImButton {
             Layout.minimumHeight: 40
             Layout.preferredWidth: 200
@@ -99,8 +70,8 @@ Item {
             padding: 5
             text: qsTr("Next")
             onClicked: {
-                stackView.push(finalPageSingle)
-                finalPageSingle.startResolving();
+                storagePopup.mode = "consensus"
+                storagePopup.open()
             }
         }
     }

@@ -12,7 +12,9 @@ QtObject {
     property string selectedOS;
     property string selectedDsc;
 
-    property string hostname: "";
+    property string hostname;
+    property string hostnameExecution;
+    property string hostnameConsesnus;
     property string defaultNetwork;
     property string executionClient;
     property string consensusClient;

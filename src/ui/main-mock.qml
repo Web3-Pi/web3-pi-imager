@@ -15,7 +15,7 @@ import QtQuick.Controls.Material 2.2
 import "components"
 
 Window {
-    id: window
+    id: mainWindow
     visible: true
 
     width: 480
@@ -48,15 +48,15 @@ Window {
 
         Rectangle {
             id: logoContainer
-            implicitHeight: window.height/5
+            implicitHeight: mainWindow.height/5
 
             Image {
                 id: image
                 source: "./icons/logo_web3_pi_imager.png"
 
                 // Specify the maximum size of the image
-                width: window.width
-                height: window.height / 5
+                width: mainWindow.width
+                height: mainWindow.height / 5
 
                 // Within the image's specified size rectangle, resize the
                 // image to fit within the rectangle while keeping its aspect
@@ -75,22 +75,22 @@ Window {
                 // Equal padding above and below the image
                 anchors.top: logoContainer.top
                 anchors.bottom: logoContainer.bottom
-                anchors.topMargin: window.height / 40
-                anchors.bottomMargin: window.height / 40
+                anchors.topMargin: mainWindow.height / 40
+                anchors.bottomMargin: mainWindow.height / 40
             }
         }
 
         Rectangle {
             color: "#e51763"
-            implicitWidth: window.width
-            implicitHeight: window.height * (1 - 1/5)
+            implicitWidth: mainWindow.width
+            implicitHeight: mainWindow.height * (1 - 1/5)
 
             Material.theme: Material.Light
 
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: WritingPage {}
+                initialItem: AfterWritingPageExecution {}
             }
         }
     }
@@ -116,13 +116,21 @@ Window {
         id: settings
     }
 
-    FinalPageSingle {
-        id: finalPageSingle
+    HostResolverPage {
+        id: hostResolverPage
+        visible: false
+    }
+    AfterWritingPageConsensus {
+        id: afterWritingPageConsensus
+        visible: false
+    }
+    AfterWritingPageSingle {
+        id: afterWritingPageSingle
+        visible: false
+    }
+    AfterWritingPageExecution {
+        id: afterWritingPageExecution
         visible: false
     }
 
-    InsertingPageSingle {
-        id: insertingPageSingle
-        visible: false
-    }
 }
