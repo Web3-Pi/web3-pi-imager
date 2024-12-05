@@ -48,6 +48,4 @@ async function run() {
   console.log("Created Pull Request:", pr.data.html_url);
 }
 
-run().catch(error => {
-  console.error("Error:", error.message);
-});
+run()
