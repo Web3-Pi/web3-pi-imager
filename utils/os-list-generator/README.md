@@ -2,14 +2,12 @@
 # OS List Updater for Web3 Pi Imager
 
 This script generates a JSON file containing a list of official releases for the [Web3 - Ethereum On Raspberry Pi](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi).
-It extracts details from GitHub releases, calculates file metadata.
+It extracts details from GitHub releases and calculates file metadata.
 
 ---
 
 ## Features
 
-- **Fetch GitHub Releases**: Retrieves all releases from the Ethereum On Raspberry Pi repository.
-- **Version Filtering**: Processes only releases with version numbers `>= 0.7.0`.
 - **Output Format**: Generates a JSON file in the following structure:
   ```json
   {
@@ -65,20 +63,4 @@ node index.js
 ```
 
 The output file `web3_pi_imager_os_list_v1.json` will be saved in the current directory.
-
----
-``
-## Configuration
-
-The following constants can be configured in the script:
-- **`SOURCE_REPO`**: The GitHub repository to fetch releases from. Default: `Web3-Pi/Ethereum-On-Raspberry-Pi`.
-- **`ASSET_PATTERN`**: Regular expression to identify the relevant asset file. Default: `/Web3Pi_Single_Device\.img\.xz$/`.
-- **`MIN_VERSION`**: Minimum release version to process. Default: `0.7.0`.``
-
----
-
-## Cache Directory
-
-The script uses a cache directory to store downloaded files. By default, it creates a `cache` folder in the working directory. Files are stored in subdirectories named after the release ID to avoid redundant downloads.
-
 

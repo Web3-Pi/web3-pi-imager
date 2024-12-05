@@ -27,6 +27,9 @@ async function run() {
     return;
   }
 
+  await git.addConfig('user.name', 'github-actions[bot]');
+  await git.addConfig('user.email', 'github-actions[bot]@users.noreply.github.com');
+
   await git.cwd(targetRepoDir);
   await git.checkoutLocalBranch(BRANCH_NAME);
   await git.add(FILE_NAME);
