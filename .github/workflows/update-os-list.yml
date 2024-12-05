@@ -5,11 +5,6 @@ on:
     types:
       - new-release
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to test'
-        required: true
-        default: 'mgordel/new-design'
 
 jobs:
   generate-and-pr:
@@ -18,9 +13,6 @@ jobs:
     steps:
       - name: Checkout Source Repo
         uses: actions/checkout@v3
-        with:
-          repository: Web3-Pi/Ethereum-On-Raspberry-Pi
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
