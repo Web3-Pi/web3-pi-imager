@@ -30,37 +30,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node index.js
 
-      - name: Clone target repository
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git clone git@github.com:Web3-Pi/file-bin.git target-repo
-
-      - name: Generate unique branch name
-        id: generate-branch-name
-        run: echo "branch-name=update-os-list-json-file-$(date +%s)" >> $GITHUB_ENV
-
-      - name: Copy generated file to target repository
-        run: |
-          cp utils/os-list-generator/web3_pi_imager_os_list_v1.json target-repo/
-          cd target-repo
-          git checkout -b ${{ env.branch-name }}
-          git add web3_pi_imager_os_list_v1.json
-          git commit -m "Update generated JSON file os list for Web3 Pi Imager"
-
-      - name: Push changes to new branch
-        run: |
-          cd target-repo
-          git push origin ${{ env.branch-name }}
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: Web3-Pi/file-bin
-          branch: "${{ env.branch-name }}"
-          title: "Automated update of JSON file - os list for Web3 Pi Imager"
-          body: |
-            This PR updates the generated JSON file os list for Web3 Pi Imager.
+      - name: Run script to generate PR
+        working-directory: ./utils/os-list-generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node create-pr.js

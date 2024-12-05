@@ -14,6 +14,7 @@
     "@octokit/rest": "^21.0.2",
     "axios": "^1.7.9",
     "lzma-native": "^8.0.6",
-    "semver": "^7.6.3"
+    "semver": "^7.6.3",
+    "simple-git": "^3.27.0"
   }
 }
