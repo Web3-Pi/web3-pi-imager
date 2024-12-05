@@ -1,7 +1,7 @@
 
 # OS List Updater for Web3 Pi Imager
 
-This script generates a JSON file containing a list of official releases for the [Web3 - Ethereum On Raspberry Pi](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi).
+This script generates a JSON file containing a list of official releases for the [Web3 - Ethereum On Raspberry Pi](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi).
 It extracts details from GitHub releases, calculates file metadata.
 
 ---
