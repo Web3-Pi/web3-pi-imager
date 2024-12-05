@@ -1,5 +1,8 @@
 name: Update Os List on New Release
 
+permissions:
+  contents: write
+
 on:
   repository_dispatch:
     types:
