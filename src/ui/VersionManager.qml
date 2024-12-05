@@ -21,6 +21,7 @@ QtObject {
         const osListJson = JSON.parse(osListString)
         const osListParsed = oslistFromJson(osListJson)
         if (osListParsed === false) {
+            console.error("Failed to parse os list")
             // TODO: show error
             return
         }

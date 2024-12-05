@@ -243,9 +243,8 @@ ImageWriter::ImageWriter(QObject *parent)
     //_currentKeyboard = "us";
 
     // Centralised network manager, for fetching OS lists
-    // TODO: Temporarily disabled until an endpoint with the list is available
-    // connect(&_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleNetworkRequestFinished(QNetworkReply *)));
-    useMockedOsList();
+    connect(&_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleNetworkRequestFinished(QNetworkReply *)));
+    // useMockedOsList();
 
     QByteArray randomBytes;
     for (int i = 0; i < 32; ++i) {

@@ -18,10 +18,7 @@ ImComboBox {
     model: versionManager.osListModel
     currentIndex: 0
     Component.onCompleted: {
-        if (imageWriter.isOnline()) {
-            versionManager.fetchOSList();
-        }
-        versionManager.osListModel.onCountChanged.connect(() => {
+        model.onCountChanged.connect(() => {
             currentIndex = 0;
         });
     }

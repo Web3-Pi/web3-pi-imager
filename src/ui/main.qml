@@ -174,6 +174,8 @@ ApplicationWindow {
         // chkTelemtry.checked = imageWriter.getBoolSetting("telemetry")
         const savedSettings = imageWriter.getSavedCustomizationSettings()
 
+        // versionManager.fetchOSList()
+
         singleModeForm.initialize(savedSettings)
         dualModeForm.initialize(savedSettings)
         advancedSettings.initialize(savedSettings)
