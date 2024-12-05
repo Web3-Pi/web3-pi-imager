@@ -15,7 +15,7 @@ const [targetOwner, targetRepo] = TARGET_REPO.split('/');
 async function run() {
   const targetRepoDir = path.join(process.cwd(), "target-repo");
   console.log(`Cloning ${TARGET_REPO}...`);
-  const repoUrl = `https://${process.env.GITHUB_TOKEN}@github.com/${TARGET_REPO}.git`;
+  const repoUrl = `https://x-access-token:${process.env.GITHUB_TOKEN}@github.com/${TARGET_REPO}.git`;
   await git.clone(repoUrl, targetRepoDir);
 
   if (fs.existsSync(JSON_FILE_PATH)) {
