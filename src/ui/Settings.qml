@@ -12,6 +12,7 @@ QtObject {
     property string selectedOS;
     property string selectedDsc;
 
+    property string mode: "single";
     property string hostname;
     property string hostnameExecution;
     property string hostnameConsesnus;
@@ -22,6 +23,8 @@ QtObject {
     property string consensusPort;
     property string executionEndpointAddress;
     property string keyboardLayout;
+    property bool monitoring: true;
+    property bool formatStorage: false;
 
     property var localeOptions: {
         "checked": false,
@@ -72,6 +75,8 @@ QtObject {
         cloudinitwrite = ""
         cloudinitnetwork = ""
 
+        hostname = mode === "execution" ? hostnameExecution : mode === "consensus" ? hostnameConsesnus : hostname
+
         if (hostname) {
             addFirstRun("CURRENT_HOSTNAME=`cat /etc/hostname | tr -d \" \\t\\n\\r\"`")
             addFirstRun("if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then")
@@ -94,28 +99,35 @@ QtObject {
             addCloudInit("")
         }
 
-        if (executionClient === "geth") {
+        if (executionClient === "geth" && mode !== "consensus") {
             addConfig("geth=true")
         } else {
             addConfig("geth=false")
         }
 
-        if (consensusClient === "nimbus") {
+        if (consensusClient === "nimbus" && mode !== "execution") {
             addConfig("nimbus=true")
             addConfig("lighthouse=false")
-        } else if (consensusClient === "lighthouse") {
+        } else if (consensusClient === "lighthouse" && mode !== "execution") {
             addConfig("nimbus=false")
             addConfig("lighthouse=true")
+        } else {
+            addConfig("nimbus=false")
+            addConfig("lighthouse=false")
         }
 
         if (executionEndpointAddress.length) {
             addConfig(executionEndpointAddress)
+        } else {
+            if (mode === "consensus") {
+                addConfig(`exec_url=http://${hostnameExecution}.local:8551`)
+            }
         }
 
-        if (executionPort && executionClient === 'geth') {
+        if (executionPort && executionClient === 'geth' && mode !== "consensus") {
             addConfig("geth_port=" + executionPort)
         }
-        if (consensusPort) {
+        if (consensusPort && mode !== "execution") {
             if (consensusClient === 'nimbus') {
                 addConfig("nimbus_port="+consensusPort)
             } else if (consensusClient === 'lighthouse') {
@@ -123,10 +135,20 @@ QtObject {
             }
         }
 
-        // if (chkMonitoring.checked) {
-        //     addConfig("influxdb=true")
-        //     addConfig( "grafana=true")
-        // }
+        if (defaultNetwork) {
+            addConfig("nimbus_network="+defaultNetwork)
+            addConfig("lighthouse_network="+defaultNetwork)
+        }
+
+        if (monitoring && mode !== "execution") {
+            addConfig("influxdb=true")
+            addConfig( "grafana=true")
+            addConfig( "bnm=true")
+        } else {
+            addConfig("influxdb=false")
+            addConfig( "grafana=false")
+            addConfig( "bnm=false")
+        }
 
         if (localeOptions.checked) {
             var kbdconfig = "XKBMODEL=\"pc105\"\n"
@@ -222,11 +244,11 @@ QtObject {
             addCloudInit("runcmd:\n"+cloudinitrun+"\n")
         }
 
-        imageWriter.setImageCustomization(config, cmdline, firstrun, cloudinit, cloudinitnetwork)
+        imageWriter.setImageCustomization(config, cmdline, firstrun, cloudinit, cloudinitnetwork, formatStorage, mode !== "single")
     }
 
     function save() {
-        // TODO
+        // TODO: save to local storage
         // var settings = { };
         // if (fieldHostname.length) {
         //     settings.hostname = fieldHostname.text
@@ -239,8 +261,10 @@ QtObject {
         // saveSettingsSignal(settings)
     }
 
-    function selectOs(d) {
-        imageWriter.setSrc(d.url, d.image_download_size, d.extract_size, typeof(d.extract_sha256) != "undefined" ? d.extract_sha256 : "", typeof(d.contains_multiple_files) != "undefined" ? d.contains_multiple_files : false, "", d.name, typeof(d.init_format) != "undefined" ? d.init_format : "")
-        selectedOS = d.name
+    function selectOs(osItem) {
+        if (osItem.url) {
+            imageWriter.setSrc(osItem.url, osItem.image_download_size, osItem.extract_size, typeof(osItem.extract_sha256) != "undefined" ? osItem.extract_sha256 : "", typeof(osItem.contains_multiple_files) != "undefined" ? osItem.contains_multiple_files : false, "", osItem.name, typeof(osItem.init_format) != "undefined" ? osItem.init_format : "")
+            settings.selectedOS = osItem.name
+        }
     }
 }

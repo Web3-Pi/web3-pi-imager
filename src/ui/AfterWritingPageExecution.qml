@@ -40,7 +40,7 @@ Item {
             }
 
             ImText {
-                text: "Now you can remove the card and insert another one\nfor the second Consensus Device"
+                text: "Now you can remove the card and insert another one\nfor Consensus Device"
                 color: "#fff"
                 font.pointSize: 14
                 font.bold: true

@@ -91,14 +91,12 @@ Item {
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onLinkActivated: {
-                        Qt.openUrlExternally(link)
-                    }
+                    onLinkActivated: (link) => Qt.openUrlExternally(link)
                 }
 
                 ImText {
                     topPadding: 24
-                    text: "To log in via ssh use credentials:"
+                    text: "After installation is complete, you can log in via SSH using credentials:"
                     color: "#fff"
                     font.pointSize: 13
                     font.italic: true
@@ -208,6 +206,19 @@ Item {
                 onTimeout()
             }
         }
+
+        ImButton {
+            id: quitButton
+            visible: false
+            Layout.minimumHeight: 40
+            Layout.preferredWidth: 200
+            Layout.alignment: Qt.AlignCenter
+            padding: 5
+            text: qsTr("Quit")
+            onClicked: {
+                Qt.quit()
+            }
+        }
     }
 
     Timer {
@@ -234,6 +245,7 @@ Item {
         } else {
             console.log("Unknown hostname: ", hostname)
         }
+        timer.stop()
     }
 
     function onTimeout() {

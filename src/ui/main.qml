@@ -97,36 +97,33 @@ ApplicationWindow {
         id: advancedSettings
     }
 
+    VersionManager {
+        id: versionManager
+        objectName: "versionManager"
+    }
+
     SingleModeForm {
         id: singleModeForm
         visible: false
-        onNext: {
-            chooseStorage("single")
-        }
+        onNext:() => chooseStorage("single")
     }
 
     DualModeForm {
         id: dualModeForm
         visible: false
-        onNext: {
-            chooseStorage("execution")
-        }
+        onNext: () => chooseStorage("execution")
     }
 
     StoragePopup {
         id: storagePopup
-        onSelected: {
-            startWrite(mode)
-        }
+        onSelected: (mode) => startWrite(mode)
     }
 
     WritingPage {
         id: writingPage
         objectName: "writingPage"
         visible: false
-        onEnd: {
-            afterWriting(mode)
-        }
+        onEnd: (mode) => afterWriting(mode)
     }
 
     AfterWritingPageSingle {
@@ -165,11 +162,10 @@ ApplicationWindow {
 
     MsgPopup {
         id: warningPopup
-        continueButton: false
+        continueButton: true
         yesButton: false
         noButton: false
-        constinueButton: true
-        title: qsTr("Warning")
+        title: qsTr("Error")
     }
 
 
@@ -183,7 +179,6 @@ ApplicationWindow {
         advancedSettings.initialize(savedSettings)
 
         initialized = true
-        onNetworkInfo("error bla bla")
     }
 
     function chooseStorage(mode) {
@@ -192,6 +187,8 @@ ApplicationWindow {
     }
 
     function startWrite(mode) {
+        settings.mode = mode;
+        settings.apply();
         writingPage.mode = mode
         stackView.push(writingPage)
         imageWriter.setVerifyEnabled(true)
@@ -199,13 +196,10 @@ ApplicationWindow {
     }
 
     function afterWriting(mode) {
-        console.log("After writing, mode=", mode)
         if (mode === "single") {
             stackView.push(afterWritingPageSingle)
         } else if (mode === "execution") {
-            settings.hostname = settings.hostnameConsesnus
-            settings.apply()
-            settings.save()
+
             stackView.pop()
             stackView.push(afterWritingPageExecution)
         } else if (mode === "consensus") {

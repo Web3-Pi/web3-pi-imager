@@ -8,7 +8,7 @@ ImComboBox {
     model: ListModel {
         ListElement { text: "Ethereum Mainnet"; value: "mainnet" }
         ListElement { text: "Ethereum Sepolia"; value: "sepolia" }
-        ListElement { text: "Ethereum Goerli"; value: "goerli" }
+        ListElement { text: "Ethereum Holesky"; value: "holesky" }
     }
     currentIndex: 0
     textRole: "text"

@@ -6,6 +6,7 @@
         <file>DualModeForm.qml</file>
         <file>Settings.qml</file>
         <file>AdvancedSettings.qml</file>
+        <file>VersionManager.qml</file>
         <file>WritingPage.qml</file>
         <file>StoragePopup.qml</file>
         <file>AfterWritingPageSingle.qml</file>

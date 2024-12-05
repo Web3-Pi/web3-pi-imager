@@ -61,40 +61,6 @@ namespace {
 void ImageWriter::useMockedOsList() {
    QString mockedResponse = R"(
     {
-      "imager": {
-        "latest_version": "1.8.5",
-        "url": "https://www.raspberrypi.com/software/",
-        "devices": [
-          {
-            "name": "No filtering",
-            "tags": [],
-            "default": false,
-            "description": "Show every possible image",
-            "matching_type": "inclusive"
-          },
-          {
-            "name": "Raspberry Pi 5",
-            "tags": [
-              "pi5-64bit",
-              "pi5-32bit"
-            ],
-            "icon": "https://downloads.raspberrypi.com/imager/icons/RPi_5.png",
-            "description": "The latest Raspberry Pi, Raspberry Pi 5",
-            "matching_type": "exclusive"
-          },
-          {
-            "name": "Raspberry Pi 4",
-            "tags": [
-              "pi4-64bit",
-              "pi4-32bit"
-            ],
-            "default": false,
-            "icon": "https://downloads.raspberrypi.com/imager/icons/RPi_4.png",
-            "description": "Models B, 400, and Compute Modules 4, 4S",
-            "matching_type": "inclusive"
-          }
-        ]
-      },
       "os_list": [
         {
           "name": "Web3 Pi v0.7.3 - 64bit (latest) ",
@@ -280,6 +246,12 @@ ImageWriter::ImageWriter(QObject *parent)
     // TODO: Temporarily disabled until an endpoint with the list is available
     // connect(&_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleNetworkRequestFinished(QNetworkReply *)));
     useMockedOsList();
+
+    QByteArray randomBytes;
+    for (int i = 0; i < 32; ++i) {
+        randomBytes.append(QRandomGenerator::global()->bounded(0, 256));
+    }
+    _randomHexString = randomBytes.toHex();
 }
 
 ImageWriter::~ImageWriter()
@@ -399,7 +371,7 @@ void ImageWriter::startWrite()
     connect(_thread, SIGNAL(preparationStatusUpdate(QString)), SLOT(onPreparationStatusUpdate(QString)));
     _thread->setVerifyEnabled(_verifyEnabled);
     _thread->setUserAgent(QString("Mozilla/5.0 rpi-imager/%1").arg(constantVersion()).toUtf8());
-    _thread->setImageCustomization(_config, _cmdline, _firstrun, _cloudinit, _cloudinitNetwork, _initFormat);
+    _thread->setImageCustomization(_config, _cmdline, _firstrun, _cloudinit, _cloudinitNetwork, _initFormat, _formatStorage, _isDualMode ? _randomHexString : "");
 
     if (!_expectedHash.isEmpty() && _cachedFileHash != _expectedHash && _cachingEnabled)
     {
@@ -711,12 +683,12 @@ QByteArray ImageWriter::getFilteredOSlist() {
     //         {"url", "internal://format"},
     //     }));
     //
-    // reference_os_list_array.append(QJsonObject({
-    //         {"name", QCoreApplication::translate("main", "Use custom")},
-    //         {"description", QCoreApplication::translate("main", "Select a custom .img from your computer")},
-    //         {"icon", "icons/use_custom.png"},
-    //         {"url", ""},
-    //     }));
+    reference_os_list_array.append(QJsonObject({
+            {"name", QCoreApplication::translate("main", "Use custom")},
+            {"description", QCoreApplication::translate("main", "Select a custom .img from your computer")},
+            {"icon", "icons/use_custom.png"},
+            {"url", ""},
+        }));
 
     return QJsonDocument(
         QJsonObject({
@@ -1287,19 +1259,23 @@ void ImageWriter::setSetting(const QString &key, const QVariant &value)
     _settings.sync();
 }
 
-void ImageWriter::setImageCustomization(const QByteArray &config, const QByteArray &cmdline, const QByteArray &firstrun, const QByteArray &cloudinit, const QByteArray &cloudinitNetwork)
+void ImageWriter::setImageCustomization(const QByteArray &config, const QByteArray &cmdline, const QByteArray &firstrun, const QByteArray &cloudinit, const QByteArray &cloudinitNetwork, const bool &formatStorage, const bool &isDualMode)
 {
     _config = config;
     _cmdline = cmdline;
     _firstrun = firstrun;
     _cloudinit = cloudinit;
     _cloudinitNetwork = cloudinitNetwork;
+    _formatStorage = formatStorage;
+    _isDualMode = isDualMode;
 
     qDebug() << "Custom config.txt entries:" << config;
     qDebug() << "Custom cmdline.txt entries:" << cmdline;
     qDebug() << "Custom firstuse.sh:" << firstrun;
     qDebug() << "Cloudinit:" << cloudinit;
     qDebug() << "CloudinitNetwork:" << cloudinitNetwork;
+    qDebug() << "formatStorage:" << formatStorage;
+    qDebug() << "isDualMode:" << isDualMode;
 }
 
 QString ImageWriter::crypt(const QByteArray &password)

@@ -886,7 +886,7 @@ qint64 DownloadThread::_sectorsWritten()
     return -1;
 }
 
-void DownloadThread::setImageCustomization(const QByteArray &config, const QByteArray &cmdline, const QByteArray &firstrun, const QByteArray &cloudinit, const QByteArray &cloudInitNetwork, const QByteArray &initFormat)
+void DownloadThread::setImageCustomization(const QByteArray &config, const QByteArray &cmdline, const QByteArray &firstrun, const QByteArray &cloudinit, const QByteArray &cloudInitNetwork, const QByteArray &initFormat, const bool &formatStorage, const QString &randomHexString)
 {
     _config = config;
     _cmdline = cmdline;
@@ -894,6 +894,8 @@ void DownloadThread::setImageCustomization(const QByteArray &config, const QByte
     _cloudinit = cloudinit;
     _cloudinitNetwork = cloudInitNetwork;
     _initFormat = initFormat;
+    _formatStorage = formatStorage;
+    _randomHexString = randomHexString;
 }
 
 bool DownloadThread::_customizeImage()
@@ -1000,6 +1002,15 @@ bool DownloadThread::_customizeImage()
 
             fat->writeFile("cmdline.txt", cmdline);
         }
+
+        if (_formatStorage) {
+            fat->writeFile("format_storage", " ");
+        }
+
+        if(!_randomHexString.isEmpty()) {
+            fat->writeFile("hex.jwt", _randomHexString.toUtf8());
+        }
+
         dw.sync();
     }
     catch (std::runtime_error &err)

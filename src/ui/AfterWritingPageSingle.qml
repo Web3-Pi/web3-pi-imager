@@ -85,7 +85,7 @@ Item {
                 }
             }
             ImText {
-                text: qsTr("If you want to install later, close the application,<br>and the installation process, after starting the device,<br>can be monitored at <b><a href='http://%1.local' style='color: white;'>http://%1.local</a></b>").arg(settings.hostname)
+                text: qsTr("If you want to install later,<br>the installation process can be monitored at <b><a href='http://%1.local' style='color: white;'>http://%1.local</a></b>").arg(settings.hostname)
                 color: "#fff"
                 textFormat: Text.RichText
                 font.pointSize: 14

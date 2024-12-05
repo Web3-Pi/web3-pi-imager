@@ -14,8 +14,6 @@ import "components"
 Item {
     id: modeSelector
 
-    property string mode: "single";
-
     ColumnLayout {
         anchors.top: parent.top
         anchors.right: parent.right
@@ -181,17 +179,16 @@ Item {
             text: qsTr("Next")
             Layout.alignment: Qt.AlignCenter
             onClicked: {
-                stackView.push(mode === "single" ? singleModeForm :  dualModeForm)
+                stackView.push(settings.mode === "single" ? singleModeForm : dualModeForm)
             }
         }
 
     }
 
-
     function setMode(isDualMode = true) {
-        if (isDualMode) {
-            mode = "execution"
+        settings.mode = isDualMode ? "execution" : "single"
 
+        if (isDualMode) {
             singleModeBg.color = "transparent"
             singleModeBg.border.color = "#fff"
             singleModeLabel.color = "#fff"
@@ -201,10 +198,7 @@ Item {
             dualModeBg.border.color = "#a60434"
             dualModeLabel.color = "#cd2355"
             dualModeText.color = "#cd2355"
-
         } else {
-            mode = "single"
-
             singleModeBg.color = "#fff"
             singleModeBg.border.color = "#a60434"
             singleModeLabel.color = "#cd2355"

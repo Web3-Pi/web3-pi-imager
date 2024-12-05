@@ -164,14 +164,10 @@ Item {
         progressText.text = qsTr("Preparing to write... (%1)").arg(msg)
     }
 
-    function onOsListPrepared() {
-        fetchOSlist()
-    }
-
     function onError(msg) {
-        msgPopup.title = qsTr("Error")
-        msgPopup.text = msg
-        msgPopup.openPopup()
+        warningPopup.title = qsTr("Error")
+        warningPopup.text = msg
+        warningPopup.openPopup()
         stackView.pop()
     }
 

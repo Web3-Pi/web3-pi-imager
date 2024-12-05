@@ -55,10 +55,9 @@ Item {
                 }
                 ImNetworkSelector {
                     id: fieldNetwork
+                    currentIndex: 0
                 }
-
             }
-
 
             GroupBox {
                 id: groupBoxExecution
@@ -256,13 +255,13 @@ Item {
 
                     }
                 }
-
             }
             ColumnLayout {
                 spacing: 0
                 Material.theme: Material.Dark
                 ImCheckBox {
                     id: monitoring
+                    checked: true
                     text: qsTr("Enable Grafana monitoring")
                     padding: 0
                     leftPadding: 10
@@ -272,7 +271,6 @@ Item {
                     text: qsTr("Format storage")
                     padding: 0
                     leftPadding: 10
-
                 }
             }
         }
@@ -322,6 +320,7 @@ Item {
                 }
                 onClicked: {
                     stackView.pop()
+                    versionManager.fetchOSList();
                 }
             }
 
@@ -338,6 +337,21 @@ Item {
         }
     }
 
+    DropArea {
+        anchors.fill: parent
+        onEntered: (drag, mimeData) => {
+            if (drag.active && mimeData.hasUrls()) {
+                drag.acceptProposedAction()
+            }
+        }
+        onDropped: (drop) => {
+            if (drop.urls && drop.urls.length > 0) {
+                versionManager.onFileSelected(drop.urls[0].toString())
+                fieldImageVersion.currentIndex = fieldImageVersion.model.count - 1
+            }
+        }
+    }
+
     function initialize(savedSettings) {
         // TODO
     }
@@ -350,6 +364,8 @@ Item {
         settings.consensusClient = fieldDualConsensusClient.model.get(fieldDualConsensusClient.currentIndex).value
         settings.executionPort = fieldDualExecutionPort.text
         settings.consensusPort = fieldDualConsensusPort.text
+        settings.monitoring = monitoring.checked
+        settings.formatStorage = formatStorage.checked
         settings.selectOs(fieldImageVersion.getSelectedOs())
         settings.apply()
         settings.save()

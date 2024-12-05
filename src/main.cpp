@@ -353,7 +353,9 @@ int main(int argc, char *argv[])
 
     QObject *mainWindow = engine.rootObjects().value(0);
     QObject *writingPage = mainWindow->findChild<QObject*>("writingPage");
+    QObject *versionManager = mainWindow->findChild<QObject*>("versionManager");
     QObject *hostResolverPage = mainWindow->findChild<QObject*>("hostResolverPage");
+
     if (writingPage) {
         writingPage->connect(&imageWriter, SIGNAL(downloadProgress(QVariant,QVariant)), writingPage, SLOT(onDownloadProgress(QVariant,QVariant)));
         writingPage->connect(&imageWriter, SIGNAL(verifyProgress(QVariant,QVariant)), writingPage, SLOT(onVerifyProgress(QVariant,QVariant)));
@@ -366,15 +368,20 @@ int main(int argc, char *argv[])
         qWarning() << "WritingPage not found!";
     }
 
+    if (versionManager) {
+        versionManager->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), versionManager, SLOT(onFileSelected(QVariant)));
+        versionManager->connect(&imageWriter, SIGNAL(networkOnline()), versionManager, SLOT(fetchOSList()));
+        versionManager->connect(&imageWriter, SIGNAL(osListPrepared()), versionManager, SLOT(onOsListPrepared()));
+    } else {
+        qWarning() << "VersionManager not found!";
+    }
+
     if (hostResolverPage) {
         hostResolverPage->connect(&hostResolver, SIGNAL(hostResolved(QVariant,QVariant)), hostResolverPage, SLOT(onHostResolved(QVariant,QVariant)));
     } else {
         qWarning() << "HostResolverPage not found!";
     }
 
-    mainWindow->connect(&imageWriter, SIGNAL(fileSelected(QVariant)), mainWindow, SLOT(onFileSelected(QVariant)));
-    mainWindow->connect(&imageWriter, SIGNAL(networkOnline()), mainWindow, SLOT(fetchOSlist()));
-    mainWindow->connect(&imageWriter, SIGNAL(osListPrepared()), mainWindow, SLOT(onOsListPrepared()));
     mainWindow->connect(&imageWriter, SIGNAL(networkInfo(QVariant)), mainWindow, SLOT(onNetworkInfo(QVariant)));
 
 #ifndef QT_NO_WIDGETS
