@@ -15,10 +15,14 @@ Window {
 
     width: 560
     height: 580
-    minimumWidth: 560
-    minimumHeight: 620
+    minimumWidth: width
+    maximumWidth: width
+    minimumHeight: height
+    maximumHeight: height
 
     title: qsTr("Advanced settings")
+
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint
 
     Material.theme: Material.Light
     Material.foreground: "#666"

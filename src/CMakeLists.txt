@@ -21,8 +21,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_link_options("-fsanitize=address")
 
 # You _must_ set your Qt6 root for the build to progress.C
-#set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
-set(Qt6_ROOT "/Users/deimos/dev/Qt/6.7.0/macos" CACHE PATH "Your Qt6 root path")
+set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
+# set(Qt6_ROOT "/Users/deimos/dev/Qt/6.7.0/macos" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
     set(MINGW64_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")

@@ -180,6 +180,8 @@ Item {
         progressValue.text = ""
         progressBar.value = 0
         progressBar.Material.accent = Material.accent
+        cancelwritebutton.visible = true
+        cancelverifybutton.visible = false
         end(mode)
     }
 
