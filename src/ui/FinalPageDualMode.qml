@@ -58,7 +58,7 @@ Item {
                     Layout.topMargin: 15
 
                     ImText {
-                        text: qsTr("Monitor installation process at: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
+                        text: qsTr("Monitor installation process at:")
                         textFormat: Text.RichText
                         color: "#99ffffff"
                         font.pixelSize: 20
@@ -77,7 +77,7 @@ Item {
                     }
 
                     ImText {
-                        text: qsTr("2. Consensus Device: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostnameConsensus)
+                        text: qsTr("2. Consensus Device: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostnameConsesnus)
                         textFormat: Text.RichText
                         Layout.leftMargin: 5
                         color: "#99ffffff"
@@ -105,7 +105,6 @@ Item {
         RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             spacing: 20
-
 
             ButtonPrimary {
                 id: finishButton

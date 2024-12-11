@@ -30,8 +30,8 @@ Item {
             Layout.topMargin: 25
 
             ImText {
-                text: qsTr("Web3 Pi v. 0.7.3 - 64bit (latest) has been written to<br>Apple SDXC Reader Media for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
-                // text: qsTr("%1 has been written to<br>%2 for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                // text: qsTr("Web3 Pi v. 0.7.3 - 64bit (latest) has been written to<br>Apple SDXC Reader Media for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                text: qsTr("%1 has been written to<br>%2 for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 20
                 font.weight: Font.Medium

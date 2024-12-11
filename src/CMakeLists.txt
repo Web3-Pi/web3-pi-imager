@@ -8,7 +8,7 @@ OPTION (DRIVELIST_FILTER_SYSTEM_DRIVES "Filter System drives from displayed driv
 
 set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Which macOS architectures to build for")
 
-project(rpi-imager LANGUAGES CXX C)
+project(web3-pi-imager LANGUAGES CXX C)
 set(IMAGER_VERSION_MAJOR 0)
 set(IMAGER_VERSION_MINOR 1)
 set(IMAGER_VERSION_PATCH 0)
@@ -21,7 +21,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_link_options("-fsanitize=address")
 
 # You _must_ set your Qt6 root for the build to progress.C
-set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
+#set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
+set(Qt6_ROOT "/Users/deimos/dev/Qt/6.7.0/macos" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
     set(MINGW64_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
@@ -208,7 +209,7 @@ elseif (WIN32)
         windows/winwlancredentials.h
         windows/winwlancredentials.cpp
     )
-    set(DEPENDENCIES windows/rpi-imager.rc)
+    set(DEPENDENCIES windows/web3-pi-imager.rc)
     set(EXTRALIBS setupapi wlanapi Bcrypt.dll)
 endif()
 
@@ -270,15 +271,15 @@ if(${QT}WinExtras_FOUND)
     set(EXTRALIBS ${EXTRALIBS} ${QT}::WinExtras)
 endif()
 
-set(TRANSLATIONS i18n/rpi-imager_en.ts i18n/rpi-imager_nl.ts i18n/rpi-imager_zh.ts i18n/rpi-imager_tr.ts
-    i18n/rpi-imager_fr.ts i18n/rpi-imager_de.ts i18n/rpi-imager_sk.ts i18n/rpi-imager_it.ts
-    i18n/rpi-imager_ca.ts i18n/rpi-imager_sl.ts i18n/rpi-imager_ko.ts i18n/rpi-imager_ja.ts
-    i18n/rpi-imager_ru.ts i18n/rpi-imager_es.ts i18n/rpi-imager_uk.ts i18n/rpi-imager_zh-TW.ts
-    i18n/rpi-imager_pl.ts i18n/rpi-imager_he.ts i18n/rpi-imager_pt.ts)
-#qt6_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TRANSLATIONS})
-qt_add_translation(QM_FILES  ${TRANSLATIONS})
-configure_file(i18n/translations.qrc "${CMAKE_CURRENT_BINARY_DIR}" COPYONLY)
-set(SOURCES ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc ${QM_FILES})
+#set(TRANSLATIONS i18n/web3-pi-imager_en.ts i18n/web3-pi-imager_nl.ts i18n/web3-pi-imager_zh.ts i18n/web3-pi-imager_tr.ts
+#    i18n/web3-pi-imager_fr.ts i18n/web3-pi-imager_de.ts i18n/web3-pi-imager_sk.ts i18n/web3-pi-imager_it.ts
+#    i18n/web3-pi-imager_ca.ts i18n/web3-pi-imager_sl.ts i18n/web3-pi-imager_ko.ts i18n/web3-pi-imager_ja.ts
+#    i18n/web3-pi-imager_ru.ts i18n/web3-pi-imager_es.ts i18n/web3-pi-imager_uk.ts i18n/web3-pi-imager_zh-TW.ts
+#    i18n/web3-pi-imager_pl.ts i18n/web3-pi-imager_he.ts i18n/web3-pi-imager_pt.ts)
+##qt6_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TRANSLATIONS})
+#qt_add_translation(QM_FILES  ${TRANSLATIONS})
+#configure_file(i18n/translations.qrc "${CMAKE_CURRENT_BINARY_DIR}" COPYONLY)
+#set(SOURCES ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc ${QM_FILES})
 
 if (WIN32)
     # Adding WIN32 prevents a console window being opened on Windows
@@ -384,12 +385,12 @@ if (WIN32)
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe" "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe"
-            "${CMAKE_SOURCE_DIR}/../license.txt" "${CMAKE_SOURCE_DIR}/windows/rpi-imager-cli.cmd"
+            "${CMAKE_SOURCE_DIR}/../license.txt"
             "${CMAKE_BINARY_DIR}/deploy")
 
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/windows/rpi-imager.nsi.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/rpi-imager.nsi"
+        "${CMAKE_CURRENT_SOURCE_DIR}/windows/web3-pi-imager.nsi.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/web3-pi-imager.nsi"
         @ONLY)
 
     add_custom_command(TARGET ${PROJECT_NAME}
@@ -402,7 +403,7 @@ if (WIN32)
 
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        COMMAND "${WINDEPLOYQT}" --no-translations --qmldir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/deploy/rpi-imager.exe")
+        COMMAND "${WINDEPLOYQT}" --no-translations --qmldir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/deploy/web3-pi-imager.exe")
 
     # Remove excess files
     add_custom_command(TARGET ${PROJECT_NAME}
@@ -435,16 +436,16 @@ elseif(APPLE)
                 COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}")
             add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
-                COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.app")
+                COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
             # Sign the .app.
             add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
-                COMMAND codesign -f --deep --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.app")
+                COMMAND codesign -f --deep --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
 
             # Create the .dmg for distribution
             add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
-                COMMAND hdiutil create -volname "Raspberry Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.dmg")
+                COMMAND hdiutil create -volname "Web3 Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
 
             # Sign the .dmg for distribution, but do not initialise notarisation
             add_custom_command(TARGET ${PROJECT_NAME}
@@ -455,10 +456,10 @@ elseif(APPLE)
                 if(IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
                     add_custom_command(TARGET ${PROJECT_NAME}
                         POST_BUILD
-                        COMMAND xcrun notarytool submit "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.dmg" --wait --keychain-profile "${IMAGER_NOTARIZE_KEYCHAIN_PROFILE}")
+                        COMMAND xcrun notarytool submit "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg" --wait --keychain-profile "${IMAGER_NOTARIZE_KEYCHAIN_PROFILE}")
                     add_custom_command(TARGET ${PROJECT_NAME}
                         POST_BUILD
-                        COMMAND xcrun stapler staple "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.dmg")
+                        COMMAND xcrun stapler staple "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
                 else()
                     message(FATAL_ERROR "Notarization requested, but no keychain profile is supplied")
                 endif(IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
@@ -476,7 +477,7 @@ elseif(APPLE)
 
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        COMMAND "mv" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.dmg" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
+        COMMAND "mv" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.dmg" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
 
 else()
     # UNIX, Linux systems
@@ -493,9 +494,9 @@ else()
     endif()
 
     install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../debian/rpi-imager.png" DESTINATION share/icons/hicolor/128x128/apps)
-    install(FILES "linux/org.raspberrypi.rpi-imager.desktop" DESTINATION share/applications)
-    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../debian/rpi-imager.metainfo.xml" DESTINATION share/metainfo)
+    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../debian/web3-pi-imager.png" DESTINATION share/icons/hicolor/128x128/apps)
+    install(FILES "linux/org.web3-pi-imager.desktop" DESTINATION share/applications)
+    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../debian/web3-pi-imager.metainfo.xml" DESTINATION share/metainfo)
 endif()
 
 include_directories(${CURL_INCLUDE_DIR} ${LibArchive_INCLUDE_DIR} ${LIBLZMA_INCLUDE_DIRS} ${LIBDRM_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${ZSTD_INCLUDE_DIR})
