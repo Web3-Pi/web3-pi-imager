@@ -1,7 +1,8 @@
- - [ ] Embedded mode UI/components
- - [ ] Translations
+ - [x] Embedded mode UI/components
+ - [x] Translations
  - [ ] Fields validations
- - [ ] CLI
+ - [x] CLI
+ - [ ] settings persistence
 
 R:
 
@@ -12,6 +13,6 @@ R:
  - [x] exec url without var
  - [x] wifi recomended insead srongly
 
- - [ ] cli removed
- - [ ] translations removed
- - [ ] telemetry
+ - [x] cli removed
+ - [x] translations removed
+ - [x] telemetry off

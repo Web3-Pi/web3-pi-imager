@@ -76,7 +76,7 @@ Popup {
     }
 
     background: Rectangle {
-        radius: control.Material.roundedScale
+        radius: Material.roundedScale
         color: Material.foreground
         border.width: 1
         border.color: Material.background

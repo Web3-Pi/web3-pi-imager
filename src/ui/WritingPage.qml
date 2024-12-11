@@ -8,6 +8,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material.impl
 import "components"
 
 Item {
@@ -66,14 +67,13 @@ Item {
                     height: 8
                     y: (progressBar.height - height) / 2
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: Material.accent }
+                        GradientStop { position: 0.0; color: "#e5447a" }
                         GradientStop { position: 1.0; color: Material.primary }
                         orientation: Gradient.Horizontal
                     }
                 }
                 Component.onCompleted: {
                     contentItem.implicitHeight = 8
-                    contentItem.scale = 1
                 }
 
             }

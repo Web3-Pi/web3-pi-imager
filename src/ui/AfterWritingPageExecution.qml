@@ -30,7 +30,7 @@ Item {
             Layout.topMargin: 25
 
             ImText {
-                text: qsTr("<b>%1</b>has been written to<br><b>%2</b> for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                text: qsTr("<b>%1</b> has been written to<br><b>%2</b> for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 20
                 font.weight: Font.Medium

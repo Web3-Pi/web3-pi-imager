@@ -25,7 +25,7 @@ Item {
             spacing: 40
             ColumnLayout {
                 spacing: 20
-                anchors.top: parent.top
+                Layout.alignment: Qt.AlignTop
                 Rectangle {
                     height: 120
                     width: 170
@@ -66,7 +66,7 @@ Item {
             }
             ColumnLayout {
                 spacing: 20
-                anchors.top: parent.top
+                Layout.alignment: Qt.AlignTop
                 Rectangle {
                     height: 120
                     width: 170
@@ -106,7 +106,7 @@ Item {
             }
         }
         RowLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignCenter
             TextInfo {
                 text: "For more information head to <a href='http://www.web3pi.io' style='color: \"#249EC7\"'>www.web3pi.io</a>"
                 textFormat: Text.RichText

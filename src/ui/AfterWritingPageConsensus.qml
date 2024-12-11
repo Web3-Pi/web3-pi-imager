@@ -31,7 +31,7 @@ Item {
 
             ImText {
                 // text: qsTr("<b>Web3 Pi v. 0.7.3 - 64bit (latest)</b> has been written to<br><b>Apple SDXC Reader Media</b> for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
-                text: qsTr("<b>%1</b>has been written to<br><b>%2</b> for Consensus Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                text: qsTr("<b>%1</b> has been written to<br><b>%2</b> for Consensus Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 Layout.alignment: Qt.AlignCenter
                 font.pointSize: 20
                 font.weight: Font.Medium

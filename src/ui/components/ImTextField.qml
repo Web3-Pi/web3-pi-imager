@@ -10,7 +10,7 @@ TextField {
     padding: 0
     implicitHeight: 42
     Layout.fillWidth: true
-    Material.foreground: "#666"
+    Material.foreground: "#222"
     font.weight: Font.Medium
     background: Rectangle {
         color: "white"

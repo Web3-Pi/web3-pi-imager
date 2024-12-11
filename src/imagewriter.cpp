@@ -288,12 +288,12 @@ void ImageWriter::startWrite()
     else
     {
         _thread = new DownloadExtractThread(urlstr, _dst.toLatin1(), _expectedHash, this);
-        if (_repo.toString() == OSLIST_URL)
-        {
-            DownloadStatsTelemetry *tele = new DownloadStatsTelemetry(urlstr, _parentCategory.toLatin1(), _osName.toLatin1(), _embeddedMode, _currentLangcode, this);
-            connect(tele, SIGNAL(finished()), tele, SLOT(deleteLater()));
-            tele->start();
-        }
+        // if (_repo.toString() == OSLIST_URL)
+        // {
+        //     DownloadStatsTelemetry *tele = new DownloadStatsTelemetry(urlstr, _parentCategory.toLatin1(), _osName.toLatin1(), _embeddedMode, _currentLangcode, this);
+        //     connect(tele, SIGNAL(finished()), tele, SLOT(deleteLater()));
+        //     tele->start();
+        // }
     }
 
     connect(_thread, SIGNAL(success()), SLOT(onSuccess()));

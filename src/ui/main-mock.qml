@@ -78,7 +78,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: FinalPageDualMode {}
+                initialItem: WritingPage {}
             }
         }
     }
@@ -137,14 +137,6 @@ Window {
         noButton: true
         title: qsTr("Warning")
         modal: true
-        onYes: {
-            if (!imageWriter.readyToWrite()) {
-                // TODO: show error ... ?
-                console.log("Image writer is not ready to write")
-                return
-            }
-            selected(mode)
-        }
 
         function askForConfirmation() {
             text = qsTr("All existing data on '%1' will be erased.<br>Are you sure you want to continue?").arg(settings.selectedDsc)

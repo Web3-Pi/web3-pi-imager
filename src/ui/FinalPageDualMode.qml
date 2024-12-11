@@ -39,13 +39,13 @@ Item {
                     text: "Thank you for choosing Web3 Pi"
                     font.pointSize: 28
                     font.weight: Font.Medium
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.alignment: Qt.AlignHCenter
                 }
 
                 Item {
                     width: 82
                     height: 105
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.alignment: Qt.AlignHCenter
                     Image {
                         anchors.fill: parent
                         source: "icons/success.png"
