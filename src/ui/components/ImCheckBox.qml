@@ -11,6 +11,8 @@ import QtQuick.Controls.Material 2.2
 CheckBox {
     Keys.onEnterPressed: toggle()
     Keys.onReturnPressed: toggle()
-    font.family: roboto.name
-    font.pointSize: 14
+    font.family: outfit.name
+    font.pointSize: 18
+    padding: 0
+    Material.foreground: Material.theme === Material.Dark ? "#ffffff" : "#000000"
 }

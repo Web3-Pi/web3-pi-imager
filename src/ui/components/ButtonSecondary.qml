@@ -8,7 +8,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 
-ImButton {
-    Material.background: activeFocus ? "#32a0d7" : "#cd2355"
-    Material.foreground: "#ffffff"
+ButtonPrimary {
+    Material.background: "#E51763"
+    Material.foreground: "#FFFFFF"
+    rippleColor: "#20ffffff"
 }

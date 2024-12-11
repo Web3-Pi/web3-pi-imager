@@ -16,200 +16,105 @@ Item {
 
     ColumnLayout {
         anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.rightMargin: 35
-        anchors.leftMargin: 35
-        anchors.bottomMargin: 35
-        anchors.topMargin: 35
-        anchors.fill: parent
+        anchors.horizontalCenter: parent.horizontalCenter
 
-        ColumnLayout {
-            id: columnLayoutMode
+        RowLayout {
+            Layout.topMargin: 80
+            Layout.bottomMargin: 80
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             spacing: 40
-            Layout.topMargin: 30
-            Layout.bottomMargin: 30
+            ColumnLayout {
+                spacing: 20
+                anchors.top: parent.top
+                Rectangle {
+                    height: 120
+                    width: 170
+                    Layout.bottomMargin: 10
+                    color: "transparent"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Image {
+                        source: "./icons/mode_single.png"
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                    }
+                }
 
-            ImText {
-                text: "Select operating mode:"
+                ButtonPrimary {
+                    text: qsTr("Single Mode Device")
+                    font.weight: Font.Bold
+                    font.pointSize: 22
+                    Layout.preferredWidth: 248
+                    Layout.preferredHeight: 55
+                    onClicked: {
+                        settings.mode = "single"
+                        stackView.push(singleModeForm)
+                    }
+                }
+
+                ImText {
+                    text: "Raspberry Pi 5 (8GB) min."
+                    font.pointSize: 20
+                    font.weight: Font.Medium
+                }
+
+                ImText {
+                    text: "Execution and Consensus\nEthereum layers, with\nintegrated monitoring tools\non a single device."
+                    font.family: dmsans.name
+                    font.italic: true
+                    font.pointSize: 16
+                }
+
             }
-
-            // Single Mode Item
-            Rectangle {
-                id: singleModeBg
-                width: 300
-                height: 130
-                radius: 10
-                border.color: "#a60434"
-                border.width: 1
-                Layout.rightMargin: 20
-                Layout.leftMargin: 20
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                color: "#fff"
-
-                RowLayout {
-                    anchors.fill: parent
-                    layoutDirection: Qt.LeftToRight
-                    spacing: 10
-
-                    Rectangle {
-                        Layout.leftMargin: 20
-                        Layout.rightMargin: 10
-                        width: 64
-                        height: 64
-                        radius: 8
-                        color: "#fae0e0"
-                        border.width: 0
-                        Image {
-                            source: "./icons/mode_single.png"
-                            sourceSize.width: 64
-                            fillMode: Image.Stretch
-                            smooth: true
-                        }
-                    }
-
-                    ColumnLayout {
-                        spacing: 5
-                        Layout.fillWidth: true
-                        Layout.rightMargin: 20
-                        Text {
-                            id: singleModeLabel
-                            text: "Single Mode Device"
-                            font.bold: true
-                            font.pixelSize: 18
-                            color: "#cd2355"
-                            Layout.fillWidth: true
-                        }
-
-
-                        Text {
-                            id: singleModeText
-                            Layout.fillWidth: true
-                            text: "Execution and Consensus layer\non one device.\nRaspberry Pi 5 recommended"
-                            font.pixelSize: 11
-                            wrapMode: Text.WordWrap
-                            color: "#cd2355"
-                        }
+            ColumnLayout {
+                spacing: 20
+                anchors.top: parent.top
+                Rectangle {
+                    height: 120
+                    width: 170
+                    Layout.bottomMargin: 10
+                    color: "transparent"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Image {
+                        source: "./icons/mode_dual.png"
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
                     }
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: setMode(false)
-                }
-            }
-
-            // Dual Mode Item
-            Rectangle {
-                id: dualModeBg
-                width: 350
-                height: 130
-                radius: 10
-                border.color: "#fff"
-                border.width: 1
-                Layout.rightMargin: 20
-                Layout.leftMargin: 20
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                color: "transparent"
-
-                RowLayout {
-                    anchors.fill: parent
-                    layoutDirection: Qt.LeftToRight
-                    spacing: 10
-
-
-                    Rectangle {
-                        Layout.leftMargin: 20
-                        Layout.rightMargin: 10
-                        width: 64
-                        height: 64
-                        radius: 8
-                        color: "#fae0e0"
-                        border.width: 0
-                        Image {
-                            source: "./icons/mode_dual.png"
-                            sourceSize.width: 64
-                            fillMode: Image.Stretch
-                            smooth: true
-                        }
-                    }
-
-                    ColumnLayout {
-                        spacing: 5
-                        Layout.fillWidth: true
-                        Layout.rightMargin: 20
-                        Text {
-                            id: dualModeLabel
-                            text: "Dual Mode Device"
-                            font.bold: true
-                            font.pixelSize: 18
-                            color: "#fff"
-                            Layout.fillWidth: true
-                        }
-
-
-                        Text {
-                            id: dualModeText
-                            Layout.fillWidth: true
-                            text: "Two sets of devices required.\nMinimum is 2 x Raspberry Pi 4.\n1. Execution layer (min. 2TB storage)\n2. Consensus layer (~ 0.5TB storage)"
-                            font.pixelSize: 11
-                            wrapMode: Text.WordWrap
-                            color: "#eee"
-                        }
+                ButtonSecondary {
+                    text: qsTr("Dual Mode Device")
+                    font.weight: Font.Bold
+                    font.pointSize: 22
+                    Layout.preferredWidth: 248
+                    Layout.preferredHeight: 55
+                    onClicked: {
+                        settings.mode = "execution"
+                        stackView.push(dualModeForm)
                     }
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: setMode(true)
+
+                ImText {
+                    text: "2x Raspberry Pi 4 (8GB) min."
+                    font.pointSize: 20
+                    font.weight: Font.Medium
+                }
+
+                ImText {
+                    text: "Two sets of devices are required.\n- Consensus layer (~500GB storage)\n- Execution layer (2TB storage)"
+                    font.family: dmsans.name
+                    font.italic: true
+                    font.pointSize: 16
                 }
             }
         }
-
-        Item {
-            Layout.fillHeight: true
-        }
-
-        ImButton {
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
-            padding: 5
-            id: nextbutton
-            text: qsTr("Next")
-            Layout.alignment: Qt.AlignCenter
-            onClicked: {
-                stackView.push(settings.mode === "single" ? singleModeForm : dualModeForm)
+        RowLayout {
+            anchors.horizontalCenter: parent.horizontalCenter
+            TextInfo {
+                text: "For more information head to <a href='http://www.web3pi.io' style='color: \"#249EC7\"'>www.web3pi.io</a>"
+                textFormat: Text.RichText
+                onLinkActivated: (link) => Qt.openUrlExternally(link)
             }
         }
-
     }
 
-    function setMode(isDualMode = true) {
-        settings.mode = isDualMode ? "execution" : "single"
-
-        if (isDualMode) {
-            singleModeBg.color = "transparent"
-            singleModeBg.border.color = "#fff"
-            singleModeLabel.color = "#fff"
-            singleModeText.color = "#eee"
-
-            dualModeBg.color = "#fff"
-            dualModeBg.border.color = "#a60434"
-            dualModeLabel.color = "#cd2355"
-            dualModeText.color = "#cd2355"
-        } else {
-            singleModeBg.color = "#fff"
-            singleModeBg.border.color = "#a60434"
-            singleModeLabel.color = "#cd2355"
-            singleModeText.color = "#cd2355"
-
-            dualModeBg.color = "transparent"
-            dualModeBg.border.color = "#fff"
-            dualModeLabel.color = "#fff"
-            dualModeText.color = "#eee"
-        }
-    }
 }
 
 

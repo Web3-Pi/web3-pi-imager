@@ -14,7 +14,7 @@
 #include "hostresolver.h"
 #include "drivelistmodel.h"
 #include "networkaccessmanagerfactory.h"
-#include "cli.h"
+// #include "cli.h"
 #include <QMessageLogContext>
 #include <QQuickWindow>
 #include <QTranslator>
@@ -130,15 +130,15 @@ bool handleDri()
 
 int main(int argc, char *argv[])
 {
-    for (int i = 1; i < argc; i++)
-    {
-        if (strcmp(argv[i], "--cli") == 0)
-        {
-            /* CLI mode */
-            Cli cli(argc, argv);
-            return cli.run();
-        }
-    }
+    // for (int i = 1; i < argc; i++)
+    // {
+    //     if (strcmp(argv[i], "--cli") == 0)
+    //     {
+    //         /* CLI mode */
+    //         Cli cli(argc, argv);
+    //         return cli.run();
+    //     }
+    // }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -185,10 +185,10 @@ int main(int argc, char *argv[])
 #else
     QApplication app(argc, argv);
 #endif
-    app.setOrganizationName("Raspberry Pi");
-    app.setOrganizationDomain("raspberrypi.org");
-    app.setApplicationName("Imager");
-    app.setWindowIcon(QIcon(":/icons/rpi-imager.ico"));
+    app.setOrganizationName("Web3 Pi");
+    app.setOrganizationDomain("web3pi.io");
+    app.setApplicationName("Web3 Pi Imager");
+    app.setWindowIcon(QIcon(":/icons/web3pi-imager.ico"));
     ImageWriter imageWriter;
     NetworkAccessManagerFactory namf;
     QQmlApplicationEngine engine;
@@ -305,39 +305,39 @@ int main(int argc, char *argv[])
             cerr << "Ignoring unknown argument: " << args[i] << endl;
         }
     }
-
-    QTranslator *translator = new QTranslator;
-    if (customQm.isEmpty())
-    {
-#ifdef Q_OS_DARWIN
-        QString langcode = "en_GB";
-        CFArrayRef prefLangs = CFLocaleCopyPreferredLanguages();
-        if (CFArrayGetCount(prefLangs))
-        {
-            char buf[32] = {0};
-            CFStringRef strRef = (CFStringRef) CFArrayGetValueAtIndex(prefLangs, 0);
-            CFStringGetCString(strRef, buf, sizeof(buf), kCFStringEncodingUTF8);
-            langcode = buf;
-            langcode.replace('-', '_');
-            qDebug() << "OSX most preferred language:" << langcode;
-        }
-
-        CFRelease(prefLangs);
-        QLocale::setDefault(QLocale(langcode));
-#endif
-
-        if (translator->load(QLocale(), "rpi-imager", "_", QLatin1String(":/i18n")))
-            imageWriter.replaceTranslator(translator);
-        else
-            delete translator;
-    }
-    else
-    {
-        if (translator->load(customQm))
-            imageWriter.replaceTranslator(translator);
-        else
-            delete translator;
-    }
+//
+//     QTranslator *translator = new QTranslator;
+//     if (customQm.isEmpty())
+//     {
+// #ifdef Q_OS_DARWIN
+//         QString langcode = "en_GB";
+//         CFArrayRef prefLangs = CFLocaleCopyPreferredLanguages();
+//         if (CFArrayGetCount(prefLangs))
+//         {
+//             char buf[32] = {0};
+//             CFStringRef strRef = (CFStringRef) CFArrayGetValueAtIndex(prefLangs, 0);
+//             CFStringGetCString(strRef, buf, sizeof(buf), kCFStringEncodingUTF8);
+//             langcode = buf;
+//             langcode.replace('-', '_');
+//             qDebug() << "OSX most preferred language:" << langcode;
+//         }
+//
+//         CFRelease(prefLangs);
+//         QLocale::setDefault(QLocale(langcode));
+// #endif
+//
+//         if (translator->load(QLocale(), "rpi-imager", "_", QLatin1String(":/i18n")))
+//             imageWriter.replaceTranslator(translator);
+//         else
+//             delete translator;
+//     }
+//     else
+//     {
+//         if (translator->load(customQm))
+//             imageWriter.replaceTranslator(translator);
+//         else
+//             delete translator;
+//     }
 
     if (!url.isEmpty())
         imageWriter.setSrc(url);

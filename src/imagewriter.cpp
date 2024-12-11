@@ -57,73 +57,6 @@ namespace {
     constexpr uint MAX_SUBITEMS_DEPTH = 16;
 } // namespace anonymous
 
-// TODO: tmp
-void ImageWriter::useMockedOsList() {
-   QString mockedResponse = R"(
-    {
-      "os_list": [
-        {
-          "name": "Web3 Pi v0.7.3 - 64bit (latest) ",
-          "description": "Get Running Your Full Ethereum Node on Raspberry Pi. 2TB storage is required (USB SSD or NVMe) ",
-          "icon": "https://web3-pi.github.io/release-json/40x40.png",
-          "url": "https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.7.3/Web3Pi_Single_Device.img.xz",
-          "extract_size": 3675607040,
-          "extract_sha256": "2a93ecacab07733f105b82e18deb4c019b82514f9db82c67ca773f13daf9d341",
-          "image_download_size": 1113688272,
-          "image_download_sha256": "ba929176edadafa3a07014f8d483f266639af280466c7729dc13a5c9500d5eca",
-          "release_date": "2024-10-30",
-          "init_format": "cloudinit",
-          "devices": [
-            "pi5-64bit",
-            "pi4-64bit"
-          ]
-        },
-        {
-          "name": "Web3 Pi v0.7.2 - 64bit",
-          "description": "Get Running Your Full Ethereum Node on Raspberry Pi. 2TB storage is required (USB SSD or NVMe) ",
-          "icon": "https://web3-pi.github.io/release-json/40x40.png",
-          "url": "https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.7.2/Web3Pi_Single_Device.img.xz",
-          "extract_size": 3675607040,
-          "extract_sha256": "2a93ecacab07733f105b82e18deb4c019b82514f9db82c67ca773f13daf9d341",
-          "image_download_size": 1113688272,
-          "image_download_sha256": "ba929176edadafa3a07014f8d483f266639af280466c7729dc13a5c9500d5eca",
-          "release_date": "2024-10-30",
-          "init_format": "cloudinit",
-          "devices": [
-            "pi5-64bit",
-            "pi4-64bit"
-          ]
-        },
-        {
-          "name": "Web3 Pi v0.7.0 - 64bit",
-          "description": "Get Running Your Full Ethereum Node on Raspberry Pi. 2TB storage is required (USB SSD or NVMe) ",
-          "icon": "https://web3-pi.github.io/release-json/40x40.png",
-          "url": "https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.7.0/Web3Pi_Single_Device.img.xz",
-          "extract_size": 3675607040,
-          "extract_sha256": "2a93ecacab07733f105b82e18deb4c019b82514f9db82c67ca773f13daf9d341",
-          "image_download_size": 1113688272,
-          "image_download_sha256": "ba929176edadafa3a07014f8d483f266639af280466c7729dc13a5c9500d5eca",
-          "release_date": "2024-10-30",
-          "init_format": "cloudinit",
-          "devices": [
-            "pi5-64bit",
-            "pi4-64bit"
-          ]
-        }
-      ]
-    }
-    )";
-
-    QJsonParseError parseError;
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(mockedResponse.toUtf8(), &parseError);
-
-    if (parseError.error == QJsonParseError::NoError) {
-        _completeOsList = jsonDoc;
-    } else {
-        qWarning() << "Failed to parse JSON:" << parseError.errorString();
-    }
-}
-
 ImageWriter::ImageWriter(QObject *parent)
     : QObject(parent), _repo(QUrl(QString(OSLIST_URL))), _dlnow(0), _verifynow(0),
       _engine(nullptr), _thread(nullptr), _verifyEnabled(false), _cachingEnabled(false),
@@ -215,36 +148,35 @@ ImageWriter::ImageWriter(QObject *parent)
     }
     _settings.endGroup();
 
-    QDir dir(":/i18n", "rpi-imager_*.qm");
-    const QStringList transFiles = dir.entryList();
-    QLocale currentLocale;
-    QStringList localeComponents = currentLocale.name().split('_');
-    QString currentlangcode;
-    if (!localeComponents.isEmpty())
-        currentlangcode = localeComponents.first();
-
-    for (const QString &tf : transFiles)
-    {
-        QString langcode = tf.mid(11, tf.length()-14);
-        /* FIXME: we currently lack a font with support for Chinese characters in embedded mode */
-        //if (isEmbeddedMode() && langcode == "zh")
-        //    continue;
-
-        QLocale loc(langcode);
-        /* Use "English" for "en" and not "American English" */
-        QString langname = (langcode == "en" ? "English" : loc.nativeLanguageName() );
-        _translations.insert(langname, langcode);
-        if (langcode == currentlangcode)
-        {
-            _currentLang = langname;
-            _currentLangcode = currentlangcode;
-        }
-    }
+    // QDir dir(":/i18n", "rpi-imager_*.qm");
+    // const QStringList transFiles = dir.entryList();
+    // QLocale currentLocale;
+    // QStringList localeComponents = currentLocale.name().split('_');
+    // QString currentlangcode;
+    // if (!localeComponents.isEmpty())
+    //     currentlangcode = localeComponents.first();
+    //
+    // for (const QString &tf : transFiles)
+    // {
+    //     QString langcode = tf.mid(11, tf.length()-14);
+    //     /* FIXME: we currently lack a font with support for Chinese characters in embedded mode */
+    //     //if (isEmbeddedMode() && langcode == "zh")
+    //     //    continue;
+    //
+    //     QLocale loc(langcode);
+    //     /* Use "English" for "en" and not "American English" */
+    //     QString langname = (langcode == "en" ? "English" : loc.nativeLanguageName() );
+    //     _translations.insert(langname, langcode);
+    //     if (langcode == currentlangcode)
+    //     {
+    //         _currentLang = langname;
+    //         _currentLangcode = currentlangcode;
+    //     }
+    // }
     //_currentKeyboard = "us";
 
     // Centralised network manager, for fetching OS lists
     connect(&_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(handleNetworkRequestFinished(QNetworkReply *)));
-    // useMockedOsList();
 
     QByteArray randomBytes;
     for (int i = 0; i < 32; ++i) {

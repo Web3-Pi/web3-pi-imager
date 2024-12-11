@@ -8,6 +8,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material.impl
 import "components"
 
 Item {
@@ -21,51 +22,76 @@ Item {
         anchors.left: parent.left
         anchors.rightMargin: 35
         anchors.leftMargin: 35
-        anchors.topMargin: 20
+        anchors.topMargin: 10
         anchors.bottomMargin: 35
         anchors.fill: parent
 
         Item {
-            Layout.fillHeight: true
+            // Layout.fillHeight: true
         }
         ColumnLayout {
             Layout.alignment: Qt.AlignCenter
             spacing: 25
 
+            Layout.topMargin: 40
+
             Column {
                 id: loader
                 Layout.alignment: Qt.AlignCenter
-                spacing: 35
+                spacing: 65
                 visible: true
+                Layout.topMargin: 40
 
-                ImText {
-                    text: "Searching for a device on the network...\n\nIt can take up to 4 minutes after starting the device."
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
+                ColumnLayout {
+
+                    ImText {
+                        text: "Searching for a device on the network..."
+                        font.pointSize: 20
+                        font.weight: Font.Medium
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+
+                    ImText {
+                        text: "It can take up to 4 minutes after starting the device."
+                        font.pointSize: 20
+                        font.weight: Font.Medium
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "#99ffffff"
+                    }
                 }
+
 
                 BusyIndicator {
                     id: busyIndicator
                     running: true
-                    width: 100
-                    height: 100
+                    width: 132
+                    height: 132
                     anchors.horizontalCenter: parent.horizontalCenter
                     Material.theme: Material.Dark
                 }
+                Item {
+                    // Layout.fillHeight: true
+                }
             }
 
-            Column {
+            ColumnLayout {
                 id: successInfo
                 visible: false
                 Layout.alignment: Qt.AlignCenter
-                spacing: 15
+                spacing: 40
+                Layout.topMargin: 10
+
+
+                ImText {
+                    text: "Thank you for choosing Web3 Pi"
+                    font.pointSize: 28
+                    font.weight: Font.Medium
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
 
                 Item {
-
-                    width: 100
-                    height: 100
+                    width: 82
+                    height: 105
                     anchors.horizontalCenter: parent.horizontalCenter
                     Image {
                         anchors.fill: parent
@@ -73,85 +99,50 @@ Item {
                         Layout.alignment: Qt.AlignCenter
                     }
                 }
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignCenter
+                    spacing: 5
 
-                ImText {
-                    text: "Now you can monitor the installation process at"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: qsTr("<a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 18
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onLinkActivated: (link) => Qt.openUrlExternally(link)
-                }
+                    ImText {
+                        text: qsTr("Monitor installation process at: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
+                        textFormat: Text.RichText
+                        color: "#99ffffff"
+                        font.pointSize: 18
+                        font.weight: Font.Medium
+                        onLinkActivated: (link) => Qt.openUrlExternally(link)
+                    }
 
-                ImText {
-                    topPadding: 24
-                    text: "After installation is complete, you can log in via SSH using credentials:"
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "ethereum:ethereum"
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                Item {
-                    height: 10
-                    width: 100
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+                    ImText {
+                        text: "Log in via SSH using credentials: <span style='color: white;'>ethereum:ethereum</span>"
+                        textFormat: Text.RichText
+                        color: "#99ffffff"
+                        font.pointSize: 18
+                        font.weight: Font.Medium
+                    }
 
-                ImText {
-                    text: "More information at"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.italic: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                ImText {
-                    text: "<a href='https://www.web3pi.io' style='color: white;'>https://www.web3pi.io</a>"
-                    textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 13
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onLinkActivated: {
-                        Qt.openUrlExternally(link)
+                    ImText {
+                        text: qsTr("More information at: <a href='https://www.web3pi.io' style='color: white;'>www.web3pi.io</a>")
+                        textFormat: Text.RichText
+                        color: "#99ffffff"
+                        font.pointSize: 18
+                        font.weight: Font.Medium
+                        onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
                 }
-
             }
 
-            Column {
+            ColumnLayout {
                 id: timeoutInfo
                 visible: false
                 Layout.alignment: Qt.AlignCenter
                 spacing: 35
+                Layout.topMargin: 10
 
                 Item {
-
-                    width: 100
-                    height: 100
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    width: 400
+                    height: 182
+                    Layout.fillWidth: false
                     Image {
                         anchors.fill: parent
                         source: "icons/warning.png"
@@ -160,31 +151,37 @@ Item {
                 }
 
                 ImText {
-                    text: "The device cannot be found on the network.\n\nCheck if it starts correctly or restart"
-                    // textFormat: Text.RichText
-                    color: "#fff"
-                    font.pointSize: 15
-                    font.italic: true
+                    text: "The device cannot be found on your network"
+                    font.pointSize: 22
+                    color: "#FFA200"
+                    font.weight: Font.Medium
                     horizontalAlignment: Text.AlignHCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
-                ImButton {
-                    Layout.minimumHeight: 50
-                    Layout.preferredWidth: 200
-                    Layout.alignment: Qt.AlignCenter
-                    padding: 5
-                    text: qsTr("Try again")
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Material.background: "transparent"
-                    Material.foreground: "#c7ffffff"
-                    background: Rectangle {
-                        border.color: "#c7ffffff"
-                        border.width: 1
-                        radius: 4
-                        color: "transparent"
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    ImText {
+                        text: "1. Check your connection"
+                        font.family: dmsans.name
+                        font.pointSize: 20
+                        font.italic: true
                     }
-                    onClicked: startResolving()
+
+                    ImText {
+                        text: "2. Make sure that the blinker blips green blops"
+                        font.family: dmsans.name
+                        font.pointSize: 20
+                        font.italic: true
+                    }
+
+                    ImText {
+                        text: "3. Check if your Raspberry Pi is turned on"
+                        font.family: dmsans.name
+                        font.pointSize: 20
+                        font.italic: true
+                    }
                 }
 
             }
@@ -194,29 +191,50 @@ Item {
             Layout.fillHeight: true
         }
 
-        ImButton {
-            id: cancelButton
-            visible: true
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
-            Layout.alignment: Qt.AlignCenter
-            padding: 5
-            text: qsTr("CANCEL SEARCH")
-            onClicked: {
-                onTimeout()
-            }
-        }
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            spacing: 20
 
-        ImButton {
-            id: quitButton
-            visible: false
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
-            Layout.alignment: Qt.AlignCenter
-            padding: 5
-            text: qsTr("Quit")
-            onClicked: {
-                Qt.quit()
+            ButtonSecondary {
+                id: cancelButton
+                visible: true
+                Layout.preferredWidth: 200
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("CANCEL SEARCH")
+                onClicked: {
+                    onTimeout()
+                }
+            }
+
+            ButtonOutline {
+                id: quitButton
+                visible: false
+                Layout.preferredWidth: 152
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("QUIT")
+                onClicked: {
+                    Qt.quit()
+                }
+            }
+
+            ButtonPrimary {
+                id: finishButton
+                visible: false
+                Layout.preferredWidth: 187
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("FINISH")
+                onClicked: {
+                    Qt.quit()
+                }
+            }
+
+            ButtonPrimary {
+                id: tryAgainButton
+                visible: false
+                Layout.preferredWidth: 187
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("TRY AGAIN")
+                onClicked: startResolving()
             }
         }
     }
@@ -236,6 +254,9 @@ Item {
         successInfo.visible = false;
         cancelButton.visible = true
         quitButton.visible = false
+        tryAgainButton.visible = false
+        finishButton.visible = false
+        background.color = Material.background
     }
 
     function onHostResolved(hostname, ip) {
@@ -255,17 +276,24 @@ Item {
 
     function showMsg(type = 'success') {
         if (type === 'success') {
+            background.color = Material.background
+            finishButton.visible = true
             cancelButton.visible = false
-            quitButton.visible = true
+            quitButton.visible = false
+            tryAgainButton.visible = false
             loader.visible = false
             timeoutInfo.visible = false;
             successInfo.visible = true;
         } else if (type === 'timeout') {
+            background.color = Material.accent
+            finishButton.visible = false
             cancelButton.visible = false
             quitButton.visible = true
+            tryAgainButton.visible = true
             loader.visible = false
             successInfo.visible = false;
             timeoutInfo.visible = true;
         }
     }
 }
+

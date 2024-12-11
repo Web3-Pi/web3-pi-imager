@@ -9,7 +9,7 @@
   <key>CFBundleGetInfoString</key>
   <string></string>
   <key>CFBundleIconFile</key>
-  <string>rpi-imager.icns</string>
+  <string>web3pi-imager.icns</string>
   <key>CFBundleIdentifier</key>
   <string>org.raspberrypi.imagingutility</string>
   <key>CFBundleInfoDictionaryVersion</key>

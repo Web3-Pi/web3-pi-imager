@@ -1,6 +1,17 @@
  - [ ] Embedded mode UI/components
  - [ ] Translations
- - [ ] Dynamic OS list (URL)
  - [ ] Fields validations
  - [ ] CLI
- - [ ] DropArea custom local file image
+
+R:
+
+ - [ ] win instalator
+ - [ ] storage popup
+ - [x] network config
+ - [ ] storage format file in win without ext
+ - [x] exec url without var
+ - [x] wifi recomended insead srongly
+
+ - [ ] cli removed
+ - [ ] translations removed
+ - [ ] telemetry

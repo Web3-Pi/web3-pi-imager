@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.15)
 OPTION (ENABLE_CHECK_VERSION "Check for version updates" ON)
-OPTION (ENABLE_TELEMETRY "Enable sending telemetry" ON)
+OPTION (ENABLE_TELEMETRY "Enable sending telemetry" OFF)
 OPTION (DRIVELIST_FILTER_SYSTEM_DRIVES "Filter System drives from displayed drives" ON)
 
 set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Which macOS architectures to build for")
@@ -171,7 +171,7 @@ set(HEADERS config.h imagewriter.h networkaccessmanagerfactory.h nan.h drivelist
 
 # Add dependencies
 if (APPLE)
-    set_source_files_properties("ui/icons/rpi-imager.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set_source_files_properties("ui/icons/web3pi-imager.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     set(PLATFORM_SOURCES
         mac/acceleratedcryptographichash_commoncrypto.cpp
         mac/macfile.cpp
@@ -182,7 +182,7 @@ if (APPLE)
         dependencies/drivelist/src/darwin/list.mm
         dependencies/drivelist/src/darwin/REDiskList.m
     )
-    set(DEPENDENCIES ui/icons/rpi-imager.icns)
+    set(DEPENDENCIES ui/icons/web3pi-imager.icns)
     enable_language(OBJC C)
 elseif (UNIX)
     find_package(GnuTLS REQUIRED)

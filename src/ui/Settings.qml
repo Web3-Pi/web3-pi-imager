@@ -117,7 +117,7 @@ QtObject {
         }
 
         if (executionEndpointAddress.length) {
-            addConfig(executionEndpointAddress)
+            addConfig(`exec_url=${executionEndpointAddress}`)
         } else {
             if (mode === "consensus") {
                 addConfig(`exec_url=http://${hostnameExecution}.local:8551`)
@@ -136,8 +136,7 @@ QtObject {
         }
 
         if (defaultNetwork) {
-            addConfig("nimbus_network="+defaultNetwork)
-            addConfig("lighthouse_network="+defaultNetwork)
+            addConfig("eth_network="+defaultNetwork)
         }
 
         if (monitoring && mode !== "execution") {

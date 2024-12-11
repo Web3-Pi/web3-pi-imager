@@ -41,7 +41,7 @@ Popup {
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
             text: qsTr("Use OS customization?")
         }
@@ -55,7 +55,7 @@ Popup {
             anchors.top: parent.top
             anchors.rightMargin: 25
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
 
             MouseArea {
@@ -88,7 +88,7 @@ Popup {
             font.pointSize: 12
             wrapMode: Text.Wrap
             textFormat: Text.StyledText
-            font.family: roboto.name
+            font.family: outfit.name
             Layout.fillHeight: true
             Layout.leftMargin: 25
             Layout.rightMargin: 25

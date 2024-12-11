@@ -13,12 +13,15 @@ import "components"
 Window {
     id: advancedSettings
 
-    width: 540
-    height: 620
-    minimumWidth: 540
+    width: 560
+    height: 580
+    minimumWidth: 560
     minimumHeight: 620
 
     title: qsTr("Advanced settings")
+
+    Material.theme: Material.Light
+    Material.foreground: "#666"
 
     ColumnLayout {
         anchors.top: parent.top
@@ -30,12 +33,12 @@ Window {
         anchors.topMargin: 35
         anchors.fill: parent
         ColumnLayout {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
 
             spacing: 10
 
             RowLayout {
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.alignment: Qt.AlignCenter
                 spacing: 10
                 ImCheckBox {
                     id: chkExecutionEndpointAddress
@@ -50,15 +53,14 @@ Window {
                 Item {
                     Layout.fillWidth: true
                 }
-                TextField {
+                ImTextField {
                     id: fieldExecutionEndpointAddress
                     enabled: chkExecutionEndpointAddress.checked
-                    text: "exec_url=http://localhost:8551"
+                    text: "http://localhost:8551"
                     selectByMouse: true
                     Layout.minimumWidth: 220
-                    font.pointSize: 14
-                    padding: 0
                     implicitHeight: 35
+                    Layout.fillWidth: false
                 }
             }
 
@@ -71,7 +73,7 @@ Window {
 
             ColumnLayout {
                 RowLayout {
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.alignment: Qt.AlignCenter
 
                     ImText {
                         text: qsTr("Time zone:")
@@ -81,20 +83,18 @@ Window {
                     Item {
                         Layout.fillWidth: true
                     }
-                    ComboBox {
+                    ImComboBox {
                         selectTextByMouse: true
                         id: fieldTimezone
                         editable: true
                         Layout.minimumWidth: 220
-                        font.pointSize: 12
-                        font.family: roboto.name
-                        padding: 0
                         implicitHeight: 35
+                        enabled: chkLocale.checked
                     }
                 }
                 RowLayout {
 
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.alignment: Qt.AlignCenter
                     ImText {
                         text: qsTr("Keyboard layout:")
                         Layout.leftMargin: 40
@@ -103,16 +103,15 @@ Window {
                     Item {
                         Layout.fillWidth: true
                     }
-                    ComboBox {
-                        selectTextByMouse: true
+                    ImComboBox {
                         id: fieldKeyboardLayout
+                        // Material.foreground: "#000"
+                        selectTextByMouse: true
                         editable: true
                         Layout.minimumWidth: 220
-                        font.pointSize: 12
-                        font.family: roboto.name
-                        padding: 0
                         implicitHeight: 35
                         model: ["en", "gb"]
+                        enabled: chkLocale.checked
                     }
                 }
 
@@ -132,11 +131,11 @@ Window {
                 }
             }
             ImText {
-                text: qsTr("We strongly recommend using an ethernet cable")
+                text: qsTr("We recommend using an ethernet cable")
                 color: "#555"
-                Layout.leftMargin: 34
-                Layout.topMargin: -20
-                font.pointSize: 12
+                Layout.leftMargin: 25
+                Layout.topMargin: -16
+                font.pointSize: 14
                 font.italic: true
             }
 
@@ -150,14 +149,13 @@ Window {
                 Item {
                     Layout.fillWidth: true
                 }
-                TextField {
+                ImTextField {
                     id: fieldWifiSSID
                     enabled: chkWifi.checked
-                    Layout.minimumWidth: 220
+                    Layout.preferredWidth: 220
+                    Layout.fillWidth: false
                     selectByMouse: true
                     property bool indicateError: false
-                    font.pointSize: 14
-                    padding: 0
                     implicitHeight: 35
                     onTextEdited: {
                         indicateError = false
@@ -174,15 +172,14 @@ Window {
                 Item {
                     Layout.fillWidth: true
                 }
-                TextField {
+                ImTextField {
                     id: fieldWifiPassword
                     enabled: chkWifi.checked
-                    Layout.minimumWidth: 220
+                    Layout.preferredWidth: 220
                     selectByMouse: true
+                    Layout.fillWidth: false
                     echoMode: chkShowPassword.checked ? TextInput.Normal : TextInput.Password
                     property bool indicateError: false
-                    font.pointSize: 14
-                    padding: 0
                     implicitHeight: 35
                     onTextEdited: {
                         indicateError = false
@@ -210,6 +207,7 @@ Window {
                     enabled: chkWifi.checked
                     Layout.columnSpan: 2
                     text: qsTr("Hidden SSID")
+                    Material.foreground: "#000"
                 }
                 // Spacer item
                 Item {
@@ -227,15 +225,12 @@ Window {
                 Item {
                     Layout.fillWidth: true
                 }
-                ComboBox {
+                ImComboBox {
                     id: fieldWifiCountry
                     model: imageWriter.getCountryList()
                     selectTextByMouse: true
                     enabled: chkWifi.checked
                     editable: true
-                    font.family: roboto.name
-                    font.pointSize: 12
-                    padding: 0
                     implicitHeight: 35
                     Layout.minimumWidth: 220
                 }
@@ -249,13 +244,13 @@ Window {
 
         RowLayout {
             id: buttonsRow
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignCenter
 
             Item {
                 Layout.fillWidth: true
             }
 
-            ImButtonRed {
+            ButtonSecondary {
                 text: qsTr("SAVE")
                 Layout.preferredWidth: 150
                 onClicked: {

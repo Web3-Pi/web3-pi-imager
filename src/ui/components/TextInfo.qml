@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 
 Text {
-    font.family: outfit.name
-    color: Material.foreground
-    font.pointSize: 16
+    font.family: dmsans.name
+    font.pointSize: 20
+    font.italic: Font.Light
+    color: Material.primary
 }

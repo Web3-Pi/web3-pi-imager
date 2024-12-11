@@ -22,9 +22,8 @@ Project {
     Files {
         filter: "*.ttf;*.otf"
         files: [
-            "./fonts/Roboto-Bold.ttf",
-            "./fonts/Roboto-Light.ttf",
-            "./fonts/Roboto-Regular.ttf"
+            "./fonts/DMSans-VariableFont_opsz_wght.ttf",
+            "./fonts/Outfit-VariableFont_wght.ttf",
         ]
     }
 

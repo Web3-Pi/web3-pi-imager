@@ -7,6 +7,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material.impl
 import "components"
 
 Popup {
@@ -31,19 +32,22 @@ Popup {
     // background of title
     Rectangle {
         id: msgPopup_title_background
-        color: "#f5f5f5"
+        color: Material.background
         anchors.left: parent.left
         anchors.top: parent.top
         height: 35
         width: parent.width
+
 
         Text {
             id: msgPopupheader
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
+            color: Material.foreground
+            font.pointSize: 16
         }
 
         Text {
@@ -55,8 +59,10 @@ Popup {
             anchors.top: parent.top
             anchors.rightMargin: 25
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
+            font.pointSize: 14
+            color: Material.foreground
 
             MouseArea {
                 anchors.fill: parent
@@ -69,10 +75,24 @@ Popup {
     // line under title
     Rectangle {
         id: msgPopup_title_separator
-        color: "#afafaf"
+        color: Material.primary
         width: parent.width
         anchors.top: msgPopup_title_background.bottom
         height: 1
+    }
+
+    background: Rectangle {
+        radius: Material.roundedScale
+        color: Material.foreground
+
+        border.width: 1
+        border.color: Material.background
+
+        layer.enabled: Material.elevation > 0
+        layer.effect: RoundedElevationEffect {
+            elevation: Material.elevation
+            roundedScale: Material.roundedScale
+        }
     }
 
     ColumnLayout {
@@ -84,10 +104,10 @@ Popup {
 
         Text {
             id: msgPopupbody
-            font.pointSize: 12
+            font.pointSize: 14
             wrapMode: Text.Wrap
             textFormat: Text.StyledText
-            font.family: roboto.name
+            font.family: outfit.name
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.leftMargin: 10
@@ -105,39 +125,63 @@ Popup {
             spacing: 20
             id: buttons
 
-            ImButtonRed {
+            ButtonPrimary {
                 text: qsTr("NO")
                 onClicked: {
                     msgPopup.close()
                     msgPopup.no()
                 }
                 visible: msgPopup.noButton
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 140
+                font.pointSize: 16
+                Component.onCompleted: {
+                    background.border.color = "#88273F43"
+                    background.border.width = 1
+                }
             }
 
-            ImButtonRed {
+            ButtonSecondary {
                 text: qsTr("YES")
                 onClicked: {
                     msgPopup.close()
                     msgPopup.yes()
                 }
                 visible: msgPopup.yesButton
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 140
+                font.pointSize: 16
             }
 
-            ImButtonRed {
+            ButtonPrimary {
                 text: qsTr("CONTINUE")
                 onClicked: {
                     msgPopup.close()
                 }
                 visible: msgPopup.continueButton
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 140
+                font.pointSize: 16
+                Component.onCompleted: {
+                    background.border.color = "#88273F43"
+                    background.border.width = 1
+                }
             }
 
-            ImButtonRed {
+            ButtonPrimary {
                 text: qsTr("QUIT")
                 onClicked: {
                     Qt.quit()
                 }
-                font.family: roboto.name
+                font.family: outfit.name
                 visible: msgPopup.quitButton
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 140
+                font.pointSize: 16
+                Component.onCompleted: {
+                    background.border.color = "#88273F43"
+                    background.border.width = 1
+                }
             }
         }
     }

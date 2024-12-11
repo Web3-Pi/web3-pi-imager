@@ -8,6 +8,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
+
 import "components"
 
 Item {
@@ -16,6 +17,7 @@ Item {
     signal next()
 
     ColumnLayout {
+        id: mainForm
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
@@ -26,269 +28,238 @@ Item {
         anchors.fill: parent
 
 
-        ColumnLayout {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            spacing: 12
+        RowLayout {
+            width: parent.width
+            spacing: 15
 
-            RowLayout {
-                Layout.topMargin: -5
-                ImText {
-                    text: qsTr("Image version:")
-                    rightPadding: 5
-                }
-                Item {
-                    Layout.fillWidth: true
-                }
-                ImVersionSelector {
-                    id: fieldImageVersion
-                }
-            }
-
-            RowLayout {
-                ImText {
-                    text: qsTr("Default Network:")
-                    rightPadding: 5
-                }
-                Item {
-                    Layout.fillWidth: true
-                }
-                ImNetworkSelector {
-                    id: fieldNetwork
-                    currentIndex: 0
-                }
-            }
-
-            GroupBox {
-                id: groupBoxExecution
-                Layout.fillWidth: true
-                Layout.topMargin: 20
-                Layout.minimumHeight: 120
-                z: 0
-
-                label: ImText {
-                    text: qsTr("Execution Device")
-                    Layout.topMargin: 20
-                    color: "#fff"
-                    horizontalAlignment: Text.AlignHCenter5
-                    y: -20
-                }
-                background: Rectangle {
-                    z: 1
-                    color: "#00000000"
-                    radius: 2
-                    border.color: "#9affffff"
-                    border.width: 1
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    anchors.fill: parent
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing: 10
-                        anchors.margins: 15
-                        anchors.bottomMargin: 10
-                        anchors.topMargin: 10
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Hostname:")
-                                rightPadding: 5
-
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ImTextField {
-                                id: fieldHostnameExecution
-                                text: "eop-1-exec"
-                                selectByMouse: true
-                                maximumLength: 255
-                                validator: RegularExpressionValidator { regularExpression: /[0-9A-Za-z][0-9A-Za-z-]{0,62}/ }
-                                Layout.minimumWidth: 194
-                                padding: 0
-                                font.family: roboto.name
-                                font.pointSize: 12
-                                Layout.minimumHeight: 35
-
-                            }
-                            ImText {
-                                text : ".local"
-                            }
-                        }
-
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Client:")
-                                rightPadding: 5
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ImComboBox {
-                                id: fieldDualExecutionClient
-                                selectTextByMouse: true
-                                Layout.preferredWidth: 110
-                                Layout.minimumHeight: 35
-                                font.pointSize: 12
-                                model: ListModel {
-                                    ListElement { text: "Geth"; value: "geth" }
-                                    ListElement { text: "Disabled"; value: "disabled" }
-                                }
-                                textRole: "text"
-                                currentIndex: 0
-                            }
-                            ImText {
-                                text: qsTr("Port:")
-                                leftPadding: 5
-                            }
-                            ImTextField {
-                                id: fieldDualExecutionPort
-                                Layout.preferredWidth: 78
-                                text: "30303"
-                                font.family: roboto.name
-                                font.pointSize: 12
-                            }
-                        }
-
-                    }
-                }
-
-            }
-
-            GroupBox {
-                id: groupBoxExecution2
-                Layout.fillWidth: true
-                Layout.topMargin: 20
-                Layout.minimumHeight: 120
-                z: 0
-
-                label: ImText {
-                    text: qsTr("Consensus Device")
-                    Layout.topMargin: 20
-                    color: "#fff"
-                    horizontalAlignment: Text.AlignHCenter5
-                    y: -20
-                }
-                background: Rectangle {
-                    color: "transparent"
-                    radius: 2
-                    border.color: "#9affffff"
-                    border.width: 1
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    anchors.fill: parent
-                    z: 1
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        spacing: 10
-                        anchors.margins: 15
-                        anchors.bottomMargin: 10
-                        anchors.topMargin: 10
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Hostname:")
-                                rightPadding: 5
-
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ImTextField {
-                                id: fieldHostnameConsensus
-                                text: "eop-1-cons"
-                                selectByMouse: true
-                                maximumLength: 255
-                                validator: RegularExpressionValidator { regularExpression: /[0-9A-Za-z][0-9A-Za-z-]{0,62}/ }
-                                Layout.minimumWidth: 194
-                                padding: 0
-                                font.family: roboto.name
-                                font.pointSize: 12
-                                Layout.minimumHeight: 35
-
-                            }
-                            ImText {
-                                text : ".local"
-                            }
-                        }
-
-                        RowLayout {
-                            ImText {
-                                text: qsTr("Client:")
-                                rightPadding: 5
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            ImComboBox {
-                                id: fieldDualConsensusClient
-                                selectTextByMouse: true
-                                Layout.preferredWidth: 110
-                                Layout.minimumHeight: 35
-                                font.pointSize: 12
-                                model: ListModel {
-                                    ListElement { text: "Nimbus"; value: "nimbus" }
-                                    ListElement { text: "Lighthouse"; value: "lighthouse" }
-                                }
-                                currentIndex: 0
-                                textRole: "text"
-
-                            }
-                            ImText {
-                                text: qsTr("Port:")
-                                leftPadding: 5
-                            }
-                            ImTextField {
-                                id: fieldDualConsensusPort
-                                Layout.preferredWidth: 78
-                                text: "9000"
-                                font.family: roboto.name
-                                font.pointSize: 12
-                            }
-                        }
-
-                    }
-                }
-            }
             ColumnLayout {
-                spacing: 0
-                Material.theme: Material.Dark
+                Layout.preferredWidth: parent.width / 2 - 7
+                spacing: 25
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        text: qsTr("Image version:")
+                    }
+                    ImVersionSelector {
+                        id: fieldImageVersion
+                    }
+                }
+
+                Rectangle {
+                    color: "#334A4D"
+                    radius: 9
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    Layout.margins: 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 230
+
+                    Item {
+                        anchors.fill: parent
+                        anchors.margins: 20
+
+                        RowLayout {
+                            anchors.fill: parent
+                            ColumnLayout {
+                                spacing: 15
+                                Label {
+                                    text: qsTr("Execution device")
+                                    Layout.topMargin: -5
+                                }
+                                ColumnLayout {
+                                    Label {
+                                        text: qsTr("Hostname:")
+                                        font.pointSize: 16
+                                    }
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        ImTextField {
+                                            id: fieldHostnameExecution
+                                            text: "eop-1-exec"
+                                            maximumLength: 255
+                                            Layout.fillWidth: false
+                                            Layout.preferredWidth: 220
+                                            validator: RegularExpressionValidator { regularExpression: /[0-9A-Za-z][0-9A-Za-z-]{0,62}/ }
+
+                                        }
+                                        ImText {
+                                            text : ".local"
+                                        }
+                                    }
+                                }
+
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 25
+                                    ColumnLayout {
+                                        Label {
+                                            text: qsTr("Client:")
+                                            font.pointSize: 16
+                                        }
+                                        ImComboBox {
+                                            id: fieldDualExecutionClient
+                                            Layout.preferredWidth: 140
+                                            model: ListModel {
+                                                ListElement { text: "Geth"; value: "geth" }
+                                                ListElement { text: "Disabled"; value: "disabled" }
+                                            }
+                                            textRole: "text"
+                                            currentIndex: 0
+                                        }
+                                    }
+                                    ColumnLayout {
+                                        Label {
+                                            text: qsTr("Port:")
+                                            font.pointSize: 16
+                                        }
+                                        ImTextField {
+                                            id: fieldDualExecutionPort
+                                            Layout.preferredWidth: 100
+                                            Layout.fillWidth: false
+                                            text: "30303"
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+
+
                 ImCheckBox {
                     id: monitoring
                     checked: true
                     text: qsTr("Enable Grafana monitoring")
-                    padding: 0
-                    leftPadding: 10
+                    leftPadding: 20
                 }
+            }
+
+            ColumnLayout {
+                Layout.preferredWidth: parent.width / 2 - 7
+                spacing: 25
+                ColumnLayout {
+                    Layout.fillWidth: true
+
+                    Label {
+                        text: qsTr("Default Network:")
+                    }
+                    ImNetworkSelector {
+                        id: fieldNetwork
+                        currentIndex: 0
+                    }
+                }
+
+                Rectangle {
+                    color: "#334A4D"
+                    radius: 9
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    Layout.margins: 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 230
+
+                    Item {
+                        anchors.fill: parent
+                        anchors.margins: 20
+
+                        RowLayout {
+                            anchors.fill: parent
+                            ColumnLayout {
+                                spacing: 15
+                                Label {
+                                    text: qsTr("Consesnus device")
+                                    Layout.topMargin: -5
+                                }
+                                ColumnLayout {
+                                    Label {
+                                        text: qsTr("Hostname:")
+                                        font.pointSize: 16
+                                    }
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        ImTextField {
+                                            id: fieldHostnameConsensus
+                                            text: "eop-1-cons"
+                                            maximumLength: 255
+                                            Layout.fillWidth: false
+                                            Layout.preferredWidth: 220
+                                            validator: RegularExpressionValidator { regularExpression: /[0-9A-Za-z][0-9A-Za-z-]{0,62}/ }
+
+                                        }
+                                        ImText {
+                                            text : ".local"
+                                        }
+                                    }
+                                }
+
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 25
+                                    ColumnLayout {
+                                        Label {
+                                            text: qsTr("Client:")
+                                            font.pointSize: 16
+                                        }
+                                        ImComboBox {
+                                            id: fieldDualConsensusClient
+                                            selectTextByMouse: true
+                                            Layout.preferredWidth: 140
+                                            model: ListModel {
+                                                ListElement { text: "Nimbus"; value: "nimbus" }
+                                                ListElement { text: "Lighthouse"; value: "lighthouse" }
+                                            }
+                                            currentIndex: 0
+                                            textRole: "text"
+                                        }
+                                    }
+                                    ColumnLayout {
+                                        Label {
+                                            text: qsTr("Port:")
+                                            font.pointSize: 16
+                                        }
+                                        ImTextField {
+                                            id: fieldDualConsensusPort
+                                            text: "9000"
+                                            Layout.fillWidth: false
+                                            Layout.preferredWidth: 100
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+
+
+
                 ImCheckBox {
                     id: formatStorage
                     text: qsTr("Format storage")
-                    padding: 0
-                    leftPadding: 10
+                    leftPadding: 20
+                    Material.foreground: "#ffffff"
                 }
             }
         }
+
         Item {
             Layout.fillWidth: true
         }
         RowLayout {
-            Layout.preferredHeight: 50
             width: parent.width
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-            ImButton {
-                id: advencedbutton
-                text: qsTr("Advanced")
-                Layout.preferredWidth: 120
+            ButtonSecondary {
+                text: qsTr("ADVANCED")
+                Layout.preferredWidth: 150
                 Layout.alignment: Qt.AlignLeft
-                Material.background: "#cd2355"
-                Material.foreground: "#ffffff"
                 onClicked: {
                     advancedSettings.screen = mainWindow.screen
                     advancedSettings.x = mainWindow.x + mainWindow.width / 2 - advancedSettings.width / 2
@@ -301,33 +272,19 @@ Item {
                 Layout.fillWidth: true
             }
 
-            ImButton {
-                id: backbutton
-                text: qsTr("Back")
-                topInset: 2
-                bottomInset: 2
-                rightPadding: 5
-                leftPadding: 5
-                Layout.preferredWidth: 70
-                Layout.alignment: Qt.AlignRight
-                Material.background: "transparent"
-                Material.foreground: "#c7ffffff"
-                background: Rectangle {
-                    border.color: "#c7ffffff"
-                    border.width: 1
-                    radius: 4
-                    color: "transparent"
-                }
+            ButtonOutline {
+                text: qsTr("BACK")
+                Layout.rightMargin: 10
+                Layout.preferredWidth: 80
                 onClicked: {
                     stackView.pop()
                     versionManager.fetchOSList();
                 }
             }
 
-            ImButton {
-                id: continuebutton
-                text: qsTr("Next")
-                Layout.preferredWidth: 150
+            ButtonPrimary {
+                text: qsTr("NEXT")
+                Layout.preferredWidth: 180
                 Layout.alignment: Qt.AlignRight
                 onClicked: {
                     save()
@@ -371,4 +328,6 @@ Item {
         settings.save()
     }
 }
+
+
 

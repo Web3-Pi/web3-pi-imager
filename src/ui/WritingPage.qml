@@ -35,25 +35,49 @@ Item {
 
             ImText {
                 id: progressText
-                color: "white"
-                font.family: robotoBold.name
-                font.bold: true
                 visible: true
                 horizontalAlignment: Text.AlignHCenter
                 Layout.fillWidth: true
                 Layout.bottomMargin: 25
                 text: qsTr("Preparing to write...")
+                font.pointSize: 20
+            }
+
+            ImText {
+                id: progressValue
+                font.bold: true
+                visible: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+                Layout.bottomMargin: 25
+                font.pointSize: 64
             }
 
             ProgressBar {
                 id: progressBar
+                height: 8
                 Layout.bottomMargin: 0
                 Layout.fillWidth: true
                 visible: true
-                Material.background: "#d15d7d"
                 indeterminate: true
-                Material.accent: "#ffffff"
+                background: Rectangle {
+                    implicitWidth: 200
+                    implicitHeight: 8
+                    height: 8
+                    y: (progressBar.height - height) / 2
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: Material.accent }
+                        GradientStop { position: 1.0; color: Material.primary }
+                        orientation: Gradient.Horizontal
+                    }
+                }
+                Component.onCompleted: {
+                    contentItem.implicitHeight = 8
+                    contentItem.scale = 1
+                }
+
             }
+
         }
         Item {
             Layout.fillHeight: true
@@ -62,7 +86,7 @@ Item {
         ImText {
             text: getInfoText()
             color: "#fff"
-            font.pointSize: 15
+            font.pointSize: 20
             font.italic: true
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignCenter
@@ -71,29 +95,13 @@ Item {
             Layout.fillHeight: true
         }
 
-
-        Item {
-            Layout.alignment: Qt.AlignCenter
-            width: 150
-            height: 150
-            AnimatedImage {
-                anchors.fill: parent
-                source: "icons/writing.gif"
-                clip: true
-                Layout.alignment: Qt.AlignCenter
-            }
-        }
-
-
         Item {
             Layout.fillHeight: true
         }
 
-
-        ImButton {
+        ButtonSecondary {
             Layout.minimumHeight: 40
             Layout.preferredWidth: 200
-            padding: 5
             id: cancelwritebutton
             text: qsTr("CANCEL WRITE")
             onClicked: {
@@ -103,10 +111,9 @@ Item {
             Layout.alignment: Qt.AlignCenter
             visible: true
         }
-        ImButton {
+        ButtonSecondary {
             Layout.minimumHeight: 40
             Layout.preferredWidth: 200
-            padding: 5
             id: cancelverifybutton
             text: qsTr("CANCEL VERIFY")
             onClicked: {
@@ -131,9 +138,12 @@ Item {
             if (progressText.text === qsTr("Cancelling..."))
                 return
 
-            progressText.text = qsTr("Writing... %1%").arg(Math.floor(newPos*100))
+            progressText.text = qsTr("Writing...")
+            progressValue.text = qsTr("%1%").arg(Math.floor(newPos*100))
             progressBar.indeterminate = false
             progressBar.value = newPos
+
+            progressBar.Material.accent = Material.accent
         }
     }
 
@@ -154,7 +164,8 @@ Item {
             if (progressText.text === qsTr("Finalizing..."))
                 return
 
-            progressText.text = qsTr("Verifying... %1%").arg(Math.floor(newPos*100))
+            progressText.text = qsTr("Verifying...")
+            progressValue.text = qsTr("%1%").arg(Math.floor(newPos*100))
             progressBar.Material.accent = "#6cc04a"
             progressBar.value = newPos
         }
@@ -172,23 +183,11 @@ Item {
     }
 
     function onSuccess() {
-        // msgPopup.title = qsTr("Write Successful")
-        // if (settings.selectedDsc === qsTr("Erase"))
-        //     msgPopup.text = qsTr("<b>%1</b> has been erased<br><br>You can now remove the SD card from the reader").arg(settings.selectedDsc)
-        // else if (imageWriter.isEmbeddedMode()) {
-        //     //msgPopup.text = qsTr("<b>%1</b> has been written to <b>%2</b>").arg(osbutton.text).arg(dstbutton.text)
-        //     /* Just reboot to the installed OS */
-        //     Qt.quit()
-        // }
-        // else
-        //     msgPopup.text = qsTr("<b>%1</b> has been written to <b>%2</b><br><br>You can now remove the SD card from the reader").arg(settings.selectedOS).arg(settings.selectedDsc)
-        // if (imageWriter.isEmbeddedMode()) {
-        //     msgPopup.continueButton = false
-        //     msgPopup.quitButton = true
-        // }
-
-        // msgPopup.openPopup()
         imageWriter.setDst("")
+        progressText.text = ""
+        progressValue.text = ""
+        progressBar.value = 0
+        progressBar.Material.accent = Material.accent
         end(mode)
     }
 
@@ -217,3 +216,5 @@ Item {
 
 
 }
+
+

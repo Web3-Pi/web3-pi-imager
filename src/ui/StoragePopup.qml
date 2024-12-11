@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material.impl
 
 Popup {
     id: storagePopup
@@ -17,6 +18,8 @@ Popup {
         dstlist.forceActiveFocus()
     }
 
+    Material.theme: Material.Light
+
     property string mode: "execution"
 
     signal selected(string mode)
@@ -24,7 +27,7 @@ Popup {
     // background of title
     Rectangle {
         id: dstpopup_title_background
-        color: "#f5f5f5"
+        color: Material.background
         anchors.left: parent.left
         anchors.top: parent.top
         height: 35
@@ -35,8 +38,10 @@ Popup {
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
+            color: Material.foreground
+            font.pointSize: 15
         }
 
         Text {
@@ -48,8 +53,9 @@ Popup {
             anchors.top: parent.top
             anchors.rightMargin: 25
             anchors.topMargin: 10
-            font.family: roboto.name
+            font.family: outfit.name
             font.bold: true
+            color: Material.foreground
 
             MouseArea {
                 anchors.fill: parent
@@ -63,11 +69,26 @@ Popup {
     // line under title
     Rectangle {
         id: dstpopup_title_separator
-        color: "#afafaf"
+        color: Material.primary
         width: parent.width
         anchors.top: dstpopup_title_background.bottom
         height: 1
     }
+
+    background: Rectangle {
+        radius: control.Material.roundedScale
+        color: Material.foreground
+        border.width: 1
+        border.color: Material.background
+
+
+        layer.enabled: Material.elevation > 0
+        layer.effect: RoundedElevationEffect {
+            elevation: Material.elevation
+            roundedScale: Material.roundedScale
+        }
+    }
+
     ListView {
         id: dstlist
         model: driveListModel
@@ -163,8 +184,8 @@ Popup {
                             textFormat: Text.StyledText
                             verticalAlignment: Text.AlignVCenter
                             Layout.fillWidth: true
-                            font.family: roboto.name
-                            font.pointSize: 12
+                            font.family: outfit.name
+                            font.pointSize: 14
                             color: isReadOnly ? "grey" : "";
                             text: {
                                 var sizeStr = (size/1000000000).toFixed(1)+ " " + qsTr("GB");
@@ -177,8 +198,8 @@ Popup {
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
                             Layout.fillWidth: true
-                            font.family: roboto.name
-                            font.pointSize: 12
+                            font.family: outfit.name
+                            font.pointSize: 14
                             color: "grey"
                             text: {
                                 var txt= qsTr("Mounted as %1").arg(mountpoints.join(", "));

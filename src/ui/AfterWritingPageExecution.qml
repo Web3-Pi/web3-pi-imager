@@ -19,60 +19,76 @@ Item {
         anchors.left: parent.left
         anchors.rightMargin: 35
         anchors.leftMargin: 35
-        anchors.topMargin: 20
+        anchors.topMargin: 35
         anchors.bottomMargin: 35
         anchors.fill: parent
 
-        Item {
-            Layout.fillHeight: true
-        }
         ColumnLayout {
             id: infoText
             Layout.alignment: Qt.AlignCenter
-            spacing: 25
+            spacing: 45
+            Layout.topMargin: 25
 
             ImText {
-                text: qsTr("<b>%1</b>has been written to<br><b>%2</b><br>for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
-                color: "#fff"
-                font.pointSize: 14
+                text: qsTr("<b>%1</b>has been written to<br><b>%2</b> for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 horizontalAlignment: Text.AlignHCenter
-                Layout.alignment: Qt.AlignCenter
+                font.pointSize: 20
+                font.weight: Font.Medium
             }
 
-            ImText {
-                text: "Now you can remove the card and insert another one\nfor Consensus Device"
-                color: "#fff"
-                font.pointSize: 14
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                Layout.alignment: Qt.AlignCenter
-            }
             Item {
                 Layout.alignment: Qt.AlignCenter
-                width: 150
-                height: 150
+                width: 275
+                height: 176
                 Image {
                     anchors.fill: parent
                     source: "icons/after_writing_execution.png"
                     Layout.alignment: Qt.AlignCenter
                 }
             }
+
+            ImText {
+                text: "Now you can remove the card and insert another one\nfor Consensus Device"
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 20
+                font.weight: Font.Medium
+            }
         }
 
         Item {
             Layout.fillHeight: true
         }
 
-        ImButton {
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
-            Layout.alignment: Qt.AlignCenter
-            padding: 5
-            text: qsTr("Next")
-            onClicked: {
-                storagePopup.mode = "consensus"
-                storagePopup.open()
+        RowLayout {
+            spacing: 15
+            width: parent.width
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            // ButtonSecondary {
+            //     id: quitButton
+            //     visible: true
+            //     Layout.preferredWidth: 152
+            //     Layout.alignment: Qt.AlignCenter
+            //     text: qsTr("QUIT")
+            //     onClicked: {
+            //         Qt.quit()
+            //     }
+            // }
+            // Item {
+            //     Layout.fillWidth: false
+            // }
+
+            ButtonPrimary {
+                Layout.preferredWidth: 187
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("NEXT")
+                onClicked: {
+                    storagePopup.mode = "consensus"
+                    storagePopup.open()
+                }
             }
         }
     }
 }
+
+

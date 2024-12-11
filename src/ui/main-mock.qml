@@ -18,18 +18,19 @@ Window {
     id: mainWindow
     visible: true
 
-    width: 480
-    height: 730
-    minimumWidth: 480
-    minimumHeight: 730
+    width: 690
+    height: 780
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
 
-    title: qsTr("Web3 Pi Imager v%1").arg("1.0.0")
+    minimumWidth: width
+    maximumWidth: width
+    minimumHeight: height
+    maximumHeight: height
 
-    property bool dualMode: false;
+    title: qsTr("Web3 Pi Imager v%1").arg("0.1.0")
 
-    FontLoader {id: roboto;      source: "./fonts/Roboto-Regular.ttf"}
-    FontLoader {id: robotoLight; source: "./fonts/Roboto-Light.ttf"}
-    FontLoader {id: robotoBold;  source: "./fonts/Roboto-Bold.ttf"}
+    FontLoader { id: dmsans; source: "fonts/DMSans-VariableFont_opsz_wght.ttf" }
+    FontLoader { id: outfit; source: "fonts/Outfit-VariableFont_wght.ttf" }
     
     Shortcut {
         sequence: StandardKey.Quit
@@ -45,52 +46,39 @@ Window {
         id: bg
         spacing: 0
         anchors.fill: parent
-
         Rectangle {
-            id: logoContainer
-            implicitHeight: mainWindow.height/5
+            id: header
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            implicitHeight: 160
+            implicitWidth: mainWindow.width
+            z: 1
+            color: Material.foreground
 
             Image {
-                id: image
+                width: 732
+                height: 203
                 source: "./icons/logo_web3_pi_imager.png"
-
-                // Specify the maximum size of the image
-                width: mainWindow.width
-                height: mainWindow.height / 5
-
-                // Within the image's specified size rectangle, resize the
-                // image to fit within the rectangle while keeping its aspect
-                // ratio the same.  Preserving the aspect ratio implies some
-                // extra padding between the Image's extend and the actual
-                // image content: align left so all this padding is on the
-                // right.
+                anchors.horizontalCenterOffset: 63
                 fillMode: Image.PreserveAspectFit
                 horizontalAlignment: Image.AlignLeft
-
-                // Keep the left side of the image 40 pixels from the left
-                // edge
-                anchors.left: logoContainer.left
-                anchors.leftMargin: 20
-
-                // Equal padding above and below the image
-                anchors.top: logoContainer.top
-                anchors.bottom: logoContainer.bottom
-                anchors.topMargin: mainWindow.height / 40
-                anchors.bottomMargin: mainWindow.height / 40
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.margins: -25
+                anchors.topMargin: 0
+                z: 1
             }
         }
 
         Rectangle {
-            color: "#e51763"
+            color: Material.background
             implicitWidth: mainWindow.width
-            implicitHeight: mainWindow.height * (1 - 1/5)
 
-            Material.theme: Material.Light
+            implicitHeight: mainWindow.height - header.height
 
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: AfterWritingPageExecution {}
+                initialItem: FinalPageDualMode {}
             }
         }
     }
@@ -131,6 +119,43 @@ Window {
     AfterWritingPageExecution {
         id: afterWritingPageExecution
         visible: false
+    }
+    FinalPageDualMode {
+        id: finalPageDualMode
+        visible: false
+    }
+
+    StoragePopup {
+        id: storagePopup
+        onSelected: (mode) => startWrite(mode)
+    }
+
+    MsgPopup {
+        id: confirmwritepopup
+        continueButton: false
+        yesButton: true
+        noButton: true
+        title: qsTr("Warning")
+        modal: true
+        onYes: {
+            if (!imageWriter.readyToWrite()) {
+                // TODO: show error ... ?
+                console.log("Image writer is not ready to write")
+                return
+            }
+            selected(mode)
+        }
+
+        function askForConfirmation() {
+            text = qsTr("All existing data on '%1' will be erased.<br>Are you sure you want to continue?").arg(settings.selectedDsc)
+            openPopup()
+        }
+    }
+
+    Component.onCompleted: {
+        // confirmwritepopup.askForConfirmation()
+        // storagePopup.open()
+        advancedSettings.open()
     }
 
 }

@@ -7,20 +7,20 @@ ImComboBox {
     id: fieldImageVersion
     background: Rectangle {
         color: "white"
-        radius: 4
-        border.color: "#9affffff"
-        border.width: 1
+        radius: 9
     }
     selectTextByMouse: true
-    Layout.minimumWidth: 245
-    Layout.minimumHeight: 35
-    font.pointSize: 12
+    Layout.fillWidth: true
+    Layout.minimumHeight: 42
     model: versionManager.osListModel
     currentIndex: 0
     Component.onCompleted: {
-        model.onCountChanged.connect(() => {
-            currentIndex = 0;
-        });
+        if (model) {
+            model.onCountChanged.connect(() => {
+                currentIndex = 0;
+            });
+        }
+
     }
 
     onActivated: {

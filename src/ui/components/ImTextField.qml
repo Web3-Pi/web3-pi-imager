@@ -4,14 +4,18 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 
 TextField {
-    font.family: roboto.name
-    font.pointSize: 14
+    font.family: outfit.name
+    font.letterSpacing: 1
+    font.pointSize: 16
     padding: 0
-    implicitHeight: 35
+    implicitHeight: 42
+    Layout.fillWidth: true
+    Material.foreground: "#666"
+    font.weight: Font.Medium
     background: Rectangle {
         color: "white"
-        radius: 4
-        border.color: "#9affffff"
-        border.width: 1
+        radius: 9
+        border.width: Material.theme === Material.Dark ? 0 : 1
+        border.color: enabled ? Material.foreground : "#aaa"
     }
 }

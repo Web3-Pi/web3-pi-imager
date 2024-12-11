@@ -12,14 +12,13 @@
         <file>AfterWritingPageSingle.qml</file>
         <file>AfterWritingPageExecution.qml</file>
         <file>AfterWritingPageConsensus.qml</file>
+        <file>FinalPageDualMode.qml</file>
         <file>HostResolverPage.qml</file>
         <file>MsgPopup.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>countries.txt</file>
         <file>timezones.txt</file>
         <file>UseSavedSettingsPopup.qml</file>
-        <file>components/ImButton.qml</file>
-        <file>components/ImButtonRed.qml</file>
         <file>components/ImCheckBox.qml</file>
         <file>components/ImRadioButton.qml</file>
         <file>components/ImText.qml</file>
@@ -27,10 +26,14 @@
         <file>components/ImComboBox.qml</file>
         <file>components/ImVersionSelector.qml</file>
         <file>components/ImNetworkSelector.qml</file>
-        <file>icons/rpi-imager.ico</file>
-        <file>fonts/Roboto-Bold.ttf</file>
-        <file>fonts/Roboto-Light.ttf</file>
-        <file>fonts/Roboto-Regular.ttf</file>
+        <file>components/ButtonPrimary.qml</file>
+        <file>components/ButtonSecondary.qml</file>
+        <file>components/ButtonOutline.qml</file>
+        <file>components/Label.qml</file>
+        <file>components/TextInfo.qml</file>
+        <file>icons/web3pi-imager.ico</file>
+        <file>fonts/DMSans-VariableFont_opsz_wght.ttf</file>
+        <file>fonts/Outfit-VariableFont_wght.ttf</file>
         <file>icons/ic_chevron_left_40px.svg</file>
         <file>icons/ic_chevron_right_40px.svg</file>
         <file>icons/ic_sd_storage_40px.svg</file>
@@ -60,7 +63,7 @@
         <file>icons/success.png</file>
         <file>icons/warning.png</file>
         <file>icons/inserting.png</file>
-        <file>icons/inserting2.png</file>
+        <file>icons/after_writing_consensus.png</file>
         <file>icons/after_writing_execution.png</file>
     </qresource>
 </RCC>

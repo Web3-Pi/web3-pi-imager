@@ -13,7 +13,6 @@ ImComboBox {
     currentIndex: 0
     textRole: "text"
     selectTextByMouse: true
-    Layout.minimumWidth: 245
-    Layout.minimumHeight: 35
-    font.pointSize: 12
+    Layout.fillWidth: true
+    Layout.minimumHeight: 42
 }

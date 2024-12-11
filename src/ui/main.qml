@@ -3,10 +3,10 @@
  * Copyright (C) 2020 Raspberry Pi Ltd
  */
 
-import QtQuick 2.9
-import QtQuick.Window 2.2
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.2
 import "components"
 
@@ -14,10 +14,14 @@ ApplicationWindow {
     id: mainWindow
     visible: true
 
-    width: imageWriter.isEmbeddedMode() ? -1 : 480
-    height: imageWriter.isEmbeddedMode() ? -1 : 730
-    minimumWidth: imageWriter.isEmbeddedMode() ? -1 : 480
-    minimumHeight: imageWriter.isEmbeddedMode() ? -1 : 730
+    width: 690
+    height: 780
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
+
+    minimumWidth: width
+    maximumWidth: width
+    minimumHeight: height
+    maximumHeight: height
 
     title: qsTr("Web3 Pi Imager v%1").arg(imageWriter.constantVersion())
 
@@ -26,9 +30,8 @@ ApplicationWindow {
     property bool initialized: false
     property bool hasSavedSettings: false
 
-    FontLoader {id: roboto;      source: "fonts/Roboto-Regular.ttf"}
-    FontLoader {id: robotoLight; source: "fonts/Roboto-Light.ttf"}
-    FontLoader {id: robotoBold;  source: "fonts/Roboto-Bold.ttf"}
+    FontLoader { id: dmsans; source: "fonts/DMSans-VariableFont_opsz_wght.ttf" }
+    FontLoader { id: outfit; source: "fonts/Outfit-VariableFont_wght.ttf" }
 
     Component.onCompleted: {
         if (!initialized) {
@@ -50,34 +53,36 @@ ApplicationWindow {
     }
 
     ColumnLayout {
-        id: bg
         spacing: 0
         anchors.fill: parent
-
         Rectangle {
-            id: logoContainer
-            implicitHeight: mainWindow.height/5
+            id: header
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            implicitHeight: 160
+            implicitWidth: mainWindow.width
+            color: Material.foreground
+            z: 1
 
             Image {
-                id: image
-                source: "icons/logo_web3_pi_imager.png"
-                width: mainWindow.width
-                height: mainWindow.height / 5
+                width: 732
+                height: 203
+                source: "./icons/logo_web3_pi_imager.png"
+                anchors.horizontalCenterOffset: 63
                 fillMode: Image.PreserveAspectFit
                 horizontalAlignment: Image.AlignLeft
-                anchors.left: logoContainer.left
-                anchors.leftMargin: 20
-                anchors.top: logoContainer.top
-                anchors.bottom: logoContainer.bottom
-                anchors.topMargin: mainWindow.height / 40
-                anchors.bottomMargin: mainWindow.height / 40
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.margins: -25
+                anchors.topMargin: 0
+                z: 1
             }
         }
 
         Rectangle {
-            color: "#e51763"
+            id: background
+            color: Material.background
             implicitWidth: mainWindow.width
-            implicitHeight: mainWindow.height * (1 - 1/5)
+            implicitHeight: mainWindow.height - header.height
 
             StackView {
                 id: stackView
@@ -103,7 +108,7 @@ ApplicationWindow {
     }
 
     SingleModeForm {
-        id: singleModeForm
+        id:  singleModeForm
         visible: false
         onNext:() => chooseStorage("single")
     }
@@ -144,6 +149,11 @@ ApplicationWindow {
     HostResolverPage {
         id: hostResolverPage
         objectName: "hostResolverPage"
+        visible: false
+    }
+
+    FinalPageDualMode {
+        id: finalPageDualMode
         visible: false
     }
 
@@ -201,7 +211,6 @@ ApplicationWindow {
         if (mode === "single") {
             stackView.push(afterWritingPageSingle)
         } else if (mode === "execution") {
-
             stackView.pop()
             stackView.push(afterWritingPageExecution)
         } else if (mode === "consensus") {
