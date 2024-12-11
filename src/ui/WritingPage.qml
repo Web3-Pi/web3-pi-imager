@@ -26,13 +26,13 @@ Item {
         anchors.rightMargin: 35
         anchors.leftMargin: 35
         anchors.topMargin: 20
-        anchors.bottomMargin: 35
+        anchors.bottomMargin: 45
         anchors.fill: parent
 
         ColumnLayout {
             id: columnLayoutProgress
             spacing: 0
-            Layout.topMargin: 80
+            Layout.topMargin: 70
 
             ImText {
                 id: progressText
@@ -41,7 +41,7 @@ Item {
                 Layout.fillWidth: true
                 Layout.bottomMargin: 25
                 text: qsTr("Preparing to write...")
-                font.pointSize: 20
+                font.pixelSize: 20
             }
 
             ImText {
@@ -50,8 +50,8 @@ Item {
                 visible: true
                 horizontalAlignment: Text.AlignHCenter
                 Layout.fillWidth: true
-                Layout.bottomMargin: 25
-                font.pointSize: 64
+                Layout.bottomMargin: 35
+                font.pixelSize: 64
             }
 
             ProgressBar {
@@ -79,29 +79,22 @@ Item {
             }
 
         }
-        Item {
-            Layout.fillHeight: true
-        }
 
         ImText {
             text: getInfoText()
             color: "#fff"
-            font.pointSize: 20
+            font.pixelSize: 20
             font.italic: true
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignCenter
+            Layout.topMargin: 40
         }
-        Item {
-            Layout.fillHeight: true
-        }
-
         Item {
             Layout.fillHeight: true
         }
 
         ButtonSecondary {
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
+            Layout.preferredWidth: 255
             id: cancelwritebutton
             text: qsTr("CANCEL WRITE")
             onClicked: {
@@ -112,8 +105,7 @@ Item {
             visible: true
         }
         ButtonSecondary {
-            Layout.minimumHeight: 40
-            Layout.preferredWidth: 200
+            Layout.preferredWidth: 255
             id: cancelverifybutton
             text: qsTr("CANCEL VERIFY")
             onClicked: {

@@ -14,14 +14,14 @@ ComboBox {
     Keys.onEnterPressed: toggle()
     Keys.onReturnPressed: toggle()
     font.family: outfit.name
-    font.pointSize: 16
+    font.pixelSize: 14
     implicitHeight: 42
     font.weight: Font.Medium
     Component.onCompleted: {
         popup.background.color = "#FFF"
         popup.background.radius = 9
     }
-    Material.foreground: "#000"
+    Material.foreground: "#222"
     background: Rectangle {
         color: "#FFF"
         radius: 9
@@ -35,13 +35,14 @@ ComboBox {
 
         width: ListView.view.width
         text: model[control.textRole]
-        Material.foreground: hovered ? Material.accent : "#000"
+        Material.foreground: hovered ? Material.accent : "#222"
         background: Rectangle {
             color: hovered ? "#10000000" : "transparent"
         }
         font.letterSpacing: 1
         font.family: outfit.name
-        font.pointSize: 16
+        font.pixelSize: 14
+        font.weight: Font.Normal
 
         highlighted: control.highlightedIndex === index
         hoverEnabled: control.hoverEnabled

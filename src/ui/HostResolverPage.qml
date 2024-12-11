@@ -23,7 +23,7 @@ Item {
         anchors.rightMargin: 35
         anchors.leftMargin: 35
         anchors.topMargin: 10
-        anchors.bottomMargin: 35
+        anchors.bottomMargin: 45
         anchors.fill: parent
 
         Item {
@@ -46,14 +46,14 @@ Item {
 
                     ImText {
                         text: "Searching for a device on the network..."
-                        font.pointSize: 20
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         horizontalAlignment: Text.AlignHCenter
                     }
 
                     ImText {
                         text: "It can take up to 4 minutes after starting the device."
-                        font.pointSize: 20
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         horizontalAlignment: Text.AlignHCenter
                         color: "#99ffffff"
@@ -84,7 +84,7 @@ Item {
 
                 ImText {
                     text: "Thank you for choosing Web3 Pi"
-                    font.pointSize: 28
+                    font.pixelSize: 28
                     font.weight: Font.Medium
                     Layout.alignment: Qt.AlignHCenter
                 }
@@ -101,13 +101,14 @@ Item {
                 }
                 ColumnLayout {
                     Layout.alignment: Qt.AlignCenter
-                    spacing: 5
+                    spacing: 10
+                    Layout.topMargin: 15
 
                     ImText {
                         text: qsTr("Monitor installation process at: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
@@ -116,7 +117,7 @@ Item {
                         text: "Log in via SSH using credentials: <span style='color: white;'>ethereum:ethereum</span>"
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                     }
 
@@ -124,7 +125,7 @@ Item {
                         text: qsTr("More information at: <a href='https://www.web3pi.io' style='color: white;'>www.web3pi.io</a>")
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
@@ -152,7 +153,7 @@ Item {
 
                 ImText {
                     text: "The device cannot be found on your network"
-                    font.pointSize: 22
+                    font.pixelSize: 22
                     color: "#FFA200"
                     font.weight: Font.Medium
                     horizontalAlignment: Text.AlignHCenter
@@ -164,22 +165,22 @@ Item {
 
                     ImText {
                         text: "1. Check your connection"
-                        font.family: dmsans.name
-                        font.pointSize: 20
+                        font.family: dmsansItalic.name
+                        font.pixelSize: 20
                         font.italic: true
                     }
 
                     ImText {
                         text: "2. Make sure that the blinker blips green blops"
-                        font.family: dmsans.name
-                        font.pointSize: 20
+                        font.family: dmsansItalic.name
+                        font.pixelSize: 20
                         font.italic: true
                     }
 
                     ImText {
                         text: "3. Check if your Raspberry Pi is turned on"
-                        font.family: dmsans.name
-                        font.pointSize: 20
+                        font.family: dmsansItalic.name
+                        font.pixelSize: 20
                         font.italic: true
                     }
                 }
@@ -198,7 +199,7 @@ Item {
             ButtonSecondary {
                 id: cancelButton
                 visible: true
-                Layout.preferredWidth: 200
+                Layout.preferredWidth: 255
                 Layout.alignment: Qt.AlignCenter
                 text: qsTr("CANCEL SEARCH")
                 onClicked: {

@@ -78,6 +78,7 @@ Window {
                     ImText {
                         text: qsTr("Time zone:")
                         Layout.leftMargin: 40
+                        font.weight: Font.Normal
                         color: chkLocale.checked ? (fieldTimezone.indicateError ? "red" : "black") : "grey"
                     }
                     Item {
@@ -90,6 +91,7 @@ Window {
                         Layout.minimumWidth: 220
                         implicitHeight: 35
                         enabled: chkLocale.checked
+                        font.weight: Font.Normal
                     }
                 }
                 RowLayout {
@@ -98,6 +100,7 @@ Window {
                     ImText {
                         text: qsTr("Keyboard layout:")
                         Layout.leftMargin: 40
+                        font.weight: Font.Normal
                         color: chkLocale.checked ? (fieldKeyboardLayout.indicateError ? "red" : "black") : "grey"
                     }
                     Item {
@@ -112,6 +115,7 @@ Window {
                         implicitHeight: 35
                         model: ["en", "gb"]
                         enabled: chkLocale.checked
+                        font.weight: Font.Normal
                     }
                 }
 
@@ -133,6 +137,7 @@ Window {
             ImText {
                 text: qsTr("We recommend using an ethernet cable")
                 color: "#555"
+                font.weight: Font.Normal
                 Layout.leftMargin: 25
                 Layout.topMargin: -16
                 font.pointSize: 14
@@ -144,6 +149,7 @@ Window {
                     text: qsTr("SSID:")
                     color: chkWifi.checked ? (fieldWifiSSID.indicateError ? "red" : "black") : "grey"
                     Layout.leftMargin: 40
+                    font.weight: Font.Normal
                 }
                 // Spacer item
                 Item {
@@ -160,6 +166,7 @@ Window {
                     onTextEdited: {
                         indicateError = false
                     }
+                    font.weight: Font.Normal
                 }
             }
             RowLayout {
@@ -167,6 +174,7 @@ Window {
                     text: qsTr("Password:")
                     color: chkWifi.checked ? (fieldWifiPassword.indicateError ? "red" : "black") : "grey"
                     Layout.leftMargin: 40
+                    font.weight: Font.Normal
                 }
                 // Spacer item
                 Item {
@@ -181,6 +189,7 @@ Window {
                     echoMode: chkShowPassword.checked ? TextInput.Normal : TextInput.Password
                     property bool indicateError: false
                     implicitHeight: 35
+                    font.weight: Font.Normal
                     onTextEdited: {
                         indicateError = false
                     }
@@ -220,6 +229,7 @@ Window {
                     text: qsTr("Wireless LAN country:")
                     color: chkWifi.checked ? "black" : "grey"
                     Layout.leftMargin: 40
+                    font.weight: Font.Normal
                 }
                 // Spacer item
                 Item {
@@ -233,6 +243,7 @@ Window {
                     editable: true
                     implicitHeight: 35
                     Layout.minimumWidth: 220
+                    font.weight: Font.Normal
                 }
             }
 

@@ -22,8 +22,8 @@ Item {
         anchors.left: parent.left
         anchors.rightMargin: 35
         anchors.leftMargin: 35
-        anchors.topMargin: 20
-        anchors.bottomMargin: 20
+        anchors.topMargin: 0
+        anchors.bottomMargin: 40
         anchors.fill: parent
 
 
@@ -33,7 +33,7 @@ Item {
             spacing: 30
 
             ColumnLayout {
-                Layout.topMargin: -5
+                Layout.topMargin: -20
                 Label {
                     text: qsTr("Image version:")
                 }
@@ -76,7 +76,7 @@ Item {
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Execution client:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     ImComboBox {
                                         id: fieldExecutionClient
@@ -93,7 +93,7 @@ Item {
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Port:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     ImTextField {
                                         id: fieldExecutionPort
@@ -110,7 +110,8 @@ Item {
                     ImCheckBox {
                         id: monitoring
                         checked: true
-                        leftPadding: 20
+                        font.weight: Font.Medium
+                        font.family: outfitMedium.name
                         text: qsTr("Enable Grafana monitoring")
                     }
                 }
@@ -158,7 +159,7 @@ Item {
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Consesnus client:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     ImComboBox {
                                         id: fieldConsensusClient
@@ -176,7 +177,7 @@ Item {
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Port:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     ImTextField {
                                         id: fieldConsensusPort
@@ -195,7 +196,8 @@ Item {
                         id: formatStorage
                         text: qsTr("Format storage")
                         padding: 0
-                        leftPadding: 10
+                        font.weight: Font.Medium
+                        font.family: outfitMedium.name
                         Material.foreground: "#ffffff"
                     }
                 }
@@ -207,7 +209,7 @@ Item {
 
             ButtonSecondary {
                 text: qsTr("ADVANCED")
-                Layout.preferredWidth: 150
+                Layout.preferredWidth: 152
                 Layout.alignment: Qt.AlignLeft
                 onClicked: {
                     advancedSettings.screen = mainWindow.screen
@@ -224,7 +226,7 @@ Item {
             ButtonOutline {
                 text: qsTr("BACK")
                 Layout.rightMargin: 10
-                Layout.preferredWidth: 80
+                Layout.preferredWidth: 87
                 onClicked: {
                     stackView.pop()
                     versionManager.fetchOSList();
@@ -233,7 +235,7 @@ Item {
 
             ButtonPrimary {
                 text: qsTr("NEXT")
-                Layout.preferredWidth: 180
+                Layout.preferredWidth: 187
                 Layout.alignment: Qt.AlignRight
                 onClicked: {
                     save()
@@ -279,5 +281,4 @@ Item {
         settings.save()
     }
 }
-
 

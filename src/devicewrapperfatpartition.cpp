@@ -438,35 +438,38 @@ bool DeviceWrapperFatPartition::getDirEntry(const QString &longFilename, struct 
             shortFileNameChecksum = ((shortFileNameChecksum & 1) ? 0x80 : 0) + (shortFileNameChecksum >> 1) + shortFilename[i];
         }
 
-        QString longFilenameWithNull = longFilename + QChar::Null;
-        char *longFilenameStr = (char *) longFilenameWithNull.data();
-        int lfnFragments = (longFilenameWithNull.length()+12)/13;
-        int lenBytes = longFilenameWithNull.length()*2;
+        QString longFilenameWithNull = longFilename + QChar::Null; // Add \0 at the end of the name
+        const char *longFilenameStr = (const char *) longFilenameWithNull.utf16(); // UTF-16 in bytes
+        int lenBytes = longFilenameWithNull.length() * 2; // Size in bytes (UTF-16)
+        int lfnFragments = (lenBytes + 25) / 26; // Calculate the number of LFN fragments
 
-        /* long file name directory entries are added in reverse order before the 8.3 entry */
+        /* LFN entries are added in reverse order before the 8.3 entry */
         for (int i = lfnFragments; i > 0; i--)
         {
-            memset(&longEntry, 0xff, sizeof(longEntry));
+            memset(&longEntry, 0xFF, sizeof(longEntry));
             longEntry.LDIR_Attr = ATTR_LONG_NAME;
             longEntry.LDIR_Chksum = shortFileNameChecksum;
-            longEntry.LDIR_Ord = (i == lfnFragments) ? lfnFragments | LAST_LONG_ENTRY : lfnFragments;
+            longEntry.LDIR_Ord = (i == lfnFragments) ? (LAST_LONG_ENTRY | i) : i;
             longEntry.LDIR_FstClusLO = 0;
             longEntry.LDIR_Type = 0;
 
-            size_t start = (i-1) * 26;
-            memcpy(longEntry.LDIR_Name1, longFilenameStr+start, qMin(lenBytes-start, sizeof(longEntry.LDIR_Name1)));
-            start += sizeof(longEntry.LDIR_Name1);
+            size_t start = (i - 1) * 26; // Each fragment stores 26 bytes
+
+            // Fill LDIR_Name1, LDIR_Name2, LDIR_Name3 fields
+            memcpy(longEntry.LDIR_Name1, longFilenameStr + start, qMin(10U, lenBytes - start));
+            start += 10; // 10 bytes
             if (start < lenBytes)
             {
-                memcpy(longEntry.LDIR_Name2, longFilenameStr+start, qMin(lenBytes-start, sizeof(longEntry.LDIR_Name2)));
-                start += sizeof(longEntry.LDIR_Name2);
+                memcpy(longEntry.LDIR_Name2, longFilenameStr + start, qMin(12U, lenBytes - start));
+                start += 12; // 12 bytes
                 if (start < lenBytes)
                 {
-                    memcpy(longEntry.LDIR_Name3, longFilenameStr+start, qMin(lenBytes-start, sizeof(longEntry.LDIR_Name3)));
+                    memcpy(longEntry.LDIR_Name3, longFilenameStr + start, qMin(4U, lenBytes - start));
+                    start += 4; // 4 bytes
                 }
             }
 
-            writeDirEntryAtCurrentPos((struct dir_entry *) &longEntry);
+            writeDirEntryAtCurrentPos((struct dir_entry *)&longEntry);
         }
 
         memset(entry, 0, sizeof(*entry));

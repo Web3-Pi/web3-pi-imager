@@ -12,7 +12,7 @@ CheckBox {
     Keys.onEnterPressed: toggle()
     Keys.onReturnPressed: toggle()
     font.family: outfit.name
-    font.pointSize: 18
+    font.pixelSize: 18
     padding: 0
-    Material.foreground: Material.theme === Material.Dark ? "#ffffff" : "#000000"
+    Material.foreground: Material.theme === Material.Dark ? "#fff" : "#222"
 }

@@ -23,8 +23,8 @@ Item {
         anchors.left: parent.left
         anchors.rightMargin: 35
         anchors.leftMargin: 35
-        anchors.topMargin: 20
-        anchors.bottomMargin: 20
+        anchors.topMargin: 0
+        anchors.bottomMargin: 40
         anchors.fill: parent
 
 
@@ -34,7 +34,7 @@ Item {
 
             ColumnLayout {
                 Layout.preferredWidth: parent.width / 2 - 7
-                spacing: 25
+                spacing: 30
                 ColumnLayout {
                     Layout.fillWidth: true
                     Label {
@@ -51,7 +51,7 @@ Item {
                     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                     Layout.margins: 0
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 230
+                    Layout.preferredHeight: 240
 
                     Item {
                         anchors.fill: parent
@@ -60,15 +60,15 @@ Item {
                         RowLayout {
                             anchors.fill: parent
                             ColumnLayout {
-                                spacing: 15
+                                spacing: 20
                                 Label {
                                     text: qsTr("Execution device")
-                                    Layout.topMargin: -5
+                                    Layout.topMargin: -15
                                 }
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Hostname:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     RowLayout {
                                         Layout.fillWidth: true
@@ -94,7 +94,7 @@ Item {
                                     ColumnLayout {
                                         Label {
                                             text: qsTr("Client:")
-                                            font.pointSize: 16
+                                            font.pixelSize: 16
                                         }
                                         ImComboBox {
                                             id: fieldDualExecutionClient
@@ -110,7 +110,7 @@ Item {
                                     ColumnLayout {
                                         Label {
                                             text: qsTr("Port:")
-                                            font.pointSize: 16
+                                            font.pixelSize: 16
                                         }
                                         ImTextField {
                                             id: fieldDualExecutionPort
@@ -134,13 +134,12 @@ Item {
                     id: monitoring
                     checked: true
                     text: qsTr("Enable Grafana monitoring")
-                    leftPadding: 20
                 }
             }
 
             ColumnLayout {
                 Layout.preferredWidth: parent.width / 2 - 7
-                spacing: 25
+                spacing: 30
                 ColumnLayout {
                     Layout.fillWidth: true
 
@@ -159,7 +158,7 @@ Item {
                     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                     Layout.margins: 0
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 230
+                    Layout.preferredHeight: 240
 
                     Item {
                         anchors.fill: parent
@@ -168,15 +167,15 @@ Item {
                         RowLayout {
                             anchors.fill: parent
                             ColumnLayout {
-                                spacing: 15
+                                spacing: 20
                                 Label {
                                     text: qsTr("Consesnus device")
-                                    Layout.topMargin: -5
+                                    Layout.topMargin: -15
                                 }
                                 ColumnLayout {
                                     Label {
                                         text: qsTr("Hostname:")
-                                        font.pointSize: 16
+                                        font.pixelSize: 16
                                     }
                                     RowLayout {
                                         Layout.fillWidth: true
@@ -202,7 +201,7 @@ Item {
                                     ColumnLayout {
                                         Label {
                                             text: qsTr("Client:")
-                                            font.pointSize: 16
+                                            font.pixelSize: 16
                                         }
                                         ImComboBox {
                                             id: fieldDualConsensusClient
@@ -219,7 +218,7 @@ Item {
                                     ColumnLayout {
                                         Label {
                                             text: qsTr("Port:")
-                                            font.pointSize: 16
+                                            font.pixelSize: 16
                                         }
                                         ImTextField {
                                             id: fieldDualConsensusPort
@@ -243,7 +242,6 @@ Item {
                 ImCheckBox {
                     id: formatStorage
                     text: qsTr("Format storage")
-                    leftPadding: 20
                     Material.foreground: "#ffffff"
                 }
             }
@@ -258,7 +256,7 @@ Item {
 
             ButtonSecondary {
                 text: qsTr("ADVANCED")
-                Layout.preferredWidth: 150
+                Layout.preferredWidth: 152
                 Layout.alignment: Qt.AlignLeft
                 onClicked: {
                     advancedSettings.screen = mainWindow.screen
@@ -275,7 +273,7 @@ Item {
             ButtonOutline {
                 text: qsTr("BACK")
                 Layout.rightMargin: 10
-                Layout.preferredWidth: 80
+                Layout.preferredWidth: 87
                 onClicked: {
                     stackView.pop()
                     versionManager.fetchOSList();
@@ -284,7 +282,7 @@ Item {
 
             ButtonPrimary {
                 text: qsTr("NEXT")
-                Layout.preferredWidth: 180
+                Layout.preferredWidth: 187
                 Layout.alignment: Qt.AlignRight
                 onClicked: {
                     save()

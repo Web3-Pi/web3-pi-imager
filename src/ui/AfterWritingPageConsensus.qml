@@ -30,10 +30,10 @@ Item {
             Layout.topMargin: 15
 
             ImText {
-                // text: qsTr("<b>Web3 Pi v. 0.7.3 - 64bit (latest)</b> has been written to<br><b>Apple SDXC Reader Media</b> for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
-                text: qsTr("<b>%1</b> has been written to<br><b>%2</b> for Consensus Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                text: qsTr("Web3 Pi v. 0.7.3 - 64bit (latest) has been written to<br>Apple SDXC Reader Media for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                // text: qsTr("%1 has been written to<br>%2 for Consensus Device").arg(settings.selectedOS).arg(settings.selectedDsc)
                 Layout.alignment: Qt.AlignCenter
-                font.pointSize: 20
+                font.pixelSize: 20
                 font.weight: Font.Medium
             }
 
@@ -50,15 +50,15 @@ Item {
             }
             ColumnLayout {
                 Layout.topMargin: -70
-                Layout.leftMargin: -50
+                Layout.leftMargin: -80
                 Layout.alignment: Qt.AlignCenter
 
 
                 ImText {
                     text: "To perform the installations, follow the steps:"
-                    font.pointSize: 20
+                    font.pixelSize: 20
                     font.weight: Font.Medium
-
+                    Layout.bottomMargin: 15
                 }
 
                 ColumnLayout {
@@ -68,25 +68,25 @@ Item {
                     ImText {
                         text: "1. Insert first card into Execution Device"
                         font.family: dmsans.name
-                        font.pointSize: 18
+                        font.pixelSize: 18
                         font.italic: true
                     }
                     ImText {
                         text: "2. Insert second card into Consensus Device"
                         font.family: dmsans.name
-                        font.pointSize: 18
+                        font.pixelSize: 18
                         font.italic: true
                     }
                     ImText {
                         text: "3. Connect necessary cables"
                         font.family: dmsans.name
-                        font.pointSize: 18
+                        font.pixelSize: 18
                         font.italic: true
                     }
                     ImText {
                         text: "4. Turn on the devices"
                         font.family: dmsans.name
-                        font.pointSize: 18
+                        font.pixelSize: 18
                         font.italic: true
                     }
                 }

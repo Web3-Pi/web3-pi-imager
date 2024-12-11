@@ -19,14 +19,15 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         RowLayout {
-            Layout.topMargin: 80
-            Layout.bottomMargin: 80
+            Layout.topMargin: 90
+            Layout.bottomMargin: 60
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             spacing: 40
             ColumnLayout {
-                spacing: 20
+                spacing: 25
                 Layout.alignment: Qt.AlignTop
                 Rectangle {
+                    id: rectangle
                     height: 120
                     width: 170
                     Layout.bottomMargin: 10
@@ -34,16 +35,17 @@ Item {
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Image {
                         source: "./icons/mode_single.png"
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
 
                 ButtonPrimary {
                     text: qsTr("Single Mode Device")
+                    font.family: outfitBold.name
                     font.weight: Font.Bold
-                    font.pointSize: 22
+                    font.pixelSize: 24
                     Layout.preferredWidth: 248
-                    Layout.preferredHeight: 55
+                    Layout.preferredHeight: 47
                     onClicked: {
                         settings.mode = "single"
                         stackView.push(singleModeForm)
@@ -52,39 +54,44 @@ Item {
 
                 ImText {
                     text: "Raspberry Pi 5 (8GB) min."
-                    font.pointSize: 20
+                    font.pixelSize: 20
                     font.weight: Font.Medium
                 }
 
                 ImText {
                     text: "Execution and Consensus\nEthereum layers, with\nintegrated monitoring tools\non a single device."
-                    font.family: dmsans.name
+                    font.family: dmsansItalic.name
                     font.italic: true
-                    font.pointSize: 16
+                    font.pixelSize: 16
                 }
 
             }
             ColumnLayout {
-                spacing: 20
+                spacing: 25
                 Layout.alignment: Qt.AlignTop
                 Rectangle {
+                    id: rectangle1
                     height: 120
                     width: 170
                     Layout.bottomMargin: 10
                     color: "transparent"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Image {
+                        anchors.top: parent.top
+                        anchors.topMargin: -15
                         source: "./icons/mode_dual.png"
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                        // anchors.horizontalCenter: parent.horizontalCenter
+                       Layout.alignment: Qt.AlignHCenter
                     }
                 }
 
                 ButtonSecondary {
                     text: qsTr("Dual Mode Device")
+                    font.family: outfitBold.name
                     font.weight: Font.Bold
-                    font.pointSize: 22
+                    font.pixelSize: 24
                     Layout.preferredWidth: 248
-                    Layout.preferredHeight: 55
+                    Layout.preferredHeight: 47
                     onClicked: {
                         settings.mode = "execution"
                         stackView.push(dualModeForm)
@@ -93,15 +100,15 @@ Item {
 
                 ImText {
                     text: "2x Raspberry Pi 4 (8GB) min."
-                    font.pointSize: 20
+                    font.pixelSize: 20
                     font.weight: Font.Medium
                 }
 
                 ImText {
                     text: "Two sets of devices are required.\n- Consensus layer (~500GB storage)\n- Execution layer (2TB storage)"
-                    font.family: dmsans.name
+                    font.family: dmsansItalic.name
                     font.italic: true
-                    font.pointSize: 16
+                    font.pixelSize: 16
                 }
             }
         }

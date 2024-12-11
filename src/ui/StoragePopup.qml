@@ -36,12 +36,12 @@ Popup {
         Text {
             text: getTitle()
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             anchors.fill: parent
-            anchors.topMargin: 10
             font.family: outfit.name
             font.bold: true
             color: Material.foreground
-            font.pointSize: 15
+            font.pixelSize: 16
         }
 
         Text {
@@ -49,12 +49,11 @@ Popup {
             Layout.alignment: Qt.AlignRight
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.rightMargin: 25
-            anchors.topMargin: 10
+            anchors.fill: parent
+            anchors.rightMargin: 15
             font.family: outfit.name
             font.bold: true
+            font.pixelSize: 16
             color: Material.foreground
 
             MouseArea {
@@ -185,7 +184,7 @@ Popup {
                             verticalAlignment: Text.AlignVCenter
                             Layout.fillWidth: true
                             font.family: outfit.name
-                            font.pointSize: 14
+                            font.pixelSize: 14
                             color: isReadOnly ? "grey" : "";
                             text: {
                                 var sizeStr = (size/1000000000).toFixed(1)+ " " + qsTr("GB");
@@ -199,7 +198,7 @@ Popup {
                             verticalAlignment: Text.AlignVCenter
                             Layout.fillWidth: true
                             font.family: outfit.name
-                            font.pointSize: 14
+                            font.pixelSize: 14
                             color: "grey"
                             text: {
                                 var txt= qsTr("Mounted as %1").arg(mountpoints.join(", "));

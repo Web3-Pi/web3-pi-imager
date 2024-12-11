@@ -21,10 +21,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_link_options("-fsanitize=address")
 
 # You _must_ set your Qt6 root for the build to progress.C
-set(Qt6_ROOT "/Users/deimos/dev/Qt/6.8.0/macos" CACHE PATH "Your Qt6 root path")
+set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
-    set(MINGW64_ROOT "" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
+    set(MINGW64_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
 endif()
 
 if (APPLE)
@@ -111,10 +111,10 @@ set(ARCHIVE_ENABLE_TAR OFF CACHE BOOL "")
 set(ARCHIVE_ENABLE_CPIO OFF CACHE BOOL "")
 set(ARCHIVE_ENABLE_CAT OFF CACHE BOOL "")
 set(ARCHIVE_BUILD_SHARED_LIBS OFF CACHE BOOL "")
-add_subdirectory(dependencies/libarchive-3.7.4)
+add_subdirectory(dependencies/libarchive-3.7.7)
 set(LibArchive_FOUND true)
 set(LibArchive_LIBRARIES archive_static)
-set(LibArchive_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/libarchive-3.7.4/libarchive)
+set(LibArchive_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/libarchive-3.7.7/libarchive)
 
 # Bundled libcurl
 set(CMAKE_CURL_INCLUDES)
@@ -158,11 +158,11 @@ else()
     endif(WIN32)
 endif(APPLE)
 
-add_subdirectory(dependencies/curl-8.8.0)
+add_subdirectory(dependencies/curl-8.11.0)
 set(CURL_FOUND true)
 set(CURL_LIBRARIES libcurl_static)
-set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.8.0/include)
-set(CURL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.8.0/include)
+set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.11.0/include)
+set(CURL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.11.0/include)
 
 # Adding headers explicity so they are displayed in Qt Creator
 set(HEADERS config.h imagewriter.h networkaccessmanagerfactory.h nan.h drivelistitem.h drivelistmodel.h drivelistmodelpollthread.h driveformatthread.h powersaveblocker.h cli.h
@@ -333,35 +333,35 @@ if (WIN32)
     endif ()
     #
     #  Now find signtool
-    if (NOT SIGNTOOL)
-            # Try to list all Windows 10 SDK versions, if any.
-            set(win10_kit_versions)
-            set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
-            set(regval "KitsRoot10")
-            # Note: must be a cache operation in order to read from the registry.
-            get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
-            if (w10_kits_path)
-                message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
-                    file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
-                    # Reverse list, so newer (higher-numbered) versions appear first.
-                    list(REVERSE w10_kit_versions)
-            endif ()
-            unset(w10_kits_path CACHE)
-            if (w10_kit_versions)
-                    find_program(SIGNTOOL
-                                    NAMES           signtool
-                                    PATHS           ${w10_kit_versions}
-                                    PATH_SUFFIXES   ${arch}
-                                                    bin/${arch}
-                                                    bin
-                                    NO_DEFAULT_PATH
-                    )
-            endif ()
-    endif ()
+    # if (NOT SIGNTOOL)
+    #         # Try to list all Windows 10 SDK versions, if any.
+    #         set(win10_kit_versions)
+    #         set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
+    #         set(regval "KitsRoot10")
+    #         # Note: must be a cache operation in order to read from the registry.
+    #         get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
+    #         if (w10_kits_path)
+    #             message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
+    #                 file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
+    #                 # Reverse list, so newer (higher-numbered) versions appear first.
+    #                 list(REVERSE w10_kit_versions)
+    #         endif ()
+    #         unset(w10_kits_path CACHE)
+    #         if (w10_kit_versions)
+    #                 find_program(SIGNTOOL
+    #                                 NAMES           signtool
+    #                                 PATHS           ${w10_kit_versions}
+    #                                 PATH_SUFFIXES   ${arch}
+    #                                                 bin/${arch}
+    #                                                 bin
+    #                                 NO_DEFAULT_PATH
+    #                 )
+    #         endif ()
+    # endif ()
 
-    if (NOT SIGNTOOL)
-        message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
-    endif()
+    # if (NOT SIGNTOOL)
+    #     message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
+    # endif()
 #    add_definitions(-DSIGNTOOL="${SIGNTOOL}")
 #
 #    add_custom_command(TARGET ${PROJECT_NAME}

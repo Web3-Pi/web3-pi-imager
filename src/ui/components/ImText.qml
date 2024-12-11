@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.2
 
 Text {
     font.family: outfit.name
+    font.weight: Font.Medium
     color: Material.foreground
-    font.pointSize: 16
+    font.pixelSize: 16
 }

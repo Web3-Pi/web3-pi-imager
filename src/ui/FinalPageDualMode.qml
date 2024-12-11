@@ -37,7 +37,7 @@ Item {
 
                 ImText {
                     text: "Thank you for choosing Web3 Pi"
-                    font.pointSize: 28
+                    font.pixelSize: 32
                     font.weight: Font.Medium
                     Layout.alignment: Qt.AlignHCenter
                 }
@@ -54,13 +54,14 @@ Item {
                 }
                 ColumnLayout {
                     Layout.alignment: Qt.AlignCenter
-                    spacing: 5
+                    spacing: 10
+                    Layout.topMargin: 15
 
                     ImText {
                         text: qsTr("Monitor installation process at: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
@@ -70,7 +71,7 @@ Item {
                         Layout.leftMargin: 5
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
@@ -80,7 +81,7 @@ Item {
                         textFormat: Text.RichText
                         Layout.leftMargin: 5
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }
@@ -89,7 +90,7 @@ Item {
                         text: qsTr("More information at: <a href='https://www.web3pi.io' style='color: white;'>www.web3pi.io</a>")
                         textFormat: Text.RichText
                         color: "#99ffffff"
-                        font.pointSize: 18
+                        font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
                     }

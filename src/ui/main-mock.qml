@@ -20,7 +20,7 @@ Window {
 
     width: 690
     height: 780
-    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint
 
     minimumWidth: width
     maximumWidth: width
@@ -75,6 +75,7 @@ Window {
         }
 
         Rectangle {
+            id: background
             color: Material.background
             implicitWidth: mainWindow.width
 
@@ -83,7 +84,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: ModeSelector {}
+                initialItem: WritingPage {}
             }
         }
     }
@@ -151,8 +152,8 @@ Window {
 
     Component.onCompleted: {
         // confirmwritepopup.askForConfirmation()
-        // storagePopup.open()
-        advancedSettings.open()
+        storagePopup.open()
+        // advancedSettings.open()
     }
 
 }

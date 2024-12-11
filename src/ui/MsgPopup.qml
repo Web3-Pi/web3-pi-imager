@@ -42,12 +42,13 @@ Popup {
         Text {
             id: msgPopupheader
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             anchors.fill: parent
-            anchors.topMargin: 10
+            // anchors.topMargin: 10
             font.family: outfit.name
             font.bold: true
             color: Material.foreground
-            font.pointSize: 16
+            font.pixelSize: 16
         }
 
         Text {
@@ -55,13 +56,11 @@ Popup {
             Layout.alignment: Qt.AlignRight
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.rightMargin: 25
-            anchors.topMargin: 10
+            anchors.fill: parent
+            anchors.rightMargin: 15
             font.family: outfit.name
             font.bold: true
-            font.pointSize: 14
+            font.pixelSize: 16
             color: Material.foreground
 
             MouseArea {
@@ -104,7 +103,8 @@ Popup {
 
         Text {
             id: msgPopupbody
-            font.pointSize: 14
+            font.pixelSize: 14
+            font.weight: Font.Normal
             wrapMode: Text.Wrap
             textFormat: Text.StyledText
             font.family: outfit.name
@@ -134,7 +134,7 @@ Popup {
                 visible: msgPopup.noButton
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 140
-                font.pointSize: 16
+                font.pixelSize: 18
                 Component.onCompleted: {
                     background.border.color = "#88273F43"
                     background.border.width = 1
@@ -150,7 +150,7 @@ Popup {
                 visible: msgPopup.yesButton
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 140
-                font.pointSize: 16
+                font.pixelSize: 18
             }
 
             ButtonPrimary {
@@ -161,7 +161,7 @@ Popup {
                 visible: msgPopup.continueButton
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 140
-                font.pointSize: 16
+                font.pixelSize: 14
                 Component.onCompleted: {
                     background.border.color = "#88273F43"
                     background.border.width = 1
@@ -177,7 +177,7 @@ Popup {
                 visible: msgPopup.quitButton
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 140
-                font.pointSize: 16
+                font.pixelSize: 14
                 Component.onCompleted: {
                     background.border.color = "#88273F43"
                     background.border.width = 1

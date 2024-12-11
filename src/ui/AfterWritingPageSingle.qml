@@ -33,9 +33,10 @@ Item {
             spacing: 25
 
             ImText {
-                text: qsTr("<b>%1</b> has been written to<br><b>%2</b>").arg(settings.selectedOS).arg(settings.selectedDsc)
+                // text: qsTr("Web3 Pi v. 0.7.3 - 64bit (latest) has been written to<br>Apple SDXC Reader Media for Execution Device").arg(settings.selectedOS).arg(settings.selectedDsc)
+                text: qsTr("%1 has been written to<br>%2").arg(settings.selectedOS).arg(settings.selectedDsc)
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: 20
+                font.pixelSize: 20
                 font.weight: Font.Medium
             }
             Item {
@@ -52,7 +53,7 @@ Item {
 
             ImText {
                 text: "To install it now, perform following operations:"
-                font.pointSize: 20
+                font.pixelSize: 20
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -62,21 +63,21 @@ Item {
                 ImText {
                     text: "1. Insert the card into the Raspberry Pi"
                     font.family: dmsans.name
-                    font.pointSize: 18
+                    font.pixelSize: 18
                     font.italic: true
                 }
 
                 ImText {
                     text: "2. Connect the necessary cables"
                     font.family: dmsans.name
-                    font.pointSize: 18
+                    font.pixelSize: 18
                     font.italic: true
                 }
 
                 ImText {
                     text: "3. Turn on the device"
                     font.family: dmsans.name
-                    font.pointSize: 18
+                    font.pixelSize: 18
                     font.italic: true
                 }
             }
@@ -85,7 +86,7 @@ Item {
             ImText {
                 text: qsTr("If you want to install later,<br>the installation process can be monitored at <b><a href='http://%1.local' style='color: white;'>http://%1.local</a></b>").arg(settings.hostname)
                 textFormat: Text.RichText
-                font.pointSize: 15
+                font.pixelSize: 15
                 font.italic: true
                 horizontalAlignment: Text.AlignHCenter
                 onLinkActivated: {

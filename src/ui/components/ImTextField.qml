@@ -4,9 +4,9 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 
 TextField {
-    font.family: outfit.name
+    font.family: outfitMedium.name
+    font.pixelSize: 14
     font.letterSpacing: 1
-    font.pointSize: 16
     padding: 0
     implicitHeight: 42
     Layout.fillWidth: true
