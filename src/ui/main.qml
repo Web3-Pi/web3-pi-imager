@@ -30,8 +30,15 @@ ApplicationWindow {
     property bool initialized: false
     property bool hasSavedSettings: false
 
-    FontLoader { id: dmsans; source: "fonts/DMSans-VariableFont_opsz_wght.ttf" }
-    FontLoader { id: outfit; source: "fonts/Outfit-VariableFont_wght.ttf" }
+    // FontLoader { id: dmsans; source: "fonts/DMSans-VariableFont_opsz_wght.ttf" }
+    // FontLoader { id: outfit; source: "fonts/Outfit-VariableFont_wght.ttf" }
+    FontLoader { id: dmsansItalic; source: "fonts/DMSans-Italic.ttf" }
+    FontLoader { id: dmsansMedium; source: "fonts/DMSans-Medium.ttf" }
+    FontLoader { id: dmsansBold; source: "fonts/DMSans-Bold.ttf" }
+    FontLoader { id: dmsans; source: "fonts/DMSans-Regular.ttf" }
+    FontLoader { id: outfitMedium; source: "fonts/Outfit-Medium.ttf" }
+    FontLoader { id: outfit; source: "fonts/Outfit-Regular.ttf" }
+    FontLoader { id: outfitBold; source: "fonts/Outfit-Bold.ttf" }
 
     Component.onCompleted: {
         if (!initialized) {

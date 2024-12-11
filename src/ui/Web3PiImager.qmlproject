@@ -21,10 +21,7 @@ Project {
     /* Font files */
     Files {
         filter: "*.ttf;*.otf"
-        files: [
-            "./fonts/DMSans-VariableFont_opsz_wght.ttf",
-            "./fonts/Outfit-VariableFont_wght.ttf",
-        ]
+        directory: "./fonts"
     }
 
     /* Images */

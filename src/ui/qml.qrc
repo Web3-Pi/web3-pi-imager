@@ -33,6 +33,13 @@
         <file>icons/web3pi-imager.ico</file>
         <file>fonts/DMSans-VariableFont_opsz_wght.ttf</file>
         <file>fonts/Outfit-VariableFont_wght.ttf</file>
+        <file>fonts/DMSans-Bold.ttf</file>
+        <file>fonts/DMSans-Italic.ttf</file>
+        <file>fonts/DMSans-Medium.ttf</file>
+        <file>fonts/DMSans-Regular.ttf</file>
+        <file>fonts/Outfit-Bold.ttf</file>
+        <file>fonts/Outfit-Medium.ttf</file>
+        <file>fonts/Outfit-Regular.ttf</file>
         <file>icons/ic_chevron_left_40px.svg</file>
         <file>icons/ic_chevron_right_40px.svg</file>
         <file>icons/ic_sd_storage_40px.svg</file>
