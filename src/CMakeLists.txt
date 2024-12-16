@@ -6,7 +6,7 @@ OPTION (ENABLE_CHECK_VERSION "Check for version updates" ON)
 OPTION (ENABLE_TELEMETRY "Enable sending telemetry" OFF)
 OPTION (DRIVELIST_FILTER_SYSTEM_DRIVES "Filter System drives from displayed drives" ON)
 
-set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Which macOS architectures to build for")
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "Which macOS architectures to build for")
 
 project(web3-pi-imager LANGUAGES CXX C)
 set(IMAGER_VERSION_MAJOR 0)
@@ -21,8 +21,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_link_options("-fsanitize=address")
 
 # You _must_ set your Qt6 root for the build to progress.C
-set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
-# set(Qt6_ROOT "/Users/deimos/dev/Qt/6.7.0/macos" CACHE PATH "Your Qt6 root path")
+# set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
+set(Qt6_ROOT "/Users/deimos/dev/Qt/6.8.0/macos" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
     set(MINGW64_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
@@ -245,7 +245,7 @@ set(SOURCES ${PLATFORM_SOURCES} "main.cpp" "imagewriter.cpp" "networkaccessmanag
     "devicewrapper.cpp" "devicewrapperblockcacheentry.cpp" "devicewrapperpartition.cpp" "devicewrapperfatpartition.cpp"
     "driveformatthread.cpp" "localfileextractthread.cpp" "powersaveblocker.cpp" "downloadstatstelemetry.cpp" "ui/qml.qrc" "dependencies/sha256crypt/sha256crypt.c" "cli.cpp" "hostresolver.cpp")
 
-find_package(Qt6 6.7 QUIET COMPONENTS Core Quick LinguistTools Svg OPTIONAL_COMPONENTS Widgets DBus WinExtras)
+find_package(Qt6 6.7 QUIET COMPONENTS Core Quick LinguistTools Svg Network OPTIONAL_COMPONENTS Widgets DBus WinExtras)
 if (Qt6_FOUND)
     set(QT Qt6)
     if (APPLE)
@@ -470,15 +470,19 @@ elseif(APPLE)
         endif(IMAGER_SIGNING_IDENTITY)
     else()
         # Unsigned application
+        # Build dmg only for Release profile
+        if(CMAKE_BUILD_TYPE STREQUAL "Release")
+            add_custom_command(TARGET ${PROJECT_NAME}
+                    POST_BUILD
+                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -dmg)
+        endif ()
+
+ endif(IMAGER_SIGNED_APP)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
         add_custom_command(TARGET ${PROJECT_NAME}
-            POST_BUILD
-            COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -dmg)
-    endif(IMAGER_SIGNED_APP)
-
-    add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND "mv" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.dmg" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
-
+                POST_BUILD
+                COMMAND "mv" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
+    endif ()
 else()
     # UNIX, Linux systems
     if (NOT CMAKE_CROSSCOMPILING)
@@ -500,4 +504,17 @@ else()
 endif()
 
 include_directories(${CURL_INCLUDE_DIR} ${LibArchive_INCLUDE_DIR} ${LIBLZMA_INCLUDE_DIRS} ${LIBDRM_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${ZSTD_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${QT}::Core ${QT}::Quick ${QT}::Svg ${CURL_LIBRARIES} ${LibArchive_LIBRARIES} ${ZSTD_LIBRARIES} ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${LIBDRM_LIBRARIES} ${ATOMIC_LIBRARY} ${EXTRALIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${QT}::Core
+        ${QT}::Quick
+        ${QT}::Svg
+        ${QT}::Network
+        ${CURL_LIBRARIES}
+        ${LibArchive_LIBRARIES}
+        ${ZSTD_LIBRARIES}
+        ${ZLIB_LIBRARIES}
+        ${LIBLZMA_LIBRARIES}
+        ${LIBDRM_LIBRARIES}
+        ${ATOMIC_LIBRARY}
+        ${EXTRALIBS}
+)

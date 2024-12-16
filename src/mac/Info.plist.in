@@ -5,13 +5,13 @@
   <key>CFBundleDevelopmentRegion</key>
   <string>English</string>
   <key>CFBundleExecutable</key>
-  <string>rpi-imager</string>
+  <string>web3-pi-imager</string>
   <key>CFBundleGetInfoString</key>
   <string></string>
   <key>CFBundleIconFile</key>
   <string>web3pi-imager.icns</string>
   <key>CFBundleIdentifier</key>
-  <string>org.raspberrypi.imagingutility</string>
+  <string>org.web3-pi.imagingutility</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleLongVersionString</key>
