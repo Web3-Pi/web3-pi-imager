@@ -477,7 +477,16 @@ elseif(APPLE)
         if(CMAKE_BUILD_TYPE STREQUAL "Release")
             add_custom_command(TARGET ${PROJECT_NAME}
                     POST_BUILD
-                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -dmg)
+                    # Be careful with the -always-overwrite argument. It overwrites paths for dependencies in libraries.
+                    # For libssl.dylib it overwrites the links several times causing the library to fail to load !
+                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}")
+            add_custom_command(TARGET ${PROJECT_NAME}
+                    POST_BUILD
+                    COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
+            # Create the .dmg for distribution
+            add_custom_command(TARGET ${PROJECT_NAME}
+                    POST_BUILD
+                    COMMAND hdiutil create -volname "Web3 Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
         endif ()
 
  endif(IMAGER_SIGNED_APP)
