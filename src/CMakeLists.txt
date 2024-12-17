@@ -20,12 +20,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #add_compile_options("-fsanitize=address")
 #add_link_options("-fsanitize=address")
 
-# You _must_ set your Qt6 root for the build to progress.C
-# set(Qt6_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your Qt6 root path")
-set(Qt6_ROOT "/Users/deimos/dev/Qt/6.8.0/macos" CACHE PATH "Your Qt6 root path")
+# You _must_ set your Qt6 root for the build to progress.
+set(Qt6_ROOT "/opt/Qt/6.7.2/gcc_arm64" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
-    set(MINGW64_ROOT "E:\\Marcin\\Qt\\6.7.3\\mingw_64" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
+    set(MINGW64_ROOT "" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
+    set(IMAGER_SIGNED_APP OFF CACHE BOOL "Sign Imager and its installer as part of the build. Requires a valid Code Signing certificate.")
 endif()
 
 if (APPLE)
@@ -334,44 +334,47 @@ if (WIN32)
     endif ()
     #
     #  Now find signtool
-    # if (NOT SIGNTOOL)
-    #         # Try to list all Windows 10 SDK versions, if any.
-    #         set(win10_kit_versions)
-    #         set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
-    #         set(regval "KitsRoot10")
-    #         # Note: must be a cache operation in order to read from the registry.
-    #         get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
-    #         if (w10_kits_path)
-    #             message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
-    #                 file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
-    #                 # Reverse list, so newer (higher-numbered) versions appear first.
-    #                 list(REVERSE w10_kit_versions)
-    #         endif ()
-    #         unset(w10_kits_path CACHE)
-    #         if (w10_kit_versions)
-    #                 find_program(SIGNTOOL
-    #                                 NAMES           signtool
-    #                                 PATHS           ${w10_kit_versions}
-    #                                 PATH_SUFFIXES   ${arch}
-    #                                                 bin/${arch}
-    #                                                 bin
-    #                                 NO_DEFAULT_PATH
-    #                 )
-    #         endif ()
-    # endif ()
+    if (IMAGER_SIGNED_APP)
+         if (NOT SIGNTOOL)
+                 # Try to list all Windows 10 SDK versions, if any.
+                 set(win10_kit_versions)
+                 set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
+                 set(regval "KitsRoot10")
+                 # Note: must be a cache operation in order to read from the registry.
+                 get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
+                 if (w10_kits_path)
+                     message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
+                         file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
+                         # Reverse list, so newer (higher-numbered) versions appear first.
+                         list(REVERSE w10_kit_versions)
+                 endif ()
+                 unset(w10_kits_path CACHE)
+                 if (w10_kit_versions)
+                         find_program(SIGNTOOL
+                                         NAMES           signtool
+                                         PATHS           ${w10_kit_versions}
+                                         PATH_SUFFIXES   ${arch}
+                                                         bin/${arch}
+                                                         bin
+                                         NO_DEFAULT_PATH
+                         )
+                 endif ()
+         endif ()
 
-    # if (NOT SIGNTOOL)
-    #     message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
-    # endif()
-#    add_definitions(-DSIGNTOOL="${SIGNTOOL}")
-#
-#    add_custom_command(TARGET ${PROJECT_NAME}
-#        POST_BUILD
-#        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
-#
-#    add_custom_command(TARGET ${PROJECT_NAME}
-#        POST_BUILD
-#        COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe")
+         if (NOT SIGNTOOL)
+             message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
+         endif()
+            add_definitions(-DSIGNTOOL="${SIGNTOOL}")
+
+            add_custom_command(TARGET ${PROJECT_NAME}
+                POST_BUILD
+                COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
+
+            add_custom_command(TARGET ${PROJECT_NAME}
+                POST_BUILD
+                COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe")
+
+    endif ()
 
     # Windeploy
     find_program(WINDEPLOYQT "windeployqt.exe" PATHS "${Qt6_ROOT}/bin")
