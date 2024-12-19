@@ -436,7 +436,7 @@ elseif(APPLE)
             # Create the .app, leveraging macdeployqt's knowledge of Qt libraries and configuration files
             add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
-                COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}")
+                COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -libpath=/usr/local/lib -libpath=/opt/homebrew/lib -no-strip -verbose=2)
             add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
                 COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
@@ -477,9 +477,34 @@ elseif(APPLE)
         if(CMAKE_BUILD_TYPE STREQUAL "Release")
             add_custom_command(TARGET ${PROJECT_NAME}
                     POST_BUILD
-                    # Be careful with the -always-overwrite argument. It overwrites paths for dependencies in libraries.
-                    # For libssl.dylib it overwrites the links several times causing the library to fail to load !
-                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}")
+                    # To properly build an application for both x86_64 and arm64 architectures,
+                    # make sure that the linked system libraries are in universal binary versions
+                    # You can check what paths the copied libraries to Frameworks/ refer to using otool -L
+                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -verbose=2)
+
+
+            # Currently, macdeployqt does not properly link libraries for the arm64 architecture,
+            # so as a temporary solution, I replace the paths manually
+            set(TARGET_APP_PATH "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
+            set(TARGET_FRAMEWORKS_PATH "${TARGET_APP_PATH}/Contents/Frameworks")
+            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND install_name_tool -change /opt/homebrew/opt/libunistring/lib/libunistring.5.dylib @executable_path/../Frameworks/libunistring.5.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/gettext/lib/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                    COMMAND install_name_tool -change  /opt/homebrew/Cellar/openssl@3/3.4.0/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
+                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib @executable_path/../Frameworks/libssl.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+            )
+            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND install_name_tool -change /opt/homebrew/opt/libidn2/lib/libidn2.0.dylib @executable_path/../Frameworks/libidn2.0.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/libidn2/lib/libidn2.0.dylib @executable_path/../Frameworks/libidn2.0.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/libnghttp2/lib/libnghttp2.14.dylib @executable_path/../Frameworks/libnghttp2.14.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                    COMMAND install_name_tool -change /opt/homebrew/opt/libssh2/lib/libssh2.1.dylib @executable_path/../Frameworks/libssh2.1.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                    COMMAND codesign --force --deep --sign - "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+            )
+
             add_custom_command(TARGET ${PROJECT_NAME}
                     POST_BUILD
                     COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
