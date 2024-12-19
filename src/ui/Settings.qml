@@ -13,16 +13,16 @@ QtObject {
     property string selectedDsc;
 
     property string mode: "single";
-    property string hostname;
-    property string hostnameExecution;
-    property string hostnameConsesnus;
-    property string defaultNetwork;
-    property string executionClient;
-    property string consensusClient;
-    property string executionPort;
-    property string consensusPort;
-    property string executionEndpointAddress;
-    property string keyboardLayout;
+    property string hostname: "eop-1";
+    property string hostnameExecution: "eop-1-exec";
+    property string hostnameConsesnus: "eop-1-cons";
+    property string defaultNetwork: "mainnet";
+    property string executionClient: "geth";
+    property string consensusClient: "nimbus";
+    property string executionPort: "30303"
+    property string consensusPort: "9000";
+    property string executionEndpointAddress: "http://localhost:8551";
+    property bool executionEndpointAddressChecked: true;
     property bool monitoring: true;
     property bool formatStorage: false;
 
@@ -247,17 +247,49 @@ QtObject {
     }
 
     function save() {
-        // TODO: save to local storage
-        // var settings = { };
-        // if (fieldHostname.length) {
-        //     settings.hostname = fieldHostname.text
-        // }
-        // settings.timezone = fieldTimezone.editText
-        // settings.keyboardLayout = fieldKeyboardLayout.editText
-        //
-        // imageWriter.setSetting("telemetry", chkTelemtry.checked)
-        // hasSavedSettings = true
-        // saveSettingsSignal(settings)
+        const settings = {
+            hostname,
+            hostnameExecution,
+            hostnameConsesnus,
+            defaultNetwork,
+            executionClient,
+            consensusClient,
+            executionPort,
+            consensusPort,
+            executionEndpointAddress,
+            executionEndpointAddressChecked,
+            localeOptions,
+            wifiOptions,
+            monitoring,
+            formatStorage,
+        };
+        imageWriter.setSavedCustomizationSettings(settings)
+        console.log("Saved settings: ", JSON.stringify(settings))
+    }
+
+    function load() {
+        if (!imageWriter.hasSavedCustomizationSettings()) {
+            console.log("There is no saved settings")
+            return
+        }
+        const settings = imageWriter.getSavedCustomizationSettings()
+        console.log("Loaded settings: ", JSON.stringify(settings))
+        if (settings) {
+            hostname = settings.hostname
+            hostnameExecution = settings.hostnameExecution
+            hostnameConsesnus = settings.hostnameConsesnus
+            defaultNetwork = settings.defaultNetwork
+            executionClient = settings.executionClient
+            consensusClient = settings.consensusClient
+            executionPort = settings.executionPort
+            consensusPort = settings.consensusPort
+            executionEndpointAddress = settings.executionEndpointAddress
+            executionEndpointAddressChecked = settings.executionEndpointAddressChecked
+            localeOptions = settings.localeOptions
+            wifiOptions = settings.wifiOptions
+            monitoring = settings.monitoring
+            formatStorage = settings.formatStorage
+        }
     }
 
     function selectOs(osItem) {

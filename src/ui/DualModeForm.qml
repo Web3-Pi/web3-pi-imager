@@ -17,7 +17,6 @@ Item {
     signal next()
 
     ColumnLayout {
-        id: mainForm
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
@@ -307,7 +306,7 @@ Item {
         }
     }
 
-    function initialize(savedSettings) {
+    function initialize() {
         // TODO
     }
 

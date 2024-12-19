@@ -47,20 +47,20 @@ Window {
                 ImCheckBox {
                     id: chkExecutionEndpointAddress
                     text: qsTr("Execution endpoint address:")
+                    checked: settings.executionEndpointAddressChecked
                     onCheckedChanged: {
                         if (checked) {
                             fieldExecutionEndpointAddress.forceActiveFocus()
                         }
                     }
                 }
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
                 ImTextField {
                     id: fieldExecutionEndpointAddress
                     enabled: chkExecutionEndpointAddress.checked
-                    text: "http://localhost:8551"
+                    text: settings.executionEndpointAddress
                     selectByMouse: true
                     Layout.minimumWidth: 220
                     implicitHeight: 35
@@ -144,7 +144,7 @@ Window {
                 font.weight: Font.Normal
                 Layout.leftMargin: 25
                 Layout.topMargin: -16
-                font.pointSize: 14
+                font.pixelSize: 14
                 font.italic: true
             }
 
@@ -315,19 +315,23 @@ Window {
         return !!error
     }
 
-    function initialize(savedSettings) {
+    function initialize() {
+
+        if (settings.executionEndpointAddress.length) {
+            chkExecutionEndpointAddress.checked = true
+            fieldExecutionEndpointAddress.text = settings.executionEndpointAddress
+        }
+
         fieldTimezone.model = imageWriter.getTimezoneList()
         fieldKeyboardLayout.model = imageWriter.getKeymapLayoutList()
 
-        if ('wifiSSID' in savedSettings) {
-            fieldWifiSSID.text = savedSettings.wifiSSID
-            if ('wifiSSIDHidden' in savedSettings && savedSettings.wifiSSIDHidden) {
-                chkWifiSSIDHidden.checked = true
-            }
-            fieldWifiPassword.text = savedSettings.wifiPassword
-            fieldWifiCountry.currentIndex = fieldWifiCountry.find(savedSettings.wifiCountry)
+        if (settings.wifiOptions.checked) {
+            fieldWifiSSID.text = settings.wifiOptions.ssid
+            chkWifiSSIDHidden.checked = settings.wifiOptions.ssidHidden
+            fieldWifiPassword.text = settings.wifiPassword
+            fieldWifiCountry.currentIndex = fieldWifiCountry.find(settings.wifiOptions.wifiCountry)
             if (fieldWifiCountry.currentIndex == -1) {
-                fieldWifiCountry.editText = savedSettings.wifiCountry
+                fieldWifiCountry.editText = settings.wifiOptions.wifiCountry
             }
             chkWifi.checked = true
         } else {
@@ -346,39 +350,32 @@ Window {
         }
 
         var tz;
-        if ('timezone' in savedSettings) {
+        if (settings.localeOptions.checked) {
             chkLocale.checked = true
-            tz = savedSettings.timezone
+            tz = settings.localeOptions.timezone
+
+            fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(settings.keyboardLayout)
+            if (fieldKeyboardLayout.currentIndex == -1) {
+                fieldKeyboardLayout.editText = settings.keyboardLayout
+            }
+
         } else {
             tz = imageWriter.getTimezone()
+
+            /* Lacking an easy cross-platform to fetch keyboard layout
+               from host system, just default to "gb" for people in
+               UK time zone for now, and "us" for everyone else */
+            if (tz === "Europe/London") {
+                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("gb")
+            } else {
+                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("us")
+            }
         }
         var tzidx = fieldTimezone.find(tz)
         if (tzidx === -1) {
             fieldTimezone.editText = tz
         } else {
             fieldTimezone.currentIndex = tzidx
-        }
-        if ('keyboardLayout' in savedSettings) {
-            fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(savedSettings.keyboardLayout)
-            if (fieldKeyboardLayout.currentIndex == -1) {
-                fieldKeyboardLayout.editText = savedSettings.keyboardLayout
-            }
-        } else {
-            if (imageWriter.isEmbeddedMode())
-            {
-                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(imageWriter.getCurrentKeyboard())
-            }
-            else
-            {
-                /* Lacking an easy cross-platform to fetch keyboard layout
-                   from host system, just default to "gb" for people in
-                   UK time zone for now, and "us" for everyone else */
-                if (tz === "Europe/London") {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("gb")
-                } else {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("us")
-                }
-            }
         }
     }
 
