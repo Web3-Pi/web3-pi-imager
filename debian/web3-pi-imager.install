@@ -1,0 +1,8 @@
+#!/usr/bin/dh-exec
+
+web3-pi-imager.AppImage => /usr/bin/web3-pi-imager
+
+debian/web3-pi-imager.png /usr/share/icons/hicolor/128x128/apps/
+
+debian/*.desktop /usr/share/applications/
+debian/*.metainfo.xml /usr/share/metainfo/
