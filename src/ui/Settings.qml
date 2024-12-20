@@ -28,17 +28,20 @@ QtObject {
 
     property var localeOptions: {
         "checked": false,
-        "timezone": "",
-        "keyboardLayout": "",
+        "timezone":  imageWriter.getTimezone() || "US/Central",
+        "keyboardLayout":  imageWriter.getCurrentKeyboard() || "us",
     };
     property var wifiOptions: {
         "checked": false,
-        "ssid": "",
-        "password": "",
+        "ssid":  imageWriter.getSSID() || "",
+        "password":  "",
         "ssidHidden": false,
-        "wifiCountry": ""
+        "wifiCountry": "us"
     }
 
+    function initialize() {
+        loadSavedSettings()
+    }
 
     function addCmdline(s) {
         cmdline += " "+s
@@ -116,7 +119,7 @@ QtObject {
             addConfig("lighthouse=false")
         }
 
-        if (executionEndpointAddress.length) {
+        if (executionEndpointAddress.checked) {
             addConfig(`exec_url=${executionEndpointAddress}`)
         } else {
             if (mode === "consensus") {
@@ -256,24 +259,31 @@ QtObject {
             consensusClient,
             executionPort,
             consensusPort,
-            executionEndpointAddress,
             executionEndpointAddressChecked,
             localeOptions,
             wifiOptions,
             monitoring,
             formatStorage,
         };
+
+        if (executionEndpointAddressChecked) {
+            settings.executionEndpointAddress = executionEndpointAddress
+        }
+        if (localeOptions.checked) {
+            settings.localeOptions = localeOptions
+        }
+        if (wifiOptions.checked) {
+            settings.wifiOptions = wifiOptions
+        }
+
         imageWriter.setSavedCustomizationSettings(settings)
-        console.log("Saved settings: ", JSON.stringify(settings))
     }
 
-    function load() {
+    function loadSavedSettings() {
         if (!imageWriter.hasSavedCustomizationSettings()) {
-            console.log("There is no saved settings")
             return
         }
         const settings = imageWriter.getSavedCustomizationSettings()
-        console.log("Loaded settings: ", JSON.stringify(settings))
         if (settings) {
             hostname = settings.hostname
             hostnameExecution = settings.hostnameExecution
@@ -283,10 +293,10 @@ QtObject {
             consensusClient = settings.consensusClient
             executionPort = settings.executionPort
             consensusPort = settings.consensusPort
-            executionEndpointAddress = settings.executionEndpointAddress
-            executionEndpointAddressChecked = settings.executionEndpointAddressChecked
-            localeOptions = settings.localeOptions
-            wifiOptions = settings.wifiOptions
+            if (settings.executionEndpointAddress) executionEndpointAddress = settings.executionEndpointAddress
+            if (settings.executionEndpointAddressChecked) executionEndpointAddressChecked = settings.executionEndpointAddressChecked
+            if (settings.localeOptions) localeOptions = settings.localeOptions
+            if (settings.wifiOptions) wifiOptions = settings.wifiOptions
             monitoring = settings.monitoring
             formatStorage = settings.formatStorage
         }

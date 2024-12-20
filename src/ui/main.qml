@@ -173,10 +173,10 @@ ApplicationWindow {
 
 
     function initialize() {
-        settings.load()
+        settings.initialize()
+        advancedSettings.initialize()
         singleModeForm.initialize()
         dualModeForm.initialize()
-        advancedSettings.initialize()
     }
 
     function chooseStorage(mode) {

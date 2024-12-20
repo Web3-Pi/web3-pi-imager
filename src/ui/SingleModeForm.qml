@@ -267,6 +267,7 @@ Item {
 
     function initialize() {
         fieldHostname.text = settings.hostname
+        fieldImageVersion.currentIndex = findIndexByValue(fieldImageVersion.model, "value", settings.selectedOS)
         fieldNetwork.currentIndex = findIndexByValue(fieldNetwork.model, "value", settings.defaultNetwork)
         fieldExecutionClient.currentIndex = findIndexByValue(fieldExecutionClient.model, "value", settings.executionClient)
         fieldConsensusClient.currentIndex = findIndexByValue(fieldConsensusClient.model, "value", settings.consensusClient)

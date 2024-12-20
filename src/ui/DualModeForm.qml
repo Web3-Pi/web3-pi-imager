@@ -209,6 +209,7 @@ Item {
                                             model: ListModel {
                                                 ListElement { text: "Nimbus"; value: "nimbus" }
                                                 ListElement { text: "Lighthouse"; value: "lighthouse" }
+                                                ListElement { text: "Disabled"; value: "disabled" }
                                             }
                                             currentIndex: 0
                                             textRole: "text"
@@ -235,8 +236,6 @@ Item {
                     }
 
                 }
-
-
 
                 ImCheckBox {
                     id: formatStorage
@@ -306,8 +305,25 @@ Item {
         }
     }
 
+    function findIndexByValue(model, role, value) {
+        for (let i = 0; i < model.count; i++) {
+            if (model.get(i)[role] === value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     function initialize() {
-        // TODO
+        fieldHostnameExecution.text = settings.hostnameExecution
+        fieldHostnameConsensus.text = settings.hostnameConsesnus
+        fieldNetwork.currentIndex = findIndexByValue(fieldNetwork.model, "value", settings.defaultNetwork)
+        fieldDualExecutionClient.currentIndex = findIndexByValue(fieldDualExecutionClient.model, "value", settings.executionClient)
+        fieldDualConsensusClient.currentIndex = findIndexByValue(fieldDualConsensusClient.model, "value", settings.consensusClient)
+        fieldDualExecutionPort.text = settings.executionPort
+        fieldDualConsensusPort.text = settings.consensusPort
+        monitoring.checked = settings.monitoring
+        formatStorage.checked = settings.formatStorage
     }
 
     function save() {
