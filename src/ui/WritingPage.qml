@@ -96,7 +96,7 @@ Item {
         ButtonSecondary {
             Layout.preferredWidth: 255
             id: cancelwritebutton
-            text: qsTr("CANCEL WRITE")
+            text: qsTr("CANCEL")
             onClicked: {
                 progressText.text = qsTr("Cancelling...")
                 imageWriter.cancelWrite()
