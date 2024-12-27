@@ -13,32 +13,35 @@ QtObject {
     property string selectedDsc;
 
     property string mode: "single";
-    property string hostname;
-    property string hostnameExecution;
-    property string hostnameConsesnus;
-    property string defaultNetwork;
-    property string executionClient;
-    property string consensusClient;
-    property string executionPort;
-    property string consensusPort;
-    property string executionEndpointAddress;
-    property string keyboardLayout;
+    property string hostname: "eop-1";
+    property string hostnameExecution: "eop-1-exec";
+    property string hostnameConsesnus: "eop-1-cons";
+    property string defaultNetwork: "mainnet";
+    property string executionClient: "geth";
+    property string consensusClient: "nimbus";
+    property string executionPort: "30303"
+    property string consensusPort: "9000";
+    property string executionEndpointAddress: "http://localhost:8551";
+    property bool executionEndpointAddressChecked: true;
     property bool monitoring: true;
     property bool formatStorage: false;
 
     property var localeOptions: {
         "checked": false,
-        "timezone": "",
-        "keyboardLayout": "",
+        "timezone":  imageWriter.getTimezone() || "US/Central",
+        "keyboardLayout":  imageWriter.getCurrentKeyboard() || "us",
     };
     property var wifiOptions: {
         "checked": false,
-        "ssid": "",
-        "password": "",
+        "ssid":  imageWriter.getSSID() || "",
+        "password":  "",
         "ssidHidden": false,
-        "wifiCountry": ""
+        "wifiCountry": "us"
     }
 
+    function initialize() {
+        loadSavedSettings()
+    }
 
     function addCmdline(s) {
         cmdline += " "+s
@@ -116,7 +119,7 @@ QtObject {
             addConfig("lighthouse=false")
         }
 
-        if (executionEndpointAddress.length) {
+        if (executionEndpointAddress.checked) {
             addConfig(`exec_url=${executionEndpointAddress}`)
         } else {
             if (mode === "consensus") {
@@ -247,17 +250,56 @@ QtObject {
     }
 
     function save() {
-        // TODO: save to local storage
-        // var settings = { };
-        // if (fieldHostname.length) {
-        //     settings.hostname = fieldHostname.text
-        // }
-        // settings.timezone = fieldTimezone.editText
-        // settings.keyboardLayout = fieldKeyboardLayout.editText
-        //
-        // imageWriter.setSetting("telemetry", chkTelemtry.checked)
-        // hasSavedSettings = true
-        // saveSettingsSignal(settings)
+        const settings = {
+            hostname,
+            hostnameExecution,
+            hostnameConsesnus,
+            defaultNetwork,
+            executionClient,
+            consensusClient,
+            executionPort,
+            consensusPort,
+            executionEndpointAddressChecked,
+            localeOptions,
+            wifiOptions,
+            monitoring,
+            formatStorage,
+        };
+
+        if (executionEndpointAddressChecked) {
+            settings.executionEndpointAddress = executionEndpointAddress
+        }
+        if (localeOptions.checked) {
+            settings.localeOptions = localeOptions
+        }
+        if (wifiOptions.checked) {
+            settings.wifiOptions = wifiOptions
+        }
+
+        imageWriter.setSavedCustomizationSettings(settings)
+    }
+
+    function loadSavedSettings() {
+        if (!imageWriter.hasSavedCustomizationSettings()) {
+            return
+        }
+        const settings = imageWriter.getSavedCustomizationSettings()
+        if (settings) {
+            hostname = settings.hostname
+            hostnameExecution = settings.hostnameExecution
+            hostnameConsesnus = settings.hostnameConsesnus
+            defaultNetwork = settings.defaultNetwork
+            executionClient = settings.executionClient
+            consensusClient = settings.consensusClient
+            executionPort = settings.executionPort
+            consensusPort = settings.consensusPort
+            if (settings.executionEndpointAddress) executionEndpointAddress = settings.executionEndpointAddress
+            if (settings.executionEndpointAddressChecked) executionEndpointAddressChecked = settings.executionEndpointAddressChecked
+            if (settings.localeOptions) localeOptions = settings.localeOptions
+            if (settings.wifiOptions) wifiOptions = settings.wifiOptions
+            monitoring = settings.monitoring
+            formatStorage = settings.formatStorage
+        }
     }
 
     function selectOs(osItem) {

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Web3 Pi Imager
+Name[zh_CN]=树莓派启动盘制作工具
+Comment=Web3 Pi Imager
+Comment[zh_CN]=树莓派启动盘制作工具
+Icon=web3-pi-imager
+Exec=web3-pi-imager %F
+Categories=Utility
+StartupNotify=false

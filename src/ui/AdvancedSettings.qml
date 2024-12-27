@@ -24,6 +24,8 @@ Window {
 
     flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint
 
+    property bool wifiPasswordRequested: false
+
     Material.theme: Material.Light
     Material.foreground: "#666"
 
@@ -53,14 +55,12 @@ Window {
                         }
                     }
                 }
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
                 ImTextField {
                     id: fieldExecutionEndpointAddress
                     enabled: chkExecutionEndpointAddress.checked
-                    text: "http://localhost:8551"
                     selectByMouse: true
                     Layout.minimumWidth: 220
                     implicitHeight: 35
@@ -112,12 +112,10 @@ Window {
                     }
                     ImComboBox {
                         id: fieldKeyboardLayout
-                        // Material.foreground: "#000"
                         selectTextByMouse: true
                         editable: true
                         Layout.minimumWidth: 220
                         implicitHeight: 35
-                        model: ["en", "gb"]
                         enabled: chkLocale.checked
                         font.weight: Font.Normal
                     }
@@ -130,6 +128,12 @@ Window {
                 text: qsTr("Configure wireless LAN")
                 onCheckedChanged: {
                     if (checked) {
+                        if (!wifiPasswordRequested) {
+                            if (!fieldWifiPassword.text.length && advancedSettings.visible) {
+                                fieldWifiPassword.text = imageWriter.getPSK()
+                                wifiPasswordRequested = true
+                            }
+                        }
                         if (!fieldWifiSSID.length) {
                             fieldWifiSSID.forceActiveFocus()
                         } else if (!fieldWifiPassword.length) {
@@ -144,7 +148,7 @@ Window {
                 font.weight: Font.Normal
                 Layout.leftMargin: 25
                 Layout.topMargin: -16
-                font.pointSize: 14
+                font.pixelSize: 14
                 font.italic: true
             }
 
@@ -155,7 +159,6 @@ Window {
                     Layout.leftMargin: 40
                     font.weight: Font.Normal
                 }
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
@@ -180,7 +183,6 @@ Window {
                     Layout.leftMargin: 40
                     font.weight: Font.Normal
                 }
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
@@ -201,7 +203,6 @@ Window {
             }
 
             RowLayout {
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
@@ -222,7 +223,6 @@ Window {
                     text: qsTr("Hidden SSID")
                     Material.foreground: "#000"
                 }
-                // Spacer item
                 Item {
                     Layout.fillWidth: true
                 }
@@ -241,7 +241,6 @@ Window {
                 }
                 ImComboBox {
                     id: fieldWifiCountry
-                    model: imageWriter.getCountryList()
                     selectTextByMouse: true
                     enabled: chkWifi.checked
                     editable: true
@@ -272,10 +271,6 @@ Window {
                     validate()
                     save()
                     advancedSettings.close()
-                    // TODO
-                    // if (validate()) {
-                    //     advancedSettings.close()
-                    // }
                 }
             }
 
@@ -315,89 +310,48 @@ Window {
         return !!error
     }
 
-    function initialize(savedSettings) {
+    function initialize() {
+        chkExecutionEndpointAddress.checked = settings.executionEndpointAddressChecked
+        fieldExecutionEndpointAddress.text = settings.executionEndpointAddress
+
         fieldTimezone.model = imageWriter.getTimezoneList()
         fieldKeyboardLayout.model = imageWriter.getKeymapLayoutList()
+        fieldWifiCountry.model = imageWriter.getCountryList()
 
-        if ('wifiSSID' in savedSettings) {
-            fieldWifiSSID.text = savedSettings.wifiSSID
-            if ('wifiSSIDHidden' in savedSettings && savedSettings.wifiSSIDHidden) {
-                chkWifiSSIDHidden.checked = true
-            }
-            fieldWifiPassword.text = savedSettings.wifiPassword
-            fieldWifiCountry.currentIndex = fieldWifiCountry.find(savedSettings.wifiCountry)
-            if (fieldWifiCountry.currentIndex == -1) {
-                fieldWifiCountry.editText = savedSettings.wifiCountry
-            }
-            chkWifi.checked = true
-        } else {
-            fieldWifiCountry.currentIndex = fieldWifiCountry.find("GB")
-            fieldWifiSSID.text = imageWriter.getSSID()
-            if (fieldWifiSSID.text.length) {
-                fieldWifiPassword.text = imageWriter.getPSK()
-                if (fieldWifiPassword.text.length) {
-                    chkShowPassword.checked = false
-                    if (Qt.platform.os == "osx") {
-                        /* User indicated wifi must be prefilled */
-                        chkWifi.checked = true
-                    }
-                }
-            }
+        fieldWifiSSID.text = settings.wifiOptions.ssid
+        chkWifiSSIDHidden.checked = settings.wifiOptions.ssidHidden
+        fieldWifiPassword.text = settings.wifiOptions.password
+        fieldWifiCountry.currentIndex = fieldWifiCountry.find(settings.wifiOptions.wifiCountry)
+        if (fieldWifiCountry.currentIndex === -1) {
+            fieldWifiCountry.editText = settings.wifiOptions.wifiCountry
+        }
+        chkWifi.checked = settings.wifiOptions.checked
+
+        chkLocale.checked = settings.localeOptions.checked
+        fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(settings.localeOptions.keyboardLayout)
+        if (fieldKeyboardLayout.currentIndex === -1) {
+            fieldKeyboardLayout.editText = settings.localeOptions.keyboardLayout
         }
 
-        var tz;
-        if ('timezone' in savedSettings) {
-            chkLocale.checked = true
-            tz = savedSettings.timezone
-        } else {
-            tz = imageWriter.getTimezone()
-        }
-        var tzidx = fieldTimezone.find(tz)
-        if (tzidx === -1) {
-            fieldTimezone.editText = tz
-        } else {
-            fieldTimezone.currentIndex = tzidx
-        }
-        if ('keyboardLayout' in savedSettings) {
-            fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(savedSettings.keyboardLayout)
-            if (fieldKeyboardLayout.currentIndex == -1) {
-                fieldKeyboardLayout.editText = savedSettings.keyboardLayout
-            }
-        } else {
-            if (imageWriter.isEmbeddedMode())
-            {
-                fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find(imageWriter.getCurrentKeyboard())
-            }
-            else
-            {
-                /* Lacking an easy cross-platform to fetch keyboard layout
-                   from host system, just default to "gb" for people in
-                   UK time zone for now, and "us" for everyone else */
-                if (tz === "Europe/London") {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("gb")
-                } else {
-                    fieldKeyboardLayout.currentIndex = fieldKeyboardLayout.find("us")
-                }
-            }
+        fieldTimezone.currentIndex = fieldTimezone.find(settings.localeOptions.timezone)
+        if (fieldTimezone.currentIndex === -1) {
+            fieldTimezone.editText = settings.localeOptions.timezone
         }
     }
 
     function save() {
-        if (chkExecutionEndpointAddress.checked) {
-            settings.executionEndpointAddress = fieldExecutionEndpointAddress.text
-        }
-        if (chkLocale.checked) {
-            settings.localeOptions.checked = true
-            settings.localeOptions.timezone = fieldTimezone.editText
-            settings.localeOptions.keyboardLayout = fieldKeyboardLayout.editText
-        }
-        if (chkWifi.checked) {
-            settings.wifiOptions.checked = true
-            settings.wifiOptions.ssid = fieldWifiSSID.text
-            settings.wifiOptions.password = fieldWifiPassword.text
-            settings.wifiOptions.hidden = chkWifiSSIDHidden.checked
-            settings.wifiOptions.country = fieldWifiCountry.currentText
-        }
+        settings.executionEndpointAddressChecked = chkExecutionEndpointAddress.checked
+        settings.executionEndpointAddress = fieldExecutionEndpointAddress.text
+        settings.localeOptions.checked = chkLocale.checked
+        settings.localeOptions.timezone = fieldTimezone.editText
+        settings.localeOptions.keyboardLayout = fieldKeyboardLayout.editText
+        settings.wifiOptions.checked = chkWifi.checked
+        settings.wifiOptions.ssid = fieldWifiSSID.text
+        settings.wifiOptions.password = fieldWifiPassword.text
+        settings.wifiOptions.hidden = chkWifiSSIDHidden.checked
+        settings.wifiOptions.country = fieldWifiCountry.currentText
+
+        settings.save()
     }
 
     function open() {

@@ -25,13 +25,6 @@ ApplicationWindow {
 
     title: qsTr("Web3 Pi Imager v%1").arg(imageWriter.constantVersion())
 
-    signal saveSettingsSignal(var settings)
-
-    property bool initialized: false
-    property bool hasSavedSettings: false
-
-    // FontLoader { id: dmsans; source: "fonts/DMSans-VariableFont_opsz_wght.ttf" }
-    // FontLoader { id: outfit; source: "fonts/Outfit-VariableFont_wght.ttf" }
     FontLoader { id: dmsansItalic; source: "fonts/DMSans-Italic.ttf" }
     FontLoader { id: dmsansMedium; source: "fonts/DMSans-Medium.ttf" }
     FontLoader { id: dmsansBold; source: "fonts/DMSans-Bold.ttf" }
@@ -40,14 +33,7 @@ ApplicationWindow {
     FontLoader { id: outfit; source: "fonts/Outfit-Regular.ttf" }
     FontLoader { id: outfitBold; source: "fonts/Outfit-Bold.ttf" }
 
-    Component.onCompleted: {
-        if (!initialized) {
-            initialize()
-            if (imageWriter.hasSavedCustomizationSettings()) {
-                settings.apply()
-            }
-        }
-    }
+    Component.onCompleted: () => initialize()
 
     Shortcut {
         sequence: StandardKey.Quit
@@ -193,17 +179,10 @@ ApplicationWindow {
 
 
     function initialize() {
-        // TODO
-        // chkTelemtry.checked = imageWriter.getBoolSetting("telemetry")
-        const savedSettings = imageWriter.getSavedCustomizationSettings()
-
-        // versionManager.fetchOSList()
-
-        singleModeForm.initialize(savedSettings)
-        dualModeForm.initialize(savedSettings)
-        advancedSettings.initialize(savedSettings)
-
-        initialized = true
+        settings.initialize()
+        advancedSettings.initialize()
+        singleModeForm.initialize()
+        dualModeForm.initialize()
     }
 
     function chooseStorage(mode) {
