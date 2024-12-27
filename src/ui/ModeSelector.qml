@@ -40,6 +40,7 @@ Item {
                 }
 
                 ButtonPrimary {
+                    id: buttonSingle
                     text: qsTr("Single Mode Device")
                     font.family: outfitBold.name
                     font.weight: Font.Bold
@@ -50,6 +51,9 @@ Item {
                         settings.mode = "single"
                         stackView.push(singleModeForm)
                     }
+                    Material.background: buttonSingle.hovered ? "#E51763" : "#FFFFFF"
+                    Material.foreground: buttonSingle.hovered ? "#FFFFFF" : Material.accent
+                    rippleColor: Material.accent
                 }
 
                 ImText {
@@ -85,7 +89,8 @@ Item {
                     }
                 }
 
-                ButtonSecondary {
+                ButtonPrimary {
+                    id: buttonDual
                     text: qsTr("Dual Mode Device")
                     font.family: outfitBold.name
                     font.weight: Font.Bold
@@ -96,6 +101,9 @@ Item {
                         settings.mode = "execution"
                         stackView.push(dualModeForm)
                     }
+                    Material.background: buttonDual.hovered ? "#E51763" : "#FFFFFF"
+                    Material.foreground: buttonDual.hovered ? "#FFFFFF" : Material.accent
+                    rippleColor: Material.accent
                 }
 
                 ImText {
