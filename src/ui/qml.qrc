@@ -13,6 +13,7 @@
         <file>AfterWritingPageExecution.qml</file>
         <file>AfterWritingPageConsensus.qml</file>
         <file>FinalPageDualMode.qml</file>
+        <file>FinalPageSingleMode.qml</file>
         <file>HostResolverPage.qml</file>
         <file>MsgPopup.qml</file>
         <file>qtquickcontrols2.conf</file>

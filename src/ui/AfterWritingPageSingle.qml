@@ -81,19 +81,6 @@ Item {
                     font.italic: true
                 }
             }
-
-            // TODO: ???
-            ImText {
-                text: qsTr("If you want to install later,<br>the installation process can be monitored at <b><a href='http://%1.local' style='color: white;'>http://%1.local</a></b>").arg(settings.hostname)
-                textFormat: Text.RichText
-                font.pixelSize: 15
-                font.italic: true
-                horizontalAlignment: Text.AlignHCenter
-                onLinkActivated: {
-                    Qt.openUrlExternally(link)
-                }
-                visible: false
-            }
         }
 
         Item {
