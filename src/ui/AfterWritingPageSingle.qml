@@ -81,19 +81,6 @@ Item {
                     font.italic: true
                 }
             }
-
-            // TODO: ???
-            ImText {
-                text: qsTr("If you want to install later,<br>the installation process can be monitored at <b><a href='http://%1.local' style='color: white;'>http://%1.local</a></b>").arg(settings.hostname)
-                textFormat: Text.RichText
-                font.pixelSize: 15
-                font.italic: true
-                horizontalAlignment: Text.AlignHCenter
-                onLinkActivated: {
-                    Qt.openUrlExternally(link)
-                }
-                visible: false
-            }
         }
 
         Item {
@@ -103,21 +90,7 @@ Item {
         RowLayout {
             spacing: 15
             width: parent.width
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            ButtonSecondary {
-                id: quitButton
-                visible: true
-                Layout.preferredWidth: 152
-                Layout.alignment: Qt.AlignCenter
-                text: qsTr("QUIT")
-                onClicked: {
-                    Qt.quit()
-                }
-            }
-            Item {
-                Layout.fillWidth: false
-            }
+            Layout.alignment: Qt.AlignCenter
 
             ButtonPrimary {
                 Layout.preferredWidth: 187

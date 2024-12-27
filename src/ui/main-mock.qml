@@ -84,7 +84,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: WritingPage {}
+                initialItem: HostResolverPage {}
             }
         }
     }
@@ -152,7 +152,7 @@ Window {
 
     Component.onCompleted: {
         // confirmwritepopup.askForConfirmation()
-        storagePopup.open()
+        // storagePopup.open()
         // advancedSettings.open()
     }
 

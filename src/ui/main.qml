@@ -143,10 +143,16 @@ ApplicationWindow {
         id: hostResolverPage
         objectName: "hostResolverPage"
         visible: false
+        onEnd: (success) => afterHostResolved(success)
     }
 
     FinalPageDualMode {
         id: finalPageDualMode
+        visible: false
+    }
+
+    FinalPageSingleMode {
+        id: finalPageSingleMode
         visible: false
     }
 
@@ -202,6 +208,11 @@ ApplicationWindow {
         } else if (mode === "consensus") {
             stackView.push(afterWritingPageConsensus)
         }
+    }
+
+    function afterHostResolved(success) {
+        finalPageSingleMode.success = success
+        stackView.push(finalPageSingleMode)
     }
 
     function onNetworkInfo(msg) {
