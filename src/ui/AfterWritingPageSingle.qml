@@ -103,21 +103,7 @@ Item {
         RowLayout {
             spacing: 15
             width: parent.width
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            ButtonSecondary {
-                id: quitButton
-                visible: true
-                Layout.preferredWidth: 152
-                Layout.alignment: Qt.AlignCenter
-                text: qsTr("QUIT")
-                onClicked: {
-                    Qt.quit()
-                }
-            }
-            Item {
-                Layout.fillWidth: false
-            }
+            Layout.alignment: Qt.AlignCenter
 
             ButtonPrimary {
                 Layout.preferredWidth: 187

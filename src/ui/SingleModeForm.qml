@@ -16,7 +16,6 @@ Item {
     signal next()
 
     ColumnLayout {
-        id: mainForm
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
@@ -26,10 +25,8 @@ Item {
         anchors.bottomMargin: 40
         anchors.fill: parent
 
-
         ColumnLayout {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            width: parent.width
             spacing: 30
 
             ColumnLayout {
@@ -106,7 +103,6 @@ Item {
                             }
                         }
                     }
-
                     ImCheckBox {
                         id: monitoring
                         checked: true
@@ -168,6 +164,7 @@ Item {
                                         model: ListModel {
                                             ListElement { text: "Nimbus"; value: "nimbus" }
                                             ListElement { text: "Lighthouse"; value: "lighthouse" }
+                                            ListElement { text: "Disabled"; value: "disabled" }
                                         }
                                         currentIndex: 0
                                         textRole: "text"
@@ -204,8 +201,7 @@ Item {
             }
         }
         RowLayout {
-            width: parent.width
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignCenter
 
             ButtonSecondary {
                 text: qsTr("ADVANCED")
@@ -260,11 +256,25 @@ Item {
         }
     }
 
-    function initialize(savedSettings) {
-        if ('hostname' in savedSettings) {
-            fieldHostname.text = savedSettings.hostname
+    function findIndexByValue(model, role, value) {
+        for (let i = 0; i < model.count; i++) {
+            if (model.get(i)[role] === value) {
+                return i;
+            }
         }
-        // TODO
+        return -1;
+    }
+
+    function initialize() {
+        fieldHostname.text = settings.hostname
+        fieldImageVersion.currentIndex = findIndexByValue(fieldImageVersion.model, "value", settings.selectedOS)
+        fieldNetwork.currentIndex = findIndexByValue(fieldNetwork.model, "value", settings.defaultNetwork)
+        fieldExecutionClient.currentIndex = findIndexByValue(fieldExecutionClient.model, "value", settings.executionClient)
+        fieldConsensusClient.currentIndex = findIndexByValue(fieldConsensusClient.model, "value", settings.consensusClient)
+        fieldExecutionPort.text = settings.executionPort
+        fieldConsensusPort.text = settings.consensusPort
+        monitoring.checked = settings.monitoring
+        formatStorage.checked = settings.formatStorage
     }
 
     function save() {

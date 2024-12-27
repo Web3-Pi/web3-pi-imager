@@ -15,7 +15,12 @@ Rectangle {
     color: Material.background
     Item {
         id: finalPageSingleMode
+
+        property bool success: true
+
         anchors.fill: parent
+
+
         ColumnLayout {
             anchors.top: parent.top
             anchors.right: parent.right
@@ -29,7 +34,7 @@ Rectangle {
             ColumnLayout {
                 Layout.alignment: Qt.AlignCenter
                 spacing: 25
-                Layout.topMargin: 40
+                Layout.topMargin: 50
 
                 ColumnLayout {
                     id: successInfo
@@ -38,12 +43,6 @@ Rectangle {
                     spacing: 30
                     Layout.topMargin: 5
 
-                    ImText {
-                        text: "Thank you for choosing Web3 Pi"
-                        font.pixelSize: 32
-                        font.weight: Font.Medium
-                        Layout.alignment: Qt.AlignHCenter
-                    }
 
                     Item {
                         width: 82
@@ -55,101 +54,58 @@ Rectangle {
                             Layout.alignment: Qt.AlignCenter
                         }
                     }
+
+                    ImText {
+                        visible: !finalPageSingleMode.success
+                        Layout.topMargin: 20
+                        text: "If you wish to perform installation on your device later,\nplease refer to our documentation"
+                        font.pixelSize: 20
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignCenter
+                        font.weight: Font.Medium
+                        Layout.bottomMargin: 45
+                    }
+
+                    ImText {
+                        visible: finalPageSingleMode.success
+                        Layout.topMargin: 20
+                        text: "Installation process has begun..."
+                        font.pixelSize: 20
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignCenter
+                        font.weight: Font.Medium
+
+                    }
+
+                    ButtonPrimary {
+                        visible: finalPageSingleMode.success
+                        Layout.preferredWidth: 187
+                        Layout.alignment: Qt.AlignCenter
+                        text: qsTr("TRACK")
+                        onClicked: {
+                            Qt.openUrlExternally(`http://${settings.hostname}.local`)
+                        }
+                        Layout.bottomMargin: 25
+                    }
+
+
+
                     ColumnLayout {
                         Layout.alignment: Qt.AlignCenter
-                        spacing: 30
-
-                        ColumnLayout {
-                            Layout.alignment: Qt.AlignCenter
-                            ImText {
-                                text: qsTr("Monitor installation process will be available at:")
-                                textFormat: Text.RichText
-                                Layout.alignment: Qt.AlignCenter
-                                horizontalAlignment: Text.AlignHCenter
-                                color: "#99ffffff"
-                                font.pixelSize: 20
-                                font.weight: Font.Medium
-                                onLinkActivated: (link) => Qt.openUrlExternally(link)
-                            }
-                            RowLayout {
-                                Layout.alignment: Qt.AlignCenter
-                                ImText {
-                                    text: qsTr("<a href='http://%1.local' style='color: #fff;'>http://%1.local</a>").arg("eop-1")
-                                    textFormat: Text.RichText
-                                    Layout.alignment: Qt.AlignCenter
-                                    horizontalAlignment: Text.AlignHCenter
-                                    color: "#99ffffff"
-                                    //color: "#fff"
-                                    font.pixelSize: 20
-                                    font.weight: Font.Medium
-                                    onLinkActivated: (link) => Qt.openUrlExternally(link)
-                                    visible: true
-                                }
-                                ImText {
-                                    visible: true
-                                    text: qsTr("or <a href='http://%1.local' style='color: #ffffff;'>http://%1</a>").arg("192.168.1.77")
-                                    textFormat: Text.RichText
-                                    Layout.alignment: Qt.AlignCenter
-                                    horizontalAlignment: Text.AlignHCenter
-                                    color: "#bbffffff"
-                                    font.pixelSize: 20
-                                    font.weight: Font.Medium
-                                    onLinkActivated: (link) => Qt.openUrlExternally(link)
-                                }
-                            }
-
-
-                            RowLayout {
-                                Layout.alignment: Qt.AlignCenter
-
-                                visible: false
-                                ImText {
-                                    visible: true
-                                    color: "#bbffffff"
-                                    font.pixelSize: 15
-                                    font.italic: true
-                                    text: ("Searching for a device...")
-                                }
-                                BusyIndicator {
-                                    visible: true
-                                    id: busyIndicator
-                                    running: true
-                                    implicitHeight: 40
-                                    implicitWidth: 40
-                                    Material.theme: Material.Dark
-                                    Layout.alignment: Qt.AlignCenter
-                                }
-                                ButtonOutline {
-                                    visible: true
-                                    id: control
-                                    Layout.alignment: Qt.AlignCenter
-                                    Layout.preferredHeight:25
-                                    Layout.preferredWidth: 70
-                                    font.pixelSize: 10
-                                    verticalPadding: 0
-                                    topPadding: 0
-                                    bottomPadding: 0
-                                    spacing: 0
-                                    padding: 0
-                                    rightPadding: 0
-                                    leftPadding: 0
-                                    text: qsTr("CANCEL")
-                                    Material.foreground: "#bbffffff"
-                                    Component.onCompleted: {
-                                        control.background.border.color = "#997d7d7d"
-                                    }
-                                }
-                            }
-                        }
-
-
-
+                        spacing: 10
 
                         ImText {
-                            text: "After installation, log in via SSH using credentials:<br><span style='color: white;'>ethereum:ethereum</span>"
+                            text: qsTr("Monitor installation process at: <a href='http://%1.local' style='color: white;'>http://%1.local</a>").arg(settings.hostname)
                             textFormat: Text.RichText
-                            Layout.alignment: Qt.AlignCenter
-                            horizontalAlignment: Text.AlignHCenter
+                            color: "#99ffffff"
+                            font.pixelSize: 20
+                            font.weight: Font.Medium
+                            onLinkActivated: (link) => Qt.openUrlExternally(link)
+                        }
+
+                        ImText {
+                            text: "Log in via SSH using credentials: <span style='color: white;'>ethereum:ethereum</span>"
+                            textFormat: Text.RichText
                             color: "#99ffffff"
                             font.pixelSize: 20
                             font.weight: Font.Medium
@@ -158,8 +114,6 @@ Rectangle {
                         ImText {
                             text: qsTr("More information at: <a href='https://www.web3pi.io' style='color: white;'>www.web3pi.io</a>")
                             textFormat: Text.RichText
-                            Layout.alignment: Qt.AlignCenter
-                            horizontalAlignment: Text.AlignHCenter
                             color: "#99ffffff"
                             font.pixelSize: 20
                             font.weight: Font.Medium
