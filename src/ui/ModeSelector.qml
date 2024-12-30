@@ -123,9 +123,17 @@ Item {
         RowLayout {
             Layout.alignment: Qt.AlignCenter
             TextInfo {
-                text: "For more information head to <a href='http://www.web3pi.io' style='color: \"#249EC7\"'>www.web3pi.io</a>"
+                text: "For more information head to"
+            }
+            TextInfo {
+                text: "<a href='https://www.web3pi.io/' style='color: \"#249EC7\";'>www.web3pi.io</a>"
                 textFormat: Text.RichText
                 onLinkActivated: (link) => Qt.openUrlExternally(link)
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    enabled: false
+                }
             }
         }
     }

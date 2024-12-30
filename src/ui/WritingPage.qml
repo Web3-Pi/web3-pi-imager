@@ -15,6 +15,11 @@ Item {
     id: writingPage
 
     property string mode
+    property var hints: [
+        "For more information head to <a href='https://www.web3pi.io' style='color: \"#249EC7\"'>www.web3pi.io</a>",
+        qsTr("After writing the image, monitor the installation process at:<br> <a href='http://%1.local' style='color: \"#249EC7\"'>http://%1.local</a>").arg(settings.hostname),
+        "After installation, log in via SSH using credentials:<br></br>ethereum:ethereum",
+    ]
 
     signal end(string mode)
 
@@ -89,6 +94,30 @@ Item {
             Layout.alignment: Qt.AlignCenter
             Layout.topMargin: 40
         }
+
+        TextInfo {
+            property int currentIndex: 0
+
+            text: hints[currentIndex]
+            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignCenter
+            Layout.topMargin: 50
+            textFormat: Text.RichText
+            onLinkActivated: (link) => Qt.openUrlExternally(link)
+
+
+            Timer {
+                interval: 10000
+                running: true
+                repeat: true
+                onTriggered: {
+                    parent.currentIndex = (parent.currentIndex + 1) % hints.length;
+                    parent.text = hints[parent.currentIndex];
+                }
+            }
+
+        }
+
         Item {
             Layout.fillHeight: true
         }

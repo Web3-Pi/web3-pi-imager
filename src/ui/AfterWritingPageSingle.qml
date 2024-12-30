@@ -68,14 +68,21 @@ Item {
                 }
 
                 ImText {
-                    text: "2. Connect the necessary cables"
+                    text: "2. Connect the necessary cables."
                     font.family: dmsans.name
                     font.pixelSize: 18
                     font.italic: true
                 }
 
                 ImText {
-                    text: "3. Turn on the device"
+                    text: "3. Internet connection (via DHCP) is required."
+                    font.family: dmsans.name
+                    font.pixelSize: 18
+                    font.italic: true
+                }
+
+                ImText {
+                    text: "4. Turn on the device and then press NEXT button"
                     font.family: dmsans.name
                     font.pixelSize: 18
                     font.italic: true

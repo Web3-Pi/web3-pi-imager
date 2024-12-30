@@ -74,6 +74,11 @@ Item {
                         font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            enabled: false
+                        }
                     }
 
                     ImText {
@@ -84,6 +89,11 @@ Item {
                         font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            enabled: false
+                        }
                     }
 
                     ImText {
@@ -93,6 +103,11 @@ Item {
                         font.pixelSize: 20
                         font.weight: Font.Medium
                         onLinkActivated: (link) => Qt.openUrlExternally(link)
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            enabled: false
+                        }
                     }
                 }
             }

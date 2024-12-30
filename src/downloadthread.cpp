@@ -46,7 +46,7 @@ DownloadThread::DownloadThread(const QByteArray &url, const QByteArray &localfil
     _curlCount++;
 
     QSettings settings;
-    _ejectEnabled = settings.value("eject", true).toBool();
+    _ejectEnabled = settings.value("eject", false).toBool();
 }
 
 DownloadThread::~DownloadThread()

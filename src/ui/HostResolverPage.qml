@@ -99,6 +99,11 @@ Item {
                     font.pixelSize: 20
                     font.weight: Font.Medium
                     onLinkActivated: (link) => Qt.openUrlExternally(link)
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        enabled: false
+                    }
                 }
 
                 ImText {
@@ -116,6 +121,11 @@ Item {
                     font.pixelSize: 20
                     font.weight: Font.Medium
                     onLinkActivated: (link) => Qt.openUrlExternally(link)
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        enabled: false
+                    }
                 }
             }
         }
@@ -159,7 +169,7 @@ Item {
                 }
 
                 ImText {
-                    text: "2. Make sure that the blinker blips green blops"
+                    text: "2. Make sure that the status LED blinks green"
                     font.family: dmsansItalic.name
                     font.pixelSize: 20
                     font.italic: true
