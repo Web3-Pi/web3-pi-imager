@@ -12,18 +12,22 @@ Web3Pi Imager is built as a fork of the [Raspberry Pi Imager](https://github.com
 ## Features
 
 ### Single or Dual Device Mode
+
 Choose between running both execution and consensus layers on a single Raspberry Pi 5 or splitting them across two Raspberry Pi 4 devices.  
 <img src="./doc/screenshots/mode-selector.png" alt="Single and Dual Device Mode" width="600">
 
 ### Preparing Writing
+
 Easily configure your SD card with pre-selected Ethereum client settings before starting the writing process.  
 <img src="./doc/screenshots/preparing-writing.png" alt="Preparing Writing" width="600">
 
 ### Advanced Settings
-Customize advanced configurations such as locale, network settings, and monitoring tools to suit your requirements.  
+
+Customize advanced configurations such as locale and network settings.  
 <img src="./doc/screenshots/advanced-settings.png" alt="Advanced Settings" width="600">
 
 ### Writing Progress
+
 Monitor the real-time progress of the image being written to the SD card.  
 <img src="./doc/screenshots/writing.png" alt="Writing Progress" width="600">
 ---
@@ -46,26 +50,24 @@ The user can choose between two modes: **Single Mode Device** and **Dual Mode De
   - This mode splits the **execution layer** and the **consensus layer** onto two separate devices.
   - It is recommended for older hardware, such as two Raspberry Pi 4 devices (minimum 8GB RAM each).
   - In this setup:
-    - The **execution layer** (e.g., handling transactions and smart contracts) requires ~2TB of storage.
-    - The **consensus layer** (e.g., verifying blocks) requires ~500GB of storage.
+    - The **execution layer** (e.g. handling transactions and smart contracts) requires ~2TB of storage.
+    - The **consensus layer** (e.g. verifying blocks) requires ~500GB of storage.
   - This option provides flexibility for devices with lower performance or limited resources.
 
 
 ### 2. Initial Configuration
 
 - **Single Mode Device**:  
-  This mode allows you to run both the execution layer and consensus layer on a single device, such as a Raspberry Pi 5.  
-  In this mode, you can configure the following parameters:
+  This mode allows you to run both the execution layer and consensus layer on a single device, such as a Raspberry Pi 5. In this mode, you can configure the following parameters:
   - Image version (e.g. Web3 Pi image v0.7.4).
   - Default network (e.g. Ethereum Holesky).
   - Hostname for the device (e.g. `eop-1.local`).
   - Execution client and port (e.g. Geth, port 30303).
   - Consensus client and port (e.g. Lighthouse, port 9000).
-  - Optionally, enable Grafana monitoring or format the storage device before writing.
+  - Optionally, enable Grafana monitoring or format the external storage device before installation.
 
 - **Dual Mode Device**:  
-  This mode splits the execution layer and consensus layer onto two separate devices, which is particularly useful for older hardware like Raspberry Pi 4.  
-  For each device, you can configure:
+  This mode splits the execution layer and consensus layer onto two separate devices, which is particularly useful for older hardware like Raspberry Pi 4. For each device, you can configure:
 
   - **Execution Device**:
     - Hostname (e.g. `eop-1-exec.local`).
@@ -73,13 +75,13 @@ The user can choose between two modes: **Single Mode Device** and **Dual Mode De
 
   - **Consensus Device**:
     - Hostname (e.g. `eop-1-cons.local`).
-    - Consensus client (e.g., Lighthouse) and port (e.g. 9000).
+    - Consensus client (e.g. Lighthouse) and port (e.g. 9000).
 
 ### 3. Advanced Settings
 
 Regardless of the mode selected, you can access advanced settings to configure:
 - Execution endpoint address (e.g. `http://localhost:8551`).
-- Locale settings such as time zone (e.g. Europe/Warsaw) and keyboard layout (e.g. US).
+- Locale settings such as time zone and keyboard layout.
   - By default, the keyboard layout will use the system's default settings unless explicitly configured.
 - Wireless LAN configuration, including network name (SSID) and password.
 
@@ -88,7 +90,7 @@ After clicking **Save**, the settings will be stored and automatically restored 
 **Note**: Activating the Wi-Fi configuration feature will attempt to retrieve Wi-Fi credentials from the system. Depending on your operating system, this may trigger a request for elevated system permissions to access network configuration data.
 
 ### 4. Starting the Writing Process
-   After completing the configuration, click **Next** to proceed to selecting the storage device where the image will be written (e.g. an SD card).
+   After completing the configuration, click **Next** to proceed to selecting the storage device where the image will be written to the SD card.
 
 ### 5. Writing and Verification Process
   - After selecting the storage device, the application will begin writing the image to the SD card.
@@ -113,13 +115,12 @@ Alternatively, you can proceed with the next steps as described in the instructi
 
 ## Contributing
 
-If you’d like to contribute to the Web3Pi Imager project, please follow the instructions provided in the [Contributing Guide](CONTRIBUTING.md).  
-The guide includes information on setting up a local development environment, building the project, and submitting pull requests.
+If you’d like to contribute to the Web3Pi Imager project, please follow the instructions provided in the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
-This project is a fork of the [Raspberry Pi Imaging Utility](https://github.com/raspberrypi/rpi-imager), originally licensed under the Apache License 2.0. It includes modifications to support Ethereum node deployment.
+This project is a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), originally licensed under the Apache License 2.0. It includes modifications to support Ethereum node deployment.
 
 The main code of the Web3Pi Imager is made available under the terms of the Apache License. For more details, see the [`license.txt`](./license.txt) file. Additionally, this project uses various third-party dependencies such as Qt, libarchive, drivelist, mountutils, and libcurl, which are subject to their respective open source licenses. For more information, consult the relevant files in the `src/dependencies` folder.
