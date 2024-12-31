@@ -117,6 +117,14 @@ Alternatively, you can proceed with the next steps as described in the instructi
 
 If you’d like to contribute to the Web3 Pi Imager project, please follow the instructions provided in the [Contributing Guide](CONTRIBUTING.md).
 
+---
+
+## Disclaimer
+
+Raspberry Pi is a trademark of Raspberry Pi Ltd. The use of this trademark here is solely for descriptive purposes.
+
+---
+
 ## License
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
