@@ -246,6 +246,7 @@ Item {
 
     function stopResolving() {
         hostResolver.stopResolving(settings.hostname + ".local")
+        timer.stop()
         end(false)
     }
 
