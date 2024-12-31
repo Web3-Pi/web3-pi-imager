@@ -28,7 +28,7 @@ Customize advanced configurations such as locale and network settings.
 
 ### Writing Progress
 
-Monitor the real-time progress of the image being written to the SD card.  
+Monitor the real-time progress of the image being written to the SD card.
 <img src="./doc/screenshots/writing.png" alt="Writing Progress" width="600">
 ---
 
