@@ -1,11 +1,11 @@
-# Web3Pi Imager
+# Web3 Pi Imager
 
-Web3Pi Imager is a specialized tool for creating Ethereum network nodes on Raspberry Pi devices.
+Web3 Pi Imager is a specialized tool for creating Ethereum network nodes on Raspberry Pi devices.
 It allows users to prepare SD cards with pre-configured images for setting up execution and consensus clients necessary for running Ethereum nodes.
 The tool provides a simple and intuitive interface to guide users through the entire process,
 making it accessible even for those with minimal technical expertise.
 
-Web3Pi Imager is built as a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), customized specifically for Ethereum node deployment.
+Web3 Pi Imager is built as a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), customized specifically for Ethereum node deployment.
 
 ---
 
@@ -34,7 +34,7 @@ Monitor the real-time progress of the image being written to the SD card.
 
 ## Installation and Usage
 
-Download the Web3Pi Imager application from the [latest release on GitHub](https://github.com/Web3-Pi/web3-pi-imager/releases/latest).
+Download the Web3 Pi Imager application from the [latest release on GitHub](https://github.com/Web3-Pi/web3-pi-imager/releases/latest).
 Choose the appropriate binary for your operating system.
 
 ### 1. Selecting the Mode
@@ -115,7 +115,7 @@ Alternatively, you can proceed with the next steps as described in the instructi
 
 ## Contributing
 
-If you’d like to contribute to the Web3Pi Imager project, please follow the instructions provided in the [Contributing Guide](CONTRIBUTING.md).
+If you’d like to contribute to the Web3 Pi Imager project, please follow the instructions provided in the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
@@ -123,4 +123,4 @@ This project is licensed under the [Apache License 2.0](http://www.apache.org/li
 
 This project is a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), originally licensed under the Apache License 2.0. It includes modifications to support Ethereum node deployment.
 
-The main code of the Web3Pi Imager is made available under the terms of the Apache License. For more details, see the [`license.txt`](./license.txt) file. Additionally, this project uses various third-party dependencies such as Qt, libarchive, drivelist, mountutils, and libcurl, which are subject to their respective open source licenses. For more information, consult the relevant files in the `src/dependencies` folder.
+The main code of the Web3 Pi Imager is made available under the terms of the Apache License. For more details, see the [`license.txt`](./license.txt) file. Additionally, this project uses various third-party dependencies such as Qt, libarchive, drivelist, mountutils, and libcurl, which are subject to their respective open source licenses. For more information, consult the relevant files in the `src/dependencies` folder.
