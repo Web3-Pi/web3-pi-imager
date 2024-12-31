@@ -34,7 +34,7 @@ Monitor the real-time progress of the image being written to the SD card.
 
 ## Installation and Usage
 
-Download the Web3Pi Imager application from the [latest release on GitHub](https://github.com/your-repo/web3pi-imager/releases/latest).
+Download the Web3Pi Imager application from the [latest release on GitHub](https://github.com/Web3-Pi/web3-pi-imager/releases/latest).
 Choose the appropriate binary for your operating system.
 
 ### 1. Selecting the Mode
