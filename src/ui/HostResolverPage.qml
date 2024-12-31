@@ -81,7 +81,7 @@ Item {
                         control.background.radius = 9
                     }
                     onClicked: {
-                        end(false)
+                        stopResolving()
                     }
                 }
             }
@@ -242,6 +242,11 @@ Item {
         timeoutInfo.visible = false;
         tryAgainButton.visible = false
         background.color = Material.background
+    }
+
+    function stopResolving() {
+        hostResolver.stopResolving(settings.hostname + ".local")
+        end(false)
     }
 
     function onHostResolved(hostname, ip) {
