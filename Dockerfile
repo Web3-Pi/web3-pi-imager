@@ -16,13 +16,14 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libxkbcommon-x11-0 \
     libfontconfig1 \
     wget \
+    libfuse2 \
+    libgnutls30 \
+    libgnutls28-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install aqtinstall
 
 RUN aqt install-qt linux desktop 6.7.3 linux_gcc_64 -O /opt/Qt
-
-RUN ls -AL /opt/Qt/6.7.3/
 
 ENV PATH="/opt/Qt/6.7.3/gcc_64/bin:$PATH"
 ENV LD_LIBRARY_PATH="/opt/Qt/6.7.3/gcc_64/lib:$LD_LIBRARY_PATH"

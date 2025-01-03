@@ -18,7 +18,7 @@ appimage:
     plugins:
       - qt
     raw_environment:
-      QML_SOURCES_PATHS: "\"$PROJECT_ROOT\"/src/qmlcomponents/"
+      QML_SOURCES_PATHS: "\"$PROJECT_ROOT\"/src/ui/"
       QMAKE: /opt/Qt/6.7.3/gcc_64/bin/qmake
     environment:
       EXTRA_PLATFORM_PLUGINS: "libqwayland-egl.so;libqwayland-generic.so"
