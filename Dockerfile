@@ -17,10 +17,11 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libfontconfig1 \
     wget \
     libfuse2 \
-    libgnutls30 \
     libgnutls28-dev \
     libgl1-mesa-dev \
     mesa-common-dev \
+    libxcb-cursor0 \
+    libxcb-cursor-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install aqtinstall
