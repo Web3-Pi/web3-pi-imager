@@ -22,6 +22,17 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     mesa-common-dev \
     libxcb-cursor0 \
     libxcb-cursor-dev \
+    libxcb-icccm4 \
+    libxcb-icccm4-dev \
+    libxcb-keysyms1 \
+    libxcb-keysyms1-dev \
+    libxcb-shape0 \
+    libxcb-shape0-dev \
+    libwayland-cursor0 \
+    libwayland-egl1 \
+    libwayland-dev \
+    kmod \
+    file \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install aqtinstall
