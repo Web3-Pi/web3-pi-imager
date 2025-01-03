@@ -1,13 +1,14 @@
 # Web3 Pi Imager
 
-Web3 Pi Imager is a specialized tool for creating Ethereum network nodes on Raspberry Pi devices.
-It allows users to prepare SD cards with pre-configured images for setting up execution and consensus clients necessary for running Ethereum nodes.
-The tool provides a simple and intuitive interface to guide users through the entire process,
-making it accessible even for those with minimal technical expertise.
+**Web3 Pi Imager** is a user-friendly application designed to simplify the process of burning [Web3 Pi images](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/latest) images. In just a few clicks, you can prepare your Raspberry Pi to function as a full Ethereum node. The application provides step-by-step guidance and offers an intuitive interface for selecting settings, making it accessible even to non-technical users.
+<img src="./doc/screenshots/3screens.png" alt="Web3 Pi Screenshots" width="1000">
+**Web3 Pi Imager** is built as a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), customized specifically for Ethereum node deployment.
 
-Web3 Pi Imager is built as a fork of the [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), customized specifically for Ethereum node deployment.
+## Download
 
----
+Download the **Web3 Pi Imager** application from the [latest release on GitHub](https://github.com/Web3-Pi/web3-pi-imager/releases/latest).
+Choose the appropriate binary for your operating system.
+
 
 ## Features
 
