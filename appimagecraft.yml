@@ -1,15 +1,15 @@
 version: 1
 
 project:
-  name: org.raspberrypi.rpi-imager
-  version: 1.9.2
+  name: org.web3pi.web3-pi-imager
+  version: 0.1.0
 
 build:
   cmake:
     source_dir: src/
     # You should also set your Qt6_ROOT here, like so:
-    # extra_variables:
-    #  - Qt6_ROOT=
+    extra_variables:
+     - Qt6_ROOT=/opt/Qt/6.7.3/gcc_64
   environment:
     BUILD_TYPE: MinSizeRel
 
@@ -19,6 +19,7 @@ appimage:
       - qt
     raw_environment:
       QML_SOURCES_PATHS: "\"$PROJECT_ROOT\"/src/qmlcomponents/"
+      QMAKE: /opt/Qt/6.7.3/gcc_64/bin/qmake
     environment:
       EXTRA_PLATFORM_PLUGINS: "libqwayland-egl.so;libqwayland-generic.so"
       EXTRA_QT_PLUGINS: "waylandcompositor"
