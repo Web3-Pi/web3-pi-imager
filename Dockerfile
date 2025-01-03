@@ -19,6 +19,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libfuse2 \
     libgnutls30 \
     libgnutls28-dev \
+    libgl1-mesa-dev \
+    mesa-common-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install aqtinstall
