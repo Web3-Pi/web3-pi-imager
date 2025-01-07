@@ -653,6 +653,12 @@ void ImageWriter::startDriveListPolling()
     _drivelist.startPolling();
 }
 
+/* The drive list will contain disks with size greater than DRIVELIST_FILTER_LARGE_DRIVES_SIZE */
+void ImageWriter::setLargeStorageFiltering(bool included)
+{
+    _drivelist.setLargeStorageFiltering(included);
+}
+
 /* Stop polling the list of available drives */
 void ImageWriter::stopDriveListPolling()
 {

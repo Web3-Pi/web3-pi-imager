@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 import QtQuick.Controls.Material.impl
+import "components"
 
 Popup {
     id: storagePopup
@@ -96,7 +97,7 @@ Popup {
         anchors.top: dstpopup_title_separator.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: lineSeparator.top
         boundsBehavior: Flickable.StopAtBounds
         highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         clip: true
@@ -127,6 +128,37 @@ Popup {
         }
         Keys.onEnterPressed: Keys.onSpacePressed(event)
         Keys.onReturnPressed: Keys.onSpacePressed(event)
+    }
+
+    // Line separator
+    Rectangle {
+        id: lineSeparator
+        height: 1
+        width: parent.width
+        color: Material.background
+        anchors.bottom: checkboxContainer.top
+    }
+
+    Rectangle {
+        id: checkboxContainer
+        height: 40
+
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left - 1
+        anchors.right: parent.right - 1
+
+        ImCheckBox {
+            id: exampleCheckbox
+            text: qsTr("Show large storage devices")
+            font.pixelSize: 16
+            leftPadding: 15
+            font.weight: Font.Medium
+            font.family: outfitMedium.name
+            checked: false
+            onCheckedChanged: {
+                imageWriter.setLargeStorageFiltering(checked)
+            }
+        }
     }
 
     Component {

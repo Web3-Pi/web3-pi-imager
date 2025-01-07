@@ -37,4 +37,7 @@
 /* Do not cache if it would bring free disk space under 5 GB */
 #define IMAGEWRITER_MINIMAL_SPACE_FOR_CACHING   5*1024*1024*1024ll
 
+/* Maximum disk size above which the disk is marked as large - when filtering disks */
+#define DRIVELIST_FILTER_LARGE_DRIVES_SIZE      300ULL*1024*1024*1024
+
 #endif // CONFIG_H

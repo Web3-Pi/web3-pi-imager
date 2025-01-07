@@ -77,8 +77,8 @@ void DriveListModel::processDriveList(std::vector<Drivelist::DeviceDescriptor> l
         if (i.size == 0)
             continue;
 
-        // Skip devices larger than 300GB
-        if (i.size > 300ULL * 1024 * 1024 * 1024)
+        // If _includeLargeStorage = false, skip devices larger than DRIVELIST_FILTER_LARGE_DRIVES_SIZE
+        if (!_includeLargeStorage && i.size >= DRIVELIST_FILTER_LARGE_DRIVES_SIZE)
             continue;
 
 #ifdef Q_OS_DARWIN
@@ -133,4 +133,9 @@ void DriveListModel::startPolling()
 void DriveListModel::stopPolling()
 {
     _thread.stop();
+}
+
+void DriveListModel::setLargeStorageFiltering(bool included)
+{
+    _includeLargeStorage = included;
 }

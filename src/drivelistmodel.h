@@ -22,6 +22,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
     void startPolling();
     void stopPolling();
+    void setLargeStorageFiltering(bool included);
 
     enum driveListRoles {
         deviceRole = Qt::UserRole + 1, descriptionRole, sizeRole, isUsbRole, isScsiRole, isReadOnlyRole, mountpointsRole
@@ -34,6 +35,8 @@ protected:
     QMap<QString,DriveListItem *> _drivelist;
     QHash<int, QByteArray> _rolenames;
     DriveListModelPollThread _thread;
+
+    bool _includeLargeStorage;
 };
 
 #endif // DRIVELISTMODEL_H

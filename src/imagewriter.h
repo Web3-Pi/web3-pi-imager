@@ -59,6 +59,9 @@ public:
     /* Start polling the list of available drives */
     Q_INVOKABLE void startDriveListPolling();
 
+    /* the disk list will contain disks with size greater than DRIVELIST_FILTER_LARGE_DRIVES_SIZE */
+    Q_INVOKABLE void setLargeStorageFiltering(bool included);
+
     /* Stop polling the list of available drives */
     Q_INVOKABLE void stopDriveListPolling();
 
