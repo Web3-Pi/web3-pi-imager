@@ -27,7 +27,7 @@ QtObject {
     property bool formatStorage: false;
 
     property var localeOptions: {
-        "checked": false,
+        "checked": true,
         "timezone":  imageWriter.getTimezone() || "US/Central",
         "keyboardLayout":  imageWriter.getCurrentKeyboard() || "us",
     };
