@@ -149,7 +149,7 @@ Popup {
 
         ImCheckBox {
             id: exampleCheckbox
-            text: qsTr("Show large storage devices")
+            text: qsTr("Show large external storage devices")
             font.pixelSize: 16
             leftPadding: 15
             font.weight: Font.Medium
