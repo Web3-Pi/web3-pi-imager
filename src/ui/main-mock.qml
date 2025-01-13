@@ -27,7 +27,7 @@ Window {
     minimumHeight: height
     maximumHeight: height
 
-    title: qsTr("Web3 Pi Imager v%1").arg("0.1.0")
+    title: qsTr("Web3 Pi Imager v%1").arg("0.1.2")
 
     FontLoader { id: dmsansItalic; source: "fonts/DMSans-Italic.ttf" }
     FontLoader { id: dmsansMedium; source: "fonts/DMSans-Medium.ttf" }
@@ -84,7 +84,7 @@ Window {
             StackView {
                 id: stackView
                 anchors.fill: parent
-                initialItem: HostResolverPage {}
+                initialItem: ModeSelector {}
             }
         }
     }
@@ -152,7 +152,7 @@ Window {
 
     Component.onCompleted: {
         // confirmwritepopup.askForConfirmation()
-        // storagePopup.open()
+        storagePopup.open()
         // advancedSettings.open()
     }
 

@@ -212,7 +212,9 @@ ApplicationWindow {
 
     function afterHostResolved(success) {
         finalPageSingleMode.success = success
-        stackView.push(finalPageSingleMode)
+        if (stackView.currentItem !== finalPageSingleMode) {
+            stackView.push(finalPageSingleMode);
+        }
     }
 
     function onNetworkInfo(msg) {

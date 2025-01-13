@@ -251,13 +251,16 @@ Item {
     }
 
     function onHostResolved(hostname, ip) {
-        if (hostname === settings.hostname + ".local") {
-            resolvedIp = ip
-        } else {
-            console.log("Unknown hostname: ", hostname)
-        }
         timer.stop()
-        end(!!resolvedIp)
+        if (!resolvedIp) {
+            resolvedIp = ip
+            if (hostname === settings.hostname + ".local") {
+                end(true)
+            } else {
+                console.error("Unexpected hostname: " + hostname)
+                end(false)
+            }
+        }
     }
 
     function onTimeout() {
