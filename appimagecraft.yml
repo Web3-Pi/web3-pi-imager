@@ -2,7 +2,7 @@ version: 1
 
 project:
   name: org.web3pi.web3-pi-imager
-  version: 0.1.1
+  version: 0.1.2
 
 build:
   cmake:
