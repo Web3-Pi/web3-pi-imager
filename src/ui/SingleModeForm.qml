@@ -154,7 +154,7 @@ Item {
                                 spacing: 15
                                 ColumnLayout {
                                     Label {
-                                        text: qsTr("Consesnus client:")
+                                        text: qsTr("Consensus client:")
                                         font.pixelSize: 16
                                     }
                                     ImComboBox {
