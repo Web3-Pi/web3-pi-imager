@@ -16,7 +16,6 @@ Button {
     property color rippleColor: "#20000000"
 
     font.family: outfitMedium.name
-    // font.weight: Font.Medium
     font.pixelSize: 18
     Material.background: "#FFFFFF"
     Material.foreground: Material.accent

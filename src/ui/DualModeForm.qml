@@ -237,10 +237,40 @@ Item {
 
                 }
 
-                ImCheckBox {
-                    id: formatStorage
-                    text: qsTr("Format storage")
-                    Material.foreground: "#ffffff"
+                RowLayout {
+                    ImCheckBox {
+                        id: formatStorage
+                        text: qsTr("Format storage")
+                        padding: 0
+                        font.weight: Font.Medium
+                        font.family: outfitMedium.name
+                        Material.foreground: "#ffffff"
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    ButtonOutline {
+                        text: qsTr("RESET ↺")
+                        Layout.preferredWidth: 100
+                        Layout.preferredHeight: 40
+                        font.pixelSize: 16
+                        ToolTip {
+                            text: "Reset all settings to defaults"
+                            font.pixelSize: 12
+                            visible: parent.hovered
+                            y: 50
+                            background: Rectangle {
+                                color: "#334A4D"
+                                radius: 5
+                            }
+                        }
+                        onClicked: {
+                            settings.loadDefaults()
+                            initialize()
+                        }
+                    }
                 }
             }
         }
@@ -317,6 +347,8 @@ Item {
     function initialize() {
         fieldHostnameExecution.text = settings.hostnameExecution
         fieldHostnameConsensus.text = settings.hostnameConsesnus
+        const fieldImageVersionCurrentIndex = findIndexByValue(fieldImageVersion.model, "value", settings.selectedOS)
+        fieldImageVersion.currentIndex = fieldImageVersionCurrentIndex > 0 ? fieldImageVersionCurrentIndex : 0
         fieldNetwork.currentIndex = findIndexByValue(fieldNetwork.model, "value", settings.defaultNetwork)
         fieldDualExecutionClient.currentIndex = findIndexByValue(fieldDualExecutionClient.model, "value", settings.executionClient)
         fieldDualConsensusClient.currentIndex = findIndexByValue(fieldDualConsensusClient.model, "value", settings.consensusClient)

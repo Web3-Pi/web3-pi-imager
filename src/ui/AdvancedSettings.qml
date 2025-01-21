@@ -260,22 +260,45 @@ Window {
             id: buttonsRow
             Layout.alignment: Qt.AlignCenter
 
+            ButtonPrimary {
+                text: qsTr("RESET ↺")
+                Layout.preferredWidth: 120
+                rippleColor: "#20E51763"
+                onClicked: {
+                    settings.loadDefaultsAdvanced()
+                    initialize()
+                }
+                Component.onCompleted: {
+                    background.color = "transparent"
+                    background.border.color = Material.accent
+                    background.border.width = 1
+                }
+                ToolTip {
+                    text: "Reset all settings to defaults"
+                    font.pixelSize: 12
+                    visible: parent.hovered
+                    y: -40
+                    x: 0
+                    background: Rectangle {
+                        border.color: "#555"
+                        border.width: 1
+                        radius: 5
+                    }
+                }
+            }
+
             Item {
                 Layout.fillWidth: true
             }
 
             ButtonSecondary {
                 text: qsTr("SAVE")
-                Layout.preferredWidth: 150
+                Layout.preferredWidth: 180
                 onClicked: {
                     validate()
                     save()
                     advancedSettings.close()
                 }
-            }
-
-            Item {
-                Layout.fillWidth: true
             }
         }
 

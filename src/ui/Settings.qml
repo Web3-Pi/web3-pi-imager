@@ -279,6 +279,36 @@ QtObject {
         imageWriter.setSavedCustomizationSettings(settings)
     }
 
+    function loadDefaults() {
+        hostname = "eop-1"
+        hostnameExecution = "eop-1-exec"
+        hostnameConsesnus = "eop-1-cons"
+        defaultNetwork = "mainnet"
+        executionClient = "geth"
+        consensusClient = "nimbus"
+        executionPort = "30303"
+        consensusPort = "9000"
+        monitoring = true
+        formatStorage = false
+    }
+
+    function loadDefaultsAdvanced() {
+        executionEndpointAddress = "http://localhost:8551"
+        executionEndpointAddressChecked = true
+        localeOptions = {
+            "checked": true,
+            "timezone":  imageWriter.getTimezone() || "US/Central",
+            "keyboardLayout":  imageWriter.getCurrentKeyboard() || "us",
+        };
+        wifiOptions = {
+            "checked": false,
+            "ssid":  imageWriter.getSSID() || "",
+            "password":  "",
+            "ssidHidden": false,
+            "wifiCountry": "us"
+        }
+    }
+
     function loadSavedSettings() {
         if (!imageWriter.hasSavedCustomizationSettings()) {
             return
