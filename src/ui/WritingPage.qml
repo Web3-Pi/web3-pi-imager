@@ -201,6 +201,13 @@ Item {
         warningPopup.text = msg
         warningPopup.openPopup()
         stackView.pop()
+        imageWriter.setDst("")
+        progressText.text = ""
+        progressValue.text = ""
+        progressBar.value = 0
+        progressBar.Material.accent = Material.accent
+        cancelwritebutton.visible = true
+        cancelverifybutton.visible = false
     }
 
     function onSuccess() {
