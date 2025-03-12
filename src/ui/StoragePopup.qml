@@ -273,13 +273,8 @@ Popup {
         }
     }
 
-    MsgPopup {
+    ConfirmPopup {
         id: confirmwritepopup
-        continueButton: false
-        yesButton: true
-        noButton: true
-        title: qsTr("Warning")
-        modal: true
         onYes: {
             if (!imageWriter.readyToWrite()) {
                 // TODO: show error ... ?
