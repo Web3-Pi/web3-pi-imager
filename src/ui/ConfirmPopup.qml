@@ -117,7 +117,6 @@ Popup {
         }
 
         RowLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
             Layout.alignment: Qt.AlignCenter
             ImCheckBox {
                 Material.theme: Material.Light
