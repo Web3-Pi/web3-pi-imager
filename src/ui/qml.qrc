@@ -16,6 +16,7 @@
         <file>FinalPageSingleMode.qml</file>
         <file>HostResolverPage.qml</file>
         <file>MsgPopup.qml</file>
+        <file>ConfirmPopup.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>countries.txt</file>
         <file>timezones.txt</file>

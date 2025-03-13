@@ -36,8 +36,10 @@ Button {
         implicitHeight: control.Material.buttonHeight
 
         radius: 9
-        color: control.Material.buttonColor(control.Material.theme, control.Material.background,
-            control.Material.accent, control.enabled, control.flat, control.highlighted, control.checked)
+        color: control.enabled
+            ? control.Material.buttonColor(control.Material.theme, control.Material.background,
+                control.Material.accent, control.enabled, control.flat, control.highlighted, control.checked)
+            : "#D3D3D3" // Disabled buttons will use a light grey color
 
         // The layer is disabled when the button color is transparent so you can do
         // Material.background: "transparent" and get a proper flat button without needing
