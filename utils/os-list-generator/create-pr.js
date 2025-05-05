@@ -16,6 +16,13 @@ async function run() {
   const targetRepoDir = path.join(process.cwd(), "target-repo");
   console.log(`Cloning ${TARGET_REPO}...`);
   const repoUrl = `https://x-access-token:${process.env.GITHUB_TOKEN}@github.com/${TARGET_REPO}.git`;
+
+  if (fs.existsSync(targetRepoDir)) {
+    console.log(`Removing existing target repo: ${targetRepoDir}`);
+    await fs.promises.rm(targetRepoDir, {recursive: true, force: true});
+  }
+
+
   await git.clone(repoUrl, targetRepoDir);
 
   if (fs.existsSync(JSON_FILE_PATH)) {
