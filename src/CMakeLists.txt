@@ -11,7 +11,7 @@ set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "Which macOS architectur
 project(web3-pi-imager LANGUAGES CXX C)
 set(IMAGER_VERSION_MAJOR 0)
 set(IMAGER_VERSION_MINOR 1)
-set(IMAGER_VERSION_PATCH 4)
+set(IMAGER_VERSION_PATCH 5)
 set(IMAGER_VERSION_STR "${IMAGER_VERSION_MAJOR}.${IMAGER_VERSION_MINOR}.${IMAGER_VERSION_PATCH}")
 set(IMAGER_VERSION_CSV "${IMAGER_VERSION_MAJOR},${IMAGER_VERSION_MINOR},${IMAGER_VERSION_PATCH},0")
 add_definitions(-DIMAGER_VERSION_STR="${IMAGER_VERSION_STR}")
@@ -25,14 +25,14 @@ set(Qt6_ROOT "/opt/Qt/6.7.3/gcc_64" CACHE PATH "Your Qt6 root path")
 
 if (WIN32)
     set(MINGW64_ROOT "" CACHE PATH "Your MinGW64 root path, likely provided by QtCreator")
-    set(IMAGER_SIGNED_APP OFF CACHE BOOL "Sign Imager and its installer as part of the build. Requires a valid Code Signing certificate.")
+    set(IMAGER_SIGNED_APP ON CACHE BOOL "Sign Imager and its installer as part of the build. Requires a valid Code Signing certificate.")
 endif()
 
 if (APPLE)
-    set(IMAGER_SIGNED_APP OFF CACHE BOOL "Perform signing of the Imager .app as part of the build")
-    set(IMAGER_SIGNING_IDENTITY "" CACHE STRING "The Developer Identity to use for signing.")
+    set(IMAGER_SIGNED_APP ON CACHE BOOL "Perform signing of the Imager .app as part of the build")
+    set(IMAGER_SIGNING_IDENTITY "Developer ID Application: F12 LAB Sp. z o.o. \\(KMTS295USV\\)" CACHE STRING "The Developer Identity to use for signing.")
     set(IMAGER_NOTARIZE_APP OFF CACHE BOOL "Perform notarization of the Imager .dmg as part of the build")
-    set(IMAGER_NOTARIZE_KEYCHAIN_PROFILE "" CACHE STRING "The name of the Keychain item containing your notarization credentials")
+    set(IMAGER_NOTARIZE_KEYCHAIN_PROFILE "Web3 PI Imager" CACHE STRING "The name of the Keychain item containing your notarization credentials")
 endif(APPLE)
 
 ## Preferentially build the bundled code. Full vendoring is to follow in a later version.
@@ -50,9 +50,9 @@ set(XZ_ENABLE_SANDBOX OFF)
 set(XZ_BUILD_SHARED_LIBS OFF)
 set(XZ_ENABLE_DOXYGEN OFF)
 set(XZ_DECODERS
-    lzma1
-    lzma2
-    delta
+        lzma1
+        lzma2
+        delta
 )
 set(XZ_ENCODERS "")
 set(CREATE_LZMA_SYMLINKS OFF)
@@ -167,47 +167,47 @@ set(CURL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/dependencies/curl-8.11.0/include
 
 # Adding headers explicity so they are displayed in Qt Creator
 set(HEADERS config.h imagewriter.h networkaccessmanagerfactory.h nan.h drivelistitem.h drivelistmodel.h drivelistmodelpollthread.h driveformatthread.h powersaveblocker.h cli.h
-    devicewrapper.h devicewrapperblockcacheentry.h devicewrapperpartition.h devicewrapperstructs.h devicewrapperfatpartition.h wlancredentials.h
-    downloadthread.h downloadextractthread.h localfileextractthread.h downloadstatstelemetry.h hostresolver.h dependencies/mountutils/src/mountutils.hpp dependencies/sha256crypt/sha256crypt.h)
+        devicewrapper.h devicewrapperblockcacheentry.h devicewrapperpartition.h devicewrapperstructs.h devicewrapperfatpartition.h wlancredentials.h
+        downloadthread.h downloadextractthread.h localfileextractthread.h downloadstatstelemetry.h hostresolver.h dependencies/mountutils/src/mountutils.hpp dependencies/sha256crypt/sha256crypt.h)
 
 # Add dependencies
 if (APPLE)
     set_source_files_properties("ui/icons/web3pi-imager.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     set(PLATFORM_SOURCES
-        mac/acceleratedcryptographichash_commoncrypto.cpp
-        mac/macfile.cpp
-        mac/macfile.h
-        dependencies/mountutils/src/darwin/functions.cpp
-        mac/macwlancredentials.h
-        mac/macwlancredentials.cpp
-        dependencies/drivelist/src/darwin/list.mm
-        dependencies/drivelist/src/darwin/REDiskList.m
+            mac/acceleratedcryptographichash_commoncrypto.cpp
+            mac/macfile.cpp
+            mac/macfile.h
+            dependencies/mountutils/src/darwin/functions.cpp
+            mac/macwlancredentials.h
+            mac/macwlancredentials.cpp
+            dependencies/drivelist/src/darwin/list.mm
+            dependencies/drivelist/src/darwin/REDiskList.m
     )
     set(DEPENDENCIES ui/icons/web3pi-imager.icns)
     enable_language(OBJC C)
 elseif (UNIX)
     find_package(GnuTLS REQUIRED)
     set(PLATFORM_SOURCES
-        dependencies/mountutils/src/linux/functions.cpp
-        linux/linuxdrivelist.cpp
-        linux/networkmanagerapi.h
-        linux/networkmanagerapi.cpp
-        linux/stpanalyzer.h
-        linux/stpanalyzer.cpp
-        linux/acceleratedcryptographichash_gnutls.cpp
+            dependencies/mountutils/src/linux/functions.cpp
+            linux/linuxdrivelist.cpp
+            linux/networkmanagerapi.h
+            linux/networkmanagerapi.cpp
+            linux/stpanalyzer.h
+            linux/stpanalyzer.cpp
+            linux/acceleratedcryptographichash_gnutls.cpp
     )
     set(EXTRALIBS ${EXTRALIBS} GnuTLS::GnuTLS idn2 nettle)
     set(DEPENDENCIES "")
     add_definitions(-DHAVE_GNUTLS)
 elseif (WIN32)
     set(PLATFORM_SOURCES
-        windows/acceleratedcryptographichash_cng.cpp
-        dependencies/mountutils/src/windows/functions.cpp
-        dependencies/drivelist/src/windows/list.cpp
-        windows/winfile.cpp
-        windows/winfile.h
-        windows/winwlancredentials.h
-        windows/winwlancredentials.cpp
+            windows/acceleratedcryptographichash_cng.cpp
+            dependencies/mountutils/src/windows/functions.cpp
+            dependencies/drivelist/src/windows/list.cpp
+            windows/winfile.cpp
+            windows/winfile.h
+            windows/winwlancredentials.h
+            windows/winwlancredentials.cpp
     )
     set(DEPENDENCIES windows/web3-pi-imager.rc)
     set(EXTRALIBS setupapi wlanapi Bcrypt.dll)
@@ -225,13 +225,13 @@ check_cxx_source_compiles("
         x = 1;
         return (int) x;
     }"
-    atomicbuiltin)
+        atomicbuiltin)
 
 if (NOT atomicbuiltin)
-        find_library(ATOMIC_LIBRARY NAMES atomic libatomic.so.1)
-        if (NOT ATOMIC_LIBRARY)
-                message( FATAL_ERROR "Missing libatomic while architecture does need it" )
-        endif()
+    find_library(ATOMIC_LIBRARY NAMES atomic libatomic.so.1)
+    if (NOT ATOMIC_LIBRARY)
+        message( FATAL_ERROR "Missing libatomic while architecture does need it" )
+    endif()
 endif()
 
 include(TestBigEndian)
@@ -241,9 +241,9 @@ if( IS_BIG_ENDIAN )
 endif( IS_BIG_ENDIAN )
 
 set(SOURCES ${PLATFORM_SOURCES} "main.cpp" "imagewriter.cpp" "networkaccessmanagerfactory.cpp"
-    "drivelistitem.cpp" "drivelistmodel.cpp" "drivelistmodelpollthread.cpp" "downloadthread.cpp" "downloadextractthread.cpp"
-    "devicewrapper.cpp" "devicewrapperblockcacheentry.cpp" "devicewrapperpartition.cpp" "devicewrapperfatpartition.cpp"
-    "driveformatthread.cpp" "localfileextractthread.cpp" "powersaveblocker.cpp" "downloadstatstelemetry.cpp" "ui/qml.qrc" "dependencies/sha256crypt/sha256crypt.c" "cli.cpp" "hostresolver.cpp")
+        "drivelistitem.cpp" "drivelistmodel.cpp" "drivelistmodelpollthread.cpp" "downloadthread.cpp" "downloadextractthread.cpp"
+        "devicewrapper.cpp" "devicewrapperblockcacheentry.cpp" "devicewrapperpartition.cpp" "devicewrapperfatpartition.cpp"
+        "driveformatthread.cpp" "localfileextractthread.cpp" "powersaveblocker.cpp" "downloadstatstelemetry.cpp" "ui/qml.qrc" "dependencies/sha256crypt/sha256crypt.c" "cli.cpp" "hostresolver.cpp")
 
 find_package(Qt6 6.7 QUIET COMPONENTS Core Quick LinguistTools Svg Network OPTIONAL_COMPONENTS Widgets DBus WinExtras)
 if (Qt6_FOUND)
@@ -305,10 +305,10 @@ else()
 endif()
 
 if(DRIVELIST_FILTER_SYSTEM_DRIVES)
-   # Hide system drives from list
-   add_definitions(-DDRIVELIST_FILTER_SYSTEM_DRIVES=true)
+    # Hide system drives from list
+    add_definitions(-DDRIVELIST_FILTER_SYSTEM_DRIVES=true)
 else()
-   add_definitions(-DDRIVELIST_FILTER_SYSTEM_DRIVES=false)
+    add_definitions(-DDRIVELIST_FILTER_SYSTEM_DRIVES=false)
 endif()
 
 # Because dependencies are typically not available by default on Windows, build bundled code
@@ -322,55 +322,55 @@ if (WIN32)
 
     # Strip debug symbols
     add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_STRIP} "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
+            POST_BUILD
+            COMMAND ${CMAKE_STRIP} "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
 
     # Borrowed from the 'mstdlib' project: Code signing
     # First, determine our build architecture
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(arch x64)
+        set(arch x64)
     else ()
-            set(arch x86)
+        set(arch x86)
     endif ()
     #
     #  Now find signtool
     if (IMAGER_SIGNED_APP)
-         if (NOT SIGNTOOL)
-                 # Try to list all Windows 10 SDK versions, if any.
-                 set(win10_kit_versions)
-                 set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
-                 set(regval "KitsRoot10")
-                 # Note: must be a cache operation in order to read from the registry.
-                 get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
-                 if (w10_kits_path)
-                     message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
-                         file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
-                         # Reverse list, so newer (higher-numbered) versions appear first.
-                         list(REVERSE w10_kit_versions)
-                 endif ()
-                 unset(w10_kits_path CACHE)
-                 if (w10_kit_versions)
-                         find_program(SIGNTOOL
-                                         NAMES           signtool
-                                         PATHS           ${w10_kit_versions}
-                                         PATH_SUFFIXES   ${arch}
-                                                         bin/${arch}
-                                                         bin
-                                         NO_DEFAULT_PATH
-                         )
-                 endif ()
-         endif ()
+        if (NOT SIGNTOOL)
+            # Try to list all Windows 10 SDK versions, if any.
+            set(win10_kit_versions)
+            set(regkey "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows Kits\\Installed Roots")
+            set(regval "KitsRoot10")
+            # Note: must be a cache operation in order to read from the registry.
+            get_filename_component(w10_kits_path "[${regkey};${regval}]" ABSOLUTE CACHE)
+            if (w10_kits_path)
+                message(WARNING "Found Windows 10 kits path: ${w10_kits_path}")
+                file(GLOB w10_kit_versions "${w10_kits_path}/bin/10.*")
+                # Reverse list, so newer (higher-numbered) versions appear first.
+                list(REVERSE w10_kit_versions)
+            endif ()
+            unset(w10_kits_path CACHE)
+            if (w10_kit_versions)
+                find_program(SIGNTOOL
+                        NAMES           signtool
+                        PATHS           ${w10_kit_versions}
+                        PATH_SUFFIXES   ${arch}
+                        bin/${arch}
+                        bin
+                        NO_DEFAULT_PATH
+                )
+            endif ()
+        endif ()
 
-         if (NOT SIGNTOOL)
-             message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
-         endif()
-            add_definitions(-DSIGNTOOL="${SIGNTOOL}")
+        if (NOT SIGNTOOL)
+            message(FATAL_ERROR "Unable to locate signtool.exe used for code signing")
+        endif()
+        add_definitions(-DSIGNTOOL="${SIGNTOOL}")
 
-            add_custom_command(TARGET ${PROJECT_NAME}
+        add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
                 COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe")
 
-            add_custom_command(TARGET ${PROJECT_NAME}
+        add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
                 COMMAND "${SIGNTOOL}" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe")
 
@@ -385,38 +385,38 @@ if (WIN32)
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/deploy")
 
     add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe" "${CMAKE_BINARY_DIR}/dependencies/fat32format/fat32format.exe"
             "${CMAKE_SOURCE_DIR}/../license.txt"
             "${CMAKE_BINARY_DIR}/deploy")
 
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/windows/web3-pi-imager.nsi.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/web3-pi-imager.nsi"
-        @ONLY)
+            "${CMAKE_CURRENT_SOURCE_DIR}/windows/web3-pi-imager.nsi.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/web3-pi-imager.nsi"
+            @ONLY)
 
     add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
             "${MINGW64_ROOT}/bin/libgcc_s_seh-1.dll"
             "${MINGW64_ROOT}/bin/libstdc++-6.dll"
             "${MINGW64_ROOT}/bin/libwinpthread-1.dll"
             "${CMAKE_BINARY_DIR}/deploy")
 
     add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND "${WINDEPLOYQT}" --no-translations --qmldir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/deploy/web3-pi-imager.exe")
+            POST_BUILD
+            COMMAND "${WINDEPLOYQT}" --no-translations --qmldir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/deploy/web3-pi-imager.exe")
 
     # Remove excess files
     add_custom_command(TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E remove
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E remove
             "${CMAKE_BINARY_DIR}/deploy/imageformats/qtiff.dll"
             "${CMAKE_BINARY_DIR}/deploy/imageformats/qwebp.dll"
             "${CMAKE_BINARY_DIR}/deploy/imageformats/qgif.dll")
 
-elseif(APPLE)
+elseif (APPLE)
     find_library(Cocoa Cocoa)
     find_library(CoreFoundation CoreFoundation)
     find_library(DiskArbitration DiskArbitration)
@@ -429,96 +429,87 @@ elseif(APPLE)
     find_program(MACDEPLOYQT "macdeployqt" PATHS "${Qt6_ROOT}/bin")
     if (NOT MACDEPLOYQT_EXECUTABLE)
         message(FATAL_ERROR "Unable to locate macdeployqt")
-    endif()
+    endif ()
 
-    if(IMAGER_SIGNED_APP)
-        if(IMAGER_SIGNING_IDENTITY)
-            # Create the .app, leveraging macdeployqt's knowledge of Qt libraries and configuration files
-            add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -libpath=/usr/local/lib -libpath=/opt/homebrew/lib -no-strip -verbose=2)
-            add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
-            # Sign the .app.
-            add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND codesign -f --deep --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
-
-            # Create the .dmg for distribution
-            add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND hdiutil create -volname "Web3 Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
-
-            # Sign the .dmg for distribution, but do not initialise notarisation
-            add_custom_command(TARGET ${PROJECT_NAME}
-                POST_BUILD
-                COMMAND codesign -f --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Raspberry\ Pi\ Imager.dmg")
-
-            if(IMAGER_NOTARIZE_APP)
-                if(IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
-                    add_custom_command(TARGET ${PROJECT_NAME}
-                        POST_BUILD
-                        COMMAND xcrun notarytool submit "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg" --wait --keychain-profile "${IMAGER_NOTARIZE_KEYCHAIN_PROFILE}")
-                    add_custom_command(TARGET ${PROJECT_NAME}
-                        POST_BUILD
-                        COMMAND xcrun stapler staple "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
-                else()
-                    message(FATAL_ERROR "Notarization requested, but no keychain profile is supplied")
-                endif(IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
-
-            endif(IMAGER_NOTARIZE_APP)
-        else()
-            message(FATAL_ERROR "Signing requested, but no signing identity provided")
-        endif(IMAGER_SIGNING_IDENTITY)
-    else()
-        # Unsigned application
-        # Build dmg only for Release profile
-        if(CMAKE_BUILD_TYPE STREQUAL "Release")
-            add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    # To properly build an application for both x86_64 and arm64 architectures,
-                    # make sure that the linked system libraries are in universal binary versions
-                    # You can check what paths the copied libraries to Frameworks/ refer to using otool -L
-                    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -verbose=2)
-
-
-            # Currently, macdeployqt does not properly link libraries for the arm64 architecture,
-            # so as a temporary solution, I replace the paths manually
-            set(TARGET_APP_PATH "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
-            set(TARGET_FRAMEWORKS_PATH "${TARGET_APP_PATH}/Contents/Frameworks")
-            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                    COMMAND install_name_tool -change /opt/homebrew/opt/libunistring/lib/libunistring.5.dylib @executable_path/../Frameworks/libunistring.5.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/gettext/lib/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
-                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
-                    COMMAND install_name_tool -change  /opt/homebrew/Cellar/openssl@3/3.4.0/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
-                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib @executable_path/../Frameworks/libssl.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
-                    COMMAND codesign --force --deep --sign - "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
-            )
-            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                    COMMAND install_name_tool -change /opt/homebrew/opt/libidn2/lib/libidn2.0.dylib @executable_path/../Frameworks/libidn2.0.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/libidn2/lib/libidn2.0.dylib @executable_path/../Frameworks/libidn2.0.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/libnghttp2/lib/libnghttp2.14.dylib @executable_path/../Frameworks/libnghttp2.14.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
-                    COMMAND install_name_tool -change /opt/homebrew/opt/libssh2/lib/libssh2.1.dylib @executable_path/../Frameworks/libssh2.1.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
-                    COMMAND codesign --force --deep --sign - "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
-            )
-
-            add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app")
-            # Create the .dmg for distribution
-            add_custom_command(TARGET ${PROJECT_NAME}
-                    POST_BUILD
-                    COMMAND hdiutil create -volname "Web3 Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg")
-        endif ()
-
- endif(IMAGER_SIGNED_APP)
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
         add_custom_command(TARGET ${PROJECT_NAME}
                 POST_BUILD
-                COMMAND "mv" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.dmg" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg")
+                # To properly build an application for both x86_64 and arm64 architectures,
+                # make sure that the linked system libraries are in universal binary versions
+                # You can check what paths the copied libraries to Frameworks/ refer to using otool -L
+                COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" -qmldir="${CMAKE_CURRENT_SOURCE_DIR}" -always-overwrite -no-strip -verbose=2
+                COMMAND echo "macdeployqt successfully completed")
+
+
+        # Currently, macdeployqt does not properly link libraries for the arm64 architecture,
+        # so as a temporary solution, I replace the paths manually
+        set(TARGET_APP_PATH "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
+        set(TARGET_FRAMEWORKS_PATH "${TARGET_APP_PATH}/Contents/Frameworks")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND install_name_tool -change /opt/homebrew/opt/libunistring/lib/libunistring.5.dylib @executable_path/../Frameworks/libunistring.5.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                COMMAND install_name_tool -change /opt/homebrew/opt/gettext/lib/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                COMMAND codesign --force --deep -s "${IMAGER_SIGNING_IDENTITY}" "${TARGET_FRAMEWORKS_PATH}/libidn2.0.dylib"
+                COMMAND install_name_tool -change /opt/homebrew/Cellar/openssl@3/3.4.1/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
+                COMMAND codesign --force --deep -s "${IMAGER_SIGNING_IDENTITY}" "${TARGET_FRAMEWORKS_PATH}/libssl.3.dylib"
+                COMMAND codesign --force --deep -s "${IMAGER_SIGNING_IDENTITY}" "${TARGET_FRAMEWORKS_PATH}/libcrypto.3.dylib"
+                COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib @executable_path/../Frameworks/libssl.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+                COMMAND install_name_tool -change /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib @executable_path/../Frameworks/libcrypto.3.dylib "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+                COMMAND codesign --force --deep -s "${IMAGER_SIGNING_IDENTITY}" "${TARGET_FRAMEWORKS_PATH}/libssh2.1.dylib"
+                COMMAND echo "install_name_tool and codesign completed successfully")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND install_name_tool -change /opt/homebrew/opt/libidn2/lib/libidn2.0.dylib @executable_path/../Frameworks/libidn2.0.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                COMMAND install_name_tool -change /opt/homebrew/opt/libnghttp2/lib/libnghttp2.14.dylib @executable_path/../Frameworks/libnghttp2.14.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                COMMAND install_name_tool -change /opt/homebrew/opt/libssh2/lib/libssh2.1.dylib @executable_path/../Frameworks/libssh2.1.dylib "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                COMMAND codesign --force --deep -s "${IMAGER_SIGNING_IDENTITY}" "${TARGET_APP_PATH}/Contents/MacOS/${PROJECT_NAME}"
+                COMMAND echo "install_name_tool modifications for executable completed successfully")
+
+        add_custom_command(TARGET ${PROJECT_NAME}
+                POST_BUILD
+                COMMAND mv "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app"
+                COMMAND echo "Moved ${PROJECT_NAME}.app to Web3 Pi Imager.app")
+
+        if (IMAGER_SIGNED_APP)
+            if (IMAGER_SIGNING_IDENTITY)
+                # Sign the .app.
+                add_custom_command(TARGET ${PROJECT_NAME}
+                        POST_BUILD
+                        COMMAND codesign -f --deep --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager.app"
+                        COMMAND echo ".app signed successfully")
+            endif ()
+        endif ()
+        # Create the .dmg for distribution
+        add_custom_command(TARGET ${PROJECT_NAME}
+                POST_BUILD
+                COMMAND hdiutil create -volname "Web3 Pi Imager" -srcfolder "${CMAKE_BINARY_DIR}/Web3 Pi Imager.app" -ov -format UDBZ "${CMAKE_BINARY_DIR}/Web3 Pi Imager-${IMAGER_VERSION_STR}.dmg"
+                COMMAND echo ".dmg file created successfully")
+
+        if (IMAGER_SIGNED_APP)
+            if (IMAGER_SIGNING_IDENTITY)
+                # Sign the .dmg for distribution, but do not initialise notarisation
+                add_custom_command(TARGET ${PROJECT_NAME}
+                        POST_BUILD
+                        COMMAND codesign -f --digest-algorithm=sha1,sha256 -o runtime --timestamp -s "${IMAGER_SIGNING_IDENTITY}" "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg"
+                        COMMAND echo ".dmg signed successfully")
+
+                if (IMAGER_NOTARIZE_APP)
+                    if (IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
+                        add_custom_command(TARGET ${PROJECT_NAME}
+                                POST_BUILD
+                                COMMAND xcrun notarytool submit "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg" --wait --keychain-profile "${IMAGER_NOTARIZE_KEYCHAIN_PROFILE}"
+                                COMMAND echo "Notarization submitted successfully")
+                        add_custom_command(TARGET ${PROJECT_NAME}
+                                POST_BUILD
+                                COMMAND xcrun stapler staple "${CMAKE_BINARY_DIR}/Web3\ Pi\ Imager-${IMAGER_VERSION_STR}.dmg"
+                                COMMAND echo "Notarization stapled successfully")
+                    else ()
+                        message(FATAL_ERROR "Notarization requested, but no keychain profile is supplied")
+                    endif (IMAGER_NOTARIZE_KEYCHAIN_PROFILE)
+                endif (IMAGER_NOTARIZE_APP)
+            else ()
+                message(FATAL_ERROR "Signing requested, but no signing identity provided")
+            endif (IMAGER_SIGNING_IDENTITY)
+        endif ()
+
     endif ()
 else()
     # UNIX, Linux systems

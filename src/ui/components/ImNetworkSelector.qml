@@ -9,6 +9,7 @@ ImComboBox {
         ListElement { text: "Ethereum Mainnet"; value: "mainnet" }
         ListElement { text: "Ethereum Sepolia"; value: "sepolia" }
         ListElement { text: "Ethereum Holesky"; value: "holesky" }
+        ListElement { text: "Ethereum Hoodi"; value: "hoodi" }
     }
     currentIndex: 0
     textRole: "text"
