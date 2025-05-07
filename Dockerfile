@@ -33,6 +33,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libwayland-dev \
     kmod \
     file \
+    fuse \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install aqtinstall
@@ -41,6 +42,11 @@ RUN aqt install-qt linux desktop 6.7.3 linux_gcc_64 -O /opt/Qt
 
 ENV PATH="/opt/Qt/6.7.3/gcc_64/bin:$PATH"
 ENV LD_LIBRARY_PATH="/opt/Qt/6.7.3/gcc_64/lib:$LD_LIBRARY_PATH"
+
+RUN wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O /usr/local/bin/linuxdeploy && \
+    chmod +x /usr/local/bin/linuxdeploy && \
+    wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -O /usr/local/bin/linuxdeploy-plugin-qt && \
+    chmod +x /usr/local/bin/linuxdeploy-plugin-qt
 
 WORKDIR /workspace/web3-pi-imager
 
