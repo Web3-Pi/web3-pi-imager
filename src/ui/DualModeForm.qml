@@ -168,7 +168,7 @@ Item {
                             ColumnLayout {
                                 spacing: 20
                                 Label {
-                                    text: qsTr("Consesnus device")
+                                    text: qsTr("Consensus device")
                                     Layout.topMargin: -15
                                 }
                                 ColumnLayout {
