@@ -50,7 +50,7 @@ RUN wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous
 
 WORKDIR /workspace/web3-pi-imager
 
-RUN wget https://github.com/TheAssassin/appimagecraft/releases/download/continuous/appimagecraft-x86_64.AppImage && \
-    chmod +x appimagecraft-x86_64.AppImage
+RUN wget https://github.com/TheAssassin/appimagecraft/releases/download/continuous/appimagecraft-x86_64.AppImage -O /workspace/web3-pi-imager/appimagecraft-x86_64.AppImage && \
+    chmod +x /workspace/web3-pi-imager/appimagecraft-x86_64.AppImage
 
 CMD ["/bin/bash"]
