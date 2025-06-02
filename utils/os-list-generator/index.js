@@ -11,6 +11,7 @@ const SOURCE_REPO = "Web3-Pi/Ethereum-On-Raspberry-Pi";
 const ASSET_PATTERN = /Web3Pi_Single_Device\.img\.xz$/;
 const MIN_VERSION = "0.7.0";
 const OUTPUT_FILE = "web3_pi_imager_os_list_v1.json";
+const OUTPUT_FILE_OFFICIAL_RPI_IMAGER = "os-sublist-web3pi.json";
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
@@ -85,6 +86,19 @@ async function main() {
     await fs.promises.writeFile(outputPath, JSON.stringify(outputData, null, 2), "utf8");
 
     console.log(`Saved to ${outputPath}`);
+
+    const outputPathRpi = path.join(process.cwd(), OUTPUT_FILE_OFFICIAL_RPI_IMAGER);
+    await fs.promises.writeFile(outputPathRpi, JSON.stringify({
+      os_list: entries.slice(0, 1).map(entry => ({
+        "website": "https://www.web3pi.io/",
+        "icon": "https://web3-pi.github.io/release-json/40x40.png",
+        ...entry,
+        name: entry.name.replace(' (latest)', '').replace('image - ', '') + ' - 64bit'
+      }))
+    }, null, 2), "utf8");
+
+    console.log(`Saved latest version to ${outputPathRpi}`);
+
   } catch (error) {
     console.error("Error:", error.message);
   }
